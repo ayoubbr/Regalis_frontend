@@ -2,13 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DailyChallenge, DailyChallengeCreateDTO, DailyChallengeUpdateDTO } from '../models/daily-challenge.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DailyChallengeService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/daily-challenges';
+    private apiUrl = `${environment.apiUrl}/daily-challenges`;
 
     getTodayChallenge(userId: number): Observable<DailyChallenge> {
         return this.http.get<DailyChallenge>(`${this.apiUrl}/user/${userId}/today`);

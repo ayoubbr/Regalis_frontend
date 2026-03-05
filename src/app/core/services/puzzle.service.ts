@@ -2,13 +2,18 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Puzzle, PuzzleCreateDTO, PuzzleUpdateDTO } from '../models/puzzle.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PuzzleService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/puzzles';
+    private apiUrl = `${environment.apiUrl}/puzzles`;
+
+    getAll(): Observable<Puzzle[]> {
+        return this.http.get<Puzzle[]>(this.apiUrl);
+    }
 
     getById(id: number): Observable<Puzzle> {
         return this.http.get<Puzzle>(`${this.apiUrl}/${id}`);
@@ -30,7 +35,7 @@ export class PuzzleService {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 
-    verifySolution(id: number, moves: { [key: string]: string }): Observable<{ correct: boolean }> {
-        return this.http.post<{ correct: boolean }>(`${this.apiUrl}/${id}/verify`, moves);
+    verifySolution(puzzleId: number, submittedMoves: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.apiUrl}/${puzzleId}/verify`, { submittedMoves });
     }
 }

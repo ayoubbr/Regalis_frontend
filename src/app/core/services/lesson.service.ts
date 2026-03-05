@@ -2,13 +2,18 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Lesson, LessonCreateDTO, LessonUpdateDTO } from '../models/lesson.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LessonService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/lessons';
+    private apiUrl = `${environment.apiUrl}/lessons`;
+
+    getAll(): Observable<Lesson[]> {
+        return this.http.get<Lesson[]>(this.apiUrl);
+    }
 
     getById(id: number): Observable<Lesson> {
         return this.http.get<Lesson>(`${this.apiUrl}/${id}`);

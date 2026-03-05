@@ -2,13 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Module, ModuleCreateDTO, ModuleUpdateDTO } from '../models/module.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ModuleService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/modules';
+    private apiUrl = `${environment.apiUrl}/modules`;
 
     getAll(): Observable<Module[]> {
         return this.http.get<Module[]>(this.apiUrl);
