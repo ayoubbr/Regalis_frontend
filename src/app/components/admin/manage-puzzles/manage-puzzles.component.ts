@@ -103,9 +103,13 @@ export class ManagePuzzlesComponent implements OnInit {
   openCreateModal() {
     this.isCreating = true;
     this.puzzleForm.reset({
+      fenPosition: '',
+      solutionMoves: '',
       difficulty: 1000,
       xpReward: 50,
-      maxAttempts: 3
+      maxAttempts: 3,
+      moduleId: '',
+      categoryId: ''
     });
   }
 
