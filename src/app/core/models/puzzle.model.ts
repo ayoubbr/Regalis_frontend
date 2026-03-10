@@ -6,6 +6,7 @@ export interface Puzzle {
     xpReward: number;
     maxAttempts: number;
     moduleId: number;
+    categoryId: number;
 }
 
 export interface PuzzleCreateDTO {
@@ -15,6 +16,7 @@ export interface PuzzleCreateDTO {
     xpReward: number;
     maxAttempts: number;
     moduleId: number;
+    categoryId: number;
 }
 
 export interface PuzzleUpdateDTO {
@@ -24,4 +26,5 @@ export interface PuzzleUpdateDTO {
     xpReward: number;
     maxAttempts: number;
     moduleId: number;
+    categoryId: number;
 }

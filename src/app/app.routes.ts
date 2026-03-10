@@ -4,6 +4,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard/admi
 import { LessonsComponent } from './components/admin/lessons/lessons.component';
 import { ModulesComponent } from './components/admin/modules/modules.component';
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
+import { ManagePuzzlesComponent } from './components/admin/manage-puzzles/manage-puzzles.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,10 @@ export const routes: Routes = [
             {
                 path: 'users',
                 component: UserManagementComponent
+            },
+            {
+                path: 'puzzles',
+                component: ManagePuzzlesComponent
             },
             {
                 path: '',
