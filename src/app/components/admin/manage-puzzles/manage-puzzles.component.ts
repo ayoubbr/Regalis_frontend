@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { PuzzleService } from '../../../core/services/puzzle.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { ModuleService } from '../../../core/services/module.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Puzzle } from '../../../core/models/puzzle.model';
 import { Category } from '../../../core/models/category.model';
 import { Module } from '../../../core/models/module.model';
@@ -19,6 +20,7 @@ export class ManagePuzzlesComponent implements OnInit {
   private puzzleService = inject(PuzzleService);
   private categoryService = inject(CategoryService);
   private moduleService = inject(ModuleService);
+  private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
 
   puzzles: Puzzle[] = [];
@@ -68,6 +70,7 @@ export class ManagePuzzlesComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching puzzles', err);
         this.error = 'Failed to load puzzles';
+        this.toastService.showError('Failed to load puzzles');
         this.isLoading = false;
       }
     });
@@ -76,14 +79,20 @@ export class ManagePuzzlesComponent implements OnInit {
   fetchCategories() {
     this.categoryService.getAll().subscribe({
       next: (data) => this.categories = data,
-      error: (err) => console.error('Error fetching categories', err)
+      error: (err) => {
+        console.error('Error fetching categories', err);
+        this.toastService.showError('Error fetching categories');
+      }
     });
   }
 
   fetchModules() {
     this.moduleService.getAll().subscribe({
       next: (data) => this.modules = data,
-      error: (err) => console.error('Error fetching modules', err)
+      error: (err) => {
+        console.error('Error fetching modules', err);
+        this.toastService.showError('Error fetching modules');
+      }
     });
   }
 
@@ -144,6 +153,7 @@ export class ManagePuzzlesComponent implements OnInit {
   savePuzzle() {
     if (this.puzzleForm.invalid) {
       this.puzzleForm.markAllAsTouched();
+      this.toastService.showError('Please fill in all required fields correctly.');
       return;
     }
 
@@ -154,22 +164,24 @@ export class ManagePuzzlesComponent implements OnInit {
           if (index !== -1) {
             this.puzzles[index] = updatedPuzzle;
           }
+          this.toastService.showSuccess('Puzzle updated successfully!');
           this.closeCreateModal();
         },
         error: (err) => {
           console.error('Error updating puzzle', err);
-          alert('Failed to update puzzle.');
+          this.toastService.showError('Failed to update puzzle.');
         }
       });
     } else {
       this.puzzleService.create(this.puzzleForm.value).subscribe({
         next: (newPuzzle) => {
           this.puzzles.unshift(newPuzzle);
+          this.toastService.showSuccess('Puzzle created successfully!');
           this.closeCreateModal();
         },
         error: (err) => {
           console.error('Error creating puzzle', err);
-          alert('Failed to create puzzle. Please try again.');
+          this.toastService.showError('Failed to create puzzle. Please try again.');
         }
       });
     }
@@ -183,10 +195,11 @@ export class ManagePuzzlesComponent implements OnInit {
           if (this.selectedCategoryId !== null && this.filteredPuzzles.length === 0) {
             this.selectedCategoryId = null; // reset filter if empty
           }
+          this.toastService.showSuccess('Puzzle deleted successfully!');
         },
         error: (err) => {
           console.error('Error deleting puzzle', err);
-          alert('Failed to delete puzzle. Make sure it has no active attempts.');
+          this.toastService.showError('Failed to delete puzzle. Make sure it has no active attempts.');
         }
       });
     }
@@ -205,16 +218,18 @@ export class ManagePuzzlesComponent implements OnInit {
   createCategory() {
     if (this.categoryForm.invalid) {
       this.categoryForm.markAllAsTouched();
+      this.toastService.showError('Please enter a category name.');
       return;
     }
     this.categoryService.create(this.categoryForm.value).subscribe({
       next: (newCategory) => {
         this.categories.push(newCategory);
         this.categoryForm.reset();
+        this.toastService.showSuccess('Category created successfully!');
       },
       error: (err) => {
         console.error('Error creating category', err);
-        alert('Failed to create category.');
+        this.toastService.showError('Failed to create category.');
       }
     });
   }
@@ -227,10 +242,11 @@ export class ManagePuzzlesComponent implements OnInit {
           if (this.selectedCategoryId === id) {
             this.selectedCategoryId = null;
           }
+          this.toastService.showSuccess('Category deleted successfully!');
         },
         error: (err) => {
           console.error('Error deleting category', err);
-          alert('Failed to delete category due to relations.');
+          this.toastService.showError('Failed to delete category due to relations.');
         }
       });
     }

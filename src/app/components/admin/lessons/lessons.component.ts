@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LessonService } from '../../../core/services/lesson.service';
 import { ModuleService } from '../../../core/services/module.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Lesson } from '../../../core/models/lesson.model';
 import { Module } from '../../../core/models/module.model';
 
@@ -16,6 +17,7 @@ import { Module } from '../../../core/models/module.model';
 export class LessonsComponent implements OnInit {
   private lessonService = inject(LessonService);
   private moduleService = inject(ModuleService);
+  private toastService = inject(ToastService);
 
   lessons: Lesson[] = [];
   filteredLessons: Lesson[] = [];
@@ -36,7 +38,10 @@ export class LessonsComponent implements OnInit {
       next: (data) => {
         this.modules = data;
       },
-      error: (err) => console.error('Error fetching modules', err)
+      error: (err) => {
+        console.error('Error fetching modules', err);
+        this.toastService.showError('Failed to load modules.');
+      }
     });
   }
 
@@ -46,7 +51,10 @@ export class LessonsComponent implements OnInit {
         this.lessons = data;
         this.applyFilters();
       },
-      error: (err) => console.error('Error fetching lessons', err)
+      error: (err) => {
+        console.error('Error fetching lessons', err);
+        this.toastService.showError('Failed to load lessons.');
+      }
     });
   }
 
@@ -118,8 +126,14 @@ export class LessonsComponent implements OnInit {
   onDelete(id: number): void {
     if (confirm('Are you sure you want to delete this lesson?')) {
       this.lessonService.delete(id).subscribe({
-        next: () => this.loadLessons(),
-        error: (err) => console.error('Error deleting lesson', err)
+        next: () => {
+          this.loadLessons();
+          this.toastService.showSuccess('Lesson deleted successfully!');
+        },
+        error: (err) => {
+          console.error('Error deleting lesson', err);
+          this.toastService.showError('Failed to delete lesson.');
+        }
       });
     }
   }
@@ -158,7 +172,7 @@ export class LessonsComponent implements OnInit {
   saveLesson(): void {
     // Basic validation
     if (!this.currentLesson.title || !this.currentLesson.content || !this.currentLesson.moduleId) {
-      alert('Please fill in all required fields');
+      this.toastService.showError('Please fill in all required fields.');
       return;
     }
 
@@ -167,16 +181,24 @@ export class LessonsComponent implements OnInit {
         next: () => {
           this.loadLessons();
           this.closeModal();
+          this.toastService.showSuccess('Lesson updated successfully!');
         },
-        error: (err) => console.error('Error updating lesson', err)
+        error: (err) => {
+          console.error('Error updating lesson', err);
+          this.toastService.showError('Failed to update lesson.');
+        }
       });
     } else {
       this.lessonService.create(this.currentLesson).subscribe({
         next: () => {
           this.loadLessons();
           this.closeModal();
+          this.toastService.showSuccess('Lesson created successfully!');
         },
-        error: (err) => console.error('Error creating lesson', err)
+        error: (err) => {
+          console.error('Error creating lesson', err);
+          this.toastService.showError('Failed to create lesson.');
+        }
       });
     }
   }

@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModuleService } from '../../../core/services/module.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Module } from '../../../core/models/module.model';
 
 @Component({
@@ -13,6 +14,7 @@ import { Module } from '../../../core/models/module.model';
 })
 export class ModulesComponent implements OnInit {
     private moduleService = inject(ModuleService);
+    private toastService = inject(ToastService);
 
     modules: Module[] = [];
     filteredModules: Module[] = [];
@@ -28,7 +30,10 @@ export class ModulesComponent implements OnInit {
                 this.modules = data.sort((a, b) => a.orderIndex - b.orderIndex);
                 this.applyFilters();
             },
-            error: (err) => console.error('Error fetching modules', err)
+            error: (err) => {
+                console.error('Error fetching modules', err);
+                this.toastService.showError('Failed to load modules.');
+            }
         });
     }
 
@@ -52,8 +57,14 @@ export class ModulesComponent implements OnInit {
     onDelete(id: number): void {
         if (confirm('Are you sure you want to delete this module?')) {
             this.moduleService.delete(id).subscribe({
-                next: () => this.loadModules(),
-                error: (err) => console.error('Error deleting module', err)
+                next: () => {
+                    this.loadModules();
+                    this.toastService.showSuccess('Module deleted successfully!');
+                },
+                error: (err) => {
+                    console.error('Error deleting module', err);
+                    this.toastService.showError('Failed to delete module.');
+                }
             });
         }
     }
@@ -94,7 +105,7 @@ export class ModulesComponent implements OnInit {
 
     saveModule(): void {
         if (!this.currentModule.name || !this.currentModule.description) {
-            alert('Please fill in all required fields');
+            this.toastService.showError('Please fill in all required fields.');
             return;
         }
 
@@ -103,16 +114,24 @@ export class ModulesComponent implements OnInit {
                 next: () => {
                     this.loadModules();
                     this.closeModal();
+                    this.toastService.showSuccess('Module updated successfully!');
                 },
-                error: (err) => console.error('Error updating module', err)
+                error: (err) => {
+                    console.error('Error updating module', err);
+                    this.toastService.showError('Failed to update module.');
+                }
             });
         } else {
             this.moduleService.create(this.currentModule).subscribe({
                 next: () => {
                     this.loadModules();
                     this.closeModal();
+                    this.toastService.showSuccess('Module created successfully!');
                 },
-                error: (err) => console.error('Error creating module', err)
+                error: (err) => {
+                    console.error('Error creating module', err);
+                    this.toastService.showError('Failed to create module.');
+                }
             });
         }
     }
