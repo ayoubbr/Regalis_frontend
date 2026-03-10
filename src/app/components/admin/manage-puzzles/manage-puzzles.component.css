@@ -170,7 +170,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 80px 3fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: 80px 4fr 3fr  2fr;
     gap: 1rem;
     padding: 1rem 2rem;
     background-color: var(--slate-50);
@@ -229,7 +229,7 @@
 .table-row,
 .table-row.grid-4-cols {
     display: grid;
-    grid-template-columns: 80px 3fr 2fr 3fr;
+    grid-template-columns: 80px 4fr 3fr  2fr;
     gap: 1rem;
     padding: 1.5rem 2rem;
     align-items: center;
@@ -360,6 +360,66 @@
 
 .action-btn:hover {
     color: var(--primary);
+    background-color: var(--slate-200);
+}
+
+.action-btn.delete-btn {
+    color: #ef4444;
+}
+
+.action-btn.delete-btn:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+/* Category Modal List */
+.list-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+}
+
+.add-inline-form .inline-flex {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: var(--slate-50);
+    border: 2px solid var(--slate-200);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    color: var(--slate-700);
+}
+
+.btn-icon.delete {
+    background: none;
+    border: none;
+    color: var(--slate-400);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-icon.delete:hover {
+    color: #ef4444;
+    background-color: #fef2f2;
 }
 
 .pagination {
@@ -652,6 +712,24 @@
 
 .dark .btn-close:hover {
     background-color: var(--slate-800);
+}
+
+.dark .action-btn:hover {
+    background-color: var(--slate-700);
+}
+
+.dark .action-btn.delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.dark .list-item {
+    background-color: var(--slate-800);
+    border-color: var(--slate-700);
+    color: var(--slate-300);
+}
+
+.dark .btn-icon.delete:hover {
+    background-color: rgba(239, 68, 68, 0.1);
 }
 
 .dark .page-btn.disabled {
