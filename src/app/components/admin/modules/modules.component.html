@@ -1,0 +1,94 @@
+<div class="page-header">
+    <div class="header-text">
+        <h1 class="page-title">Content Management</h1>
+        <p class="page-subtitle">Create engaging chess modules for your students</p>
+    </div>
+    <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
+        <span class="material-symbols-outlined">add_circle</span>
+        Add New Module
+    </button>
+</div>
+
+<!-- Filters and Search -->
+<div class="card filter-card">
+    <div class="search-box">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input type="text" class="search-input" placeholder="Search modules by name or description..."
+            [(ngModel)]="searchQuery" (input)="onSearch()">
+    </div>
+</div>
+
+<!-- Modules List -->
+<div class="modules-grid">
+    <div *ngFor="let module of filteredModules" class="card module-card">
+        <div class="module-header">
+            <div class="module-icon-container">
+                <span class="material-symbols-outlined module-icon">{{ getModuleIcon(module) }}</span>
+            </div>
+            <div class="module-badges">
+                <span class="badge badge-primary">Order: {{ module.orderIndex }}</span>
+            </div>
+        </div>
+
+        <div class="module-body">
+            <h3 class="module-title">{{ module.name }}</h3>
+            <p class="module-description">{{ module.description }}</p>
+        </div>
+
+        <div class="module-actions">
+            <button class="chunky-button chunky-button-secondary" (click)="onEdit(module)">
+                <span class="material-symbols-outlined">edit</span>
+                Edit
+            </button>
+            <button class="chunky-button chunky-button-danger" (click)="onDelete(module.id)">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="filteredModules.length === 0" class="empty-state">
+        <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
+        <p>No modules found matching your criteria.</p>
+    </div>
+</div>
+
+<!-- Module Modal -->
+<div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="card modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">{{ isEditing ? 'Edit Module' : 'Create New Module' }}</h2>
+            <button class="close-button" (click)="closeModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form (ngSubmit)="saveModule()" #moduleForm="ngForm" class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Module Name</label>
+                <input type="text" name="name" class="form-input" placeholder="e.g. Openings Masterclass"
+                    [(ngModel)]="currentModule.name" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Order Index</label>
+                <input type="number" name="orderIndex" class="form-input" [(ngModel)]="currentModule.orderIndex"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-textarea" rows="4" placeholder="Enter module description..."
+                    [(ngModel)]="currentModule.description" required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="chunky-button chunky-button-secondary"
+                    (click)="closeModal()">Cancel</button>
+                <button type="submit" class="chunky-button chunky-button-primary" [disabled]="!moduleForm.valid">
+                    {{ isEditing ? 'Save Changes' : 'Create Module' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

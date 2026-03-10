@@ -1,0 +1,146 @@
+<div class="page-header">
+    <div class="header-text">
+        <h1 class="page-title">Lesson Management</h1>
+        <p class="page-subtitle">Create and organize your masterclass curriculum</p>
+    </div>
+    <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
+        <span class="material-symbols-outlined">add_circle</span>
+        Add New Lesson
+    </button>
+</div>
+
+<!-- Filters and Search -->
+<div class="card filter-card">
+    <div class="search-box">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input type="text" class="search-input" placeholder="Search lessons by title, module, or tags..."
+            [(ngModel)]="searchQuery" (input)="onSearch()">
+    </div>
+    <div class="filter-group">
+        <select class="filter-select" [(ngModel)]="selectedModule" (change)="onFilterChange()">
+            <option value="">All Modules</option>
+            <option *ngFor="let mod of modules" [value]="mod.id">{{ mod.name }}</option>
+        </select>
+        <select class="filter-select" [(ngModel)]="selectedDifficulty" (change)="onFilterChange()">
+            <option value="">All Difficulties</option>
+            <option value="1">Beginner</option>
+            <option value="2">Intermediate</option>
+            <option value="3">Advanced</option>
+        </select>
+    </div>
+</div>
+
+<!-- Lessons List -->
+<div class="lessons-list">
+    <div *ngFor="let lesson of filteredLessons" class="card lesson-card">
+        <div class="lesson-icon-container">
+            <span class="material-symbols-outlined lesson-icon">{{ getLessonIcon(lesson) }}</span>
+        </div>
+
+        <div class="lesson-info">
+            <div class="lesson-badges">
+                <span class="badge" [ngClass]="getModuleBadgeClass(lesson)">{{ getModuleName(lesson) }}</span>
+                <span class="badge" [ngClass]="getDifficultyBadgeClass(lesson)">{{ getDifficultyLabel(lesson) }}</span>
+            </div>
+            <h3 class="lesson-title">{{ lesson.title }}</h3>
+            <p class="lesson-description">{{ lesson.content | slice:0:80 }}{{ lesson.content.length > 80 ? '...' : '' }}
+            </p>
+        </div>
+
+        <div class="lesson-stats">
+            <div class="stat-item">
+                <p class="stat-label">Status</p>
+                <div class="status-indicator">
+                    <span class="status-dot published"></span>
+                    <span class="status-text">Published</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <p class="stat-label">Reward</p>
+                <p class="stat-value reward">{{ lesson.xpReward }} XP</p>
+            </div>
+        </div>
+
+        <div class="lesson-actions">
+            <button class="chunky-button chunky-button-secondary" (click)="onEdit(lesson)">
+                <span class="material-symbols-outlined">edit</span>
+                Edit
+            </button>
+            <button class="chunky-button chunky-button-danger" (click)="onDelete(lesson.id)">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="filteredLessons.length === 0" class="empty-state">
+        <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
+        <p>No lessons found matching your criteria.</p>
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    <p class="pagination-info">Showing {{ filteredLessons.length }} lessons</p>
+    <div class="pagination-controls">
+        <button class="chunky-button chunky-button-secondary">Previous</button>
+        <button class="chunky-button chunky-button-primary">Next</button>
+    </div>
+</div>
+
+<!-- Registration Modal -->
+<div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="card modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">{{ isEditing ? 'Edit Lesson' : 'Create New Lesson' }}</h2>
+            <button class="close-button" (click)="closeModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form (ngSubmit)="saveLesson()" #lessonForm="ngForm" class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Lesson Title</label>
+                <input type="text" name="title" class="form-input" placeholder="e.g. Mastering the Sicilian Defense"
+                    [(ngModel)]="currentLesson.title" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Module</label>
+                    <select name="moduleId" class="form-select" [(ngModel)]="currentLesson.moduleId" required>
+                        <option *ngFor="let mod of modules" [value]="mod.id">{{ mod.name }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Difficulty</label>
+                    <select name="difficulty" class="form-select" [(ngModel)]="currentLesson.difficulty" required>
+                        <option [value]="1">Beginner</option>
+                        <option [value]="2">Intermediate</option>
+                        <option [value]="3">Advanced</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">XP Reward</label>
+                <input type="number" name="xpReward" class="form-input" [(ngModel)]="currentLesson.xpReward" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Content</label>
+                <textarea name="content" class="form-textarea" rows="5"
+                    placeholder="Enter lesson content, markdown supported..." [(ngModel)]="currentLesson.content"
+                    required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="chunky-button chunky-button-secondary"
+                    (click)="closeModal()">Cancel</button>
+                <button type="submit" class="chunky-button chunky-button-primary" [disabled]="!lessonForm.valid">
+                    {{ isEditing ? 'Save Changes' : 'Create Lesson' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

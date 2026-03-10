@@ -1,0 +1,72 @@
+<div class="page-header">
+    <div class="header-text">
+        <h1 class="page-title">User Management</h1>
+        <p class="page-subtitle">Manage your kingdom's students and administrators</p>
+    </div>
+    <button class="chunky-button chunky-button-primary">
+        <span class="material-symbols-outlined">person_add</span>
+        Add New User
+    </button>
+</div>
+
+<!-- Filters and Search -->
+<div class="card filter-card">
+    <div class="search-box">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input type="text" class="search-input" placeholder="Search by username, email, or name..."
+            [(ngModel)]="searchQuery" (input)="onSearch()">
+    </div>
+</div>
+
+<!-- Users Directory -->
+<div class="users-grid">
+    <div *ngFor="let user of filteredUsers" class="card user-card">
+        <div class="user-header">
+            <div class="user-avatar-container">
+                <div class="user-avatar">{{ getUserInitials(user) }}</div>
+                <div class="status-dot online"></div>
+            </div>
+            <div class="user-actions-menu">
+                <button class="icon-button">
+                    <span class="material-symbols-outlined">more_vert</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="user-body">
+            <h3 class="user-name">{{ user.firstName }} {{ user.lastName }}</h3>
+            <!-- <p class="user-handle">@{{ user.username }}</p> -->
+            <div class="user-badges">
+                <span class="badge" [ngClass]="getRoleBadgeClass('Student')">Student</span>
+                <span class="badge badge-green" *ngIf="user.totalXp > 1000">Master</span>
+            </div>
+        </div>
+
+        <div class="user-stats">
+            <div class="stat-mini">
+                <span class="stat-mini-label">Total XP</span>
+                <span class="stat-mini-value">{{ user.totalXp | number }}</span>
+            </div>
+            <div class="stat-mini">
+                <span class="stat-mini-label">Level</span>
+                <span class="stat-mini-value">{{ (user.totalXp / 1000) + 1 | number:'1.0-0' }}</span>
+            </div>
+        </div>
+
+        <div class="user-actions">
+            <button class="chunky-button chunky-button-secondary" (click)="onEdit(user)">
+                <span class="material-symbols-outlined">edit</span>
+                Edit
+            </button>
+            <button class="chunky-button chunky-button-danger-outline" (click)="onDelete(user.id)">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="filteredUsers.length === 0" class="empty-state">
+        <span class="material-symbols-outlined empty-icon">group_off</span>
+        <p>No users found matching your search.</p>
+    </div>
+</div>

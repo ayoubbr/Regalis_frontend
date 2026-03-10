@@ -7,6 +7,8 @@ export interface User {
     id: number;
     username: string;
     email: string;
+    firstName?: string;
+    lastName?: string;
     role: Role;
     totalXp: number;
     level: number;
@@ -19,11 +21,15 @@ export interface UserCreateDTO {
     username: string;
     email: string;
     password?: string;
+    firstName?: string;
+    lastName?: string;
     role: Role;
 }
 
 export interface UserUpdateDTO {
     email: string;
     password?: string;
+    firstName?: string;
+    lastName?: string;
     role: Role;
 }

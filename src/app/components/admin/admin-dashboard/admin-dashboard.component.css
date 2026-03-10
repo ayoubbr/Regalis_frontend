@@ -1,0 +1,245 @@
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+}
+
+.welcome-text .page-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: var(--slate-900);
+}
+
+.welcome-text .page-subtitle {
+    font-size: 1.125rem;
+    color: var(--slate-500);
+    font-weight: 500;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.stat-icon-container {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon-container.users {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.stat-icon-container.active {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.stat-icon-container.xp {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.stat-icon-container.modules {
+    background-color: rgba(133, 94, 247, 0.1);
+    color: var(--primary);
+}
+
+.stat-icon-container .material-symbols-outlined {
+    font-size: 1.75rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--slate-500);
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--slate-900);
+    margin-bottom: 0.25rem;
+}
+
+.stat-trend {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--slate-400);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.trend-up {
+    color: #10b981;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+}
+
+.chart-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    margin-bottom: 0.25rem;
+}
+
+.card-subtitle {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    font-weight: 500;
+}
+
+.filter-select-mini {
+    padding: 0.5rem 0.75rem;
+    background-color: var(--slate-50);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--slate-600);
+    cursor: pointer;
+}
+
+.chart-placeholder {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding: 2rem 1rem 1rem;
+    height: 300px;
+    border-bottom: 2px solid var(--slate-100);
+}
+
+.chart-bar {
+    flex: 1;
+    background-color: var(--primary);
+    opacity: 0.2;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.chart-bar:hover {
+    opacity: 1;
+    transform: scaleX(1.1);
+}
+
+.activity-card {
+    padding: 1.5rem;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+}
+
+.activity-icon-container {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--slate-50);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--slate-500);
+}
+
+.activity-icon-container.critical {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.activity-user {
+    font-weight: 800;
+    color: var(--slate-900);
+}
+
+.activity-text {
+    font-size: 0.875rem;
+    color: var(--slate-600);
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--slate-400);
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* Dark mode */
+.dark .page-title,
+.dark .stat-value,
+.dark .card-title,
+.dark .activity-user {
+    color: white;
+}
+
+.dark .chart-placeholder {
+    border-color: var(--slate-800);
+}
+
+.dark .filter-select-mini {
+    background-color: var(--slate-800);
+    color: var(--slate-400);
+}
+
+.dark .activity-icon-container {
+    background-color: var(--slate-800);
+}
