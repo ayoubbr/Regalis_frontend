@@ -53,6 +53,10 @@
         </div>
 
         <div class="user-actions">
+            <button class="chunky-button chunky-button-secondary" [routerLink]="['/admin/users/details', user.id]">
+                <span class="material-symbols-outlined">visibility</span>
+                Details
+            </button>
             <button class="chunky-button chunky-button-secondary" (click)="onEdit(user)">
                 <span class="material-symbols-outlined">edit</span>
                 Edit

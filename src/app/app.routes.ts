@@ -4,6 +4,7 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard/admi
 import { LessonsComponent } from './components/admin/lessons/lessons.component';
 import { ModulesComponent } from './components/admin/modules/modules.component';
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
+import { UserDetailsComponent } from './components/admin/user-details/user-details.component';
 import { ManagePuzzlesComponent } from './components/admin/manage-puzzles/manage-puzzles.component';
 import { ManageChallengesComponent } from './components/admin/manage-challenges/manage-challenges.component';
 
@@ -27,6 +28,10 @@ export const routes: Routes = [
             {
                 path: 'users',
                 component: UserManagementComponent
+            },
+            {
+                path: 'users/details/:id',
+                component: UserDetailsComponent
             },
             {
                 path: 'puzzles',

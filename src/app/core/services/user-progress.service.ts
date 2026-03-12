@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class UserProgressService {
     private http = inject(HttpClient);
-    private apiUrl = `${environment.apiUrl}/user-progress`;
+    private apiUrl = `${environment.apiUrl}/progress`;
 
     startLesson(dto: UserProgressCreateDTO): Observable<UserProgress> {
         return this.http.post<UserProgress>(this.apiUrl, dto);

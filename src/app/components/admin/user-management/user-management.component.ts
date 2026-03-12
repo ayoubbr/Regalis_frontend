@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { User, Role } from '../../../core/models/user.model';
@@ -8,7 +9,7 @@ import { User, Role } from '../../../core/models/user.model';
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.css'
 })

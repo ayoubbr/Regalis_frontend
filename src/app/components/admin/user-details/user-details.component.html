@@ -1,0 +1,131 @@
+<div class="page-header">
+    <div class="header-left">
+        <button class="back-button" routerLink="/admin/users">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <div class="header-text">
+            <h1 class="page-title">User Details</h1>
+            <p class="page-subtitle">Viewing profile and statistics for {{ user?.firstName }} {{ user?.lastName }}</p>
+        </div>
+    </div>
+    <div class="header-actions">
+        <!-- We could add buttons like 'Ban User' or 'Reset Password' here later -->
+        <span class="badge" [class.badge-primary]="user?.role === 'ADMIN'" [class.badge-slate]="user?.role === 'USER'">
+            {{ user?.role }}
+        </span>
+    </div>
+</div>
+
+<div class="details-container" *ngIf="!isLoading && user">
+    <!-- User Profile Hero -->
+    <div class="card profile-hero">
+        <div class="profile-info">
+            <div class="user-avatar-large">
+                {{ user.username[0].toUpperCase() }}
+            </div>
+            <div class="user-main-details">
+                <h2 class="user-full-name">{{ user.firstName }} {{ user.lastName }}</h2>
+                <p class="user-handle">&#64;{{ user.username }}</p>
+                <div class="user-meta">
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined">mail</span>
+                        {{ user.email }}
+                    </span>
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        Joined {{ user.createdAt | date:'longDate' }}
+                    </span>
+                    <span class="meta-item">
+                        <span class="material-symbols-outlined">history</span>
+                        Last active {{ user.lastActiveDate | date:'mediumDate' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-stats">
+            <div class="stat-card xp">
+                <div class="stat-icon"><span class="material-symbols-outlined">trending_up</span></div>
+                <div class="stat-value">{{ user.totalXp | number }}</div>
+                <div class="stat-label">Total XP</div>
+            </div>
+            <div class="stat-card level">
+                <div class="stat-icon"><span class="material-symbols-outlined">military_tech</span></div>
+                <div class="stat-value">{{ user.level }}</div>
+                <div class="stat-label">Current Level</div>
+            </div>
+            <div class="stat-card streak">
+                <div class="stat-icon"><span class="material-symbols-outlined">bolt</span></div>
+                <div class="stat-value">{{ user.currentStreak }}</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-grid">
+        <!-- Achievements Section -->
+        <div class="card grid-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    Achievements ({{ unlockedAchievements.length }})
+                </h3>
+            </div>
+            <div class="achievements-list">
+                <div class="achievement-item" *ngFor="let ua of unlockedAchievements">
+                    <div class="achievement-icon">
+                        <span class="material-symbols-outlined">{{ getAchievementStatus(ua.details?.conditionType || '') }}</span>
+                    </div>
+                    <div class="achievement-info">
+                        <h4 class="achievement-name">{{ ua.details?.name }}</h4>
+                        <p class="achievement-desc">{{ ua.details?.description }}</p>
+                        <span class="unlock-date">Unlocked {{ ua.unlockedDate | date:'mediumDate' }}</span>
+                    </div>
+                </div>
+                <div class="empty-section" *ngIf="unlockedAchievements.length === 0">
+                    <p>No achievements unlocked yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson Progress Section -->
+        <div class="card grid-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    Lesson Progress
+                </h3>
+            </div>
+            <div class="progress-list">
+                <div class="progress-item" *ngFor="let p of progress">
+                    <div class="progress-info">
+                        <h4 class="lesson-name">{{ p.lessonName || 'Unknown Lesson' }}</h4>
+                        <span class="progress-status" [class.completed]="p.completed">
+                            {{ p.completed ? 'Completed' : 'Started' }}
+                        </span>
+                    </div>
+                    <div class="progress-date" *ngIf="p.completionDate">
+                        {{ p.completionDate | date:'mediumDate' }}
+                    </div>
+                </div>
+                <div class="empty-section" *ngIf="progress.length === 0">
+                    <p>No lesson progress data available.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading">
+    <div class="loader"></div>
+    <p>Summoning user records...</p>
+</div>
+
+<!-- Error/Not Found -->
+<div class="card empty-state" *ngIf="!isLoading && !user">
+    <span class="material-symbols-outlined empty-icon">person_off</span>
+    <h2 class="empty-title">User Not Found</h2>
+    <p class="empty-message">The traveler you seek has vanished from our records.</p>
+    <button class="chunky-button chunky-button-primary" routerLink="/admin/users">Return to Directory</button>
+</div>
