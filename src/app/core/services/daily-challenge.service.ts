@@ -23,11 +23,19 @@ export class DailyChallengeService {
         return this.http.get<DailyChallenge[]>(`${this.apiUrl}/user/${userId}/history`);
     }
 
+    getAll(): Observable<DailyChallenge[]> {
+        return this.http.get<DailyChallenge[]>(this.apiUrl);
+    }
+
     create(dto: DailyChallengeCreateDTO): Observable<DailyChallenge> {
         return this.http.post<DailyChallenge>(this.apiUrl, dto);
     }
 
     complete(id: number, dto: DailyChallengeUpdateDTO): Observable<DailyChallenge> {
         return this.http.put<DailyChallenge>(`${this.apiUrl}/${id}/complete`, dto);
+    }
+
+    delete(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 }
