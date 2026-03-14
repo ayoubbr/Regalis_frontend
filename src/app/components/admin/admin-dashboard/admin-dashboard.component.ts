@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../core/services/user.service';
-import { ModuleService } from '../../../core/services/module.service';
-import { forkJoin } from 'rxjs';
+import { AdminService } from '../../../core/services/admin.service';
+import { DashboardActivity } from '../../../core/models/dashboard-stats.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -12,38 +11,41 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
-  private userService = inject(UserService);
-  private moduleService = inject(ModuleService);
+  private adminService = inject(AdminService);
 
   stats = {
     totalUsers: 0,
-    activeNow: 85, // Mocked for now
+    activeNow: 0,
     totalModules: 0,
-    totalXP: '2.4M', // Mocked for now
-    popularModule: 'Opening Masterclass'
+    totalXP: '0',
+    popularModule: 'Opening Masterclass' // Still mocked for now as it needs more complex logic
   };
 
-  recentActivity = [
-    { type: 'achievement', user: 'jessica88', message: 'reached 100 day streak!', time: '2 MINS AGO', icon: 'auto_awesome' },
-    { type: 'registration', user: 'Marco Rossi', message: 'just joined from Italy 🇮🇹', time: '15 MINS AGO', icon: 'person_add' },
-    { type: 'update', user: 'Spanish 101', message: 'Lesson 4 content modified.', time: '1 HOUR AGO', icon: 'edit_note' },
-    { type: 'alert', user: 'System', message: 'Server load increased to 85%.', time: '3 HOURS AGO', icon: 'warning', critical: true }
-  ];
+  recentActivity: DashboardActivity[] = [];
 
   ngOnInit(): void {
     this.loadDashboardData();
   }
 
   loadDashboardData(): void {
-    forkJoin({
-      users: this.userService.getAll(),
-      modules: this.moduleService.getAll()
-    }).subscribe({
+    this.adminService.getDashboardStats().subscribe({
       next: (data) => {
-        this.stats.totalUsers = data.users.length;
-        this.stats.totalModules = data.modules.length;
+        this.stats.totalUsers = data.totalUsers;
+        this.stats.activeNow = data.activeUsers;
+        this.stats.totalModules = data.totalModules;
+        this.stats.totalXP = this.formatXP(data.totalXp);
+        this.recentActivity = data.recentActivities;
       },
       error: (err) => console.error('Error loading dashboard data', err)
     });
+  }
+
+  private formatXP(xp: number): string {
+    if (xp >= 1000000) {
+      return (xp / 1000000).toFixed(1) + 'M';
+    } else if (xp >= 1000) {
+      return (xp / 1000).toFixed(1) + 'K';
+    }
+    return xp.toString();
   }
 }
