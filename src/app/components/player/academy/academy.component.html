@@ -1,0 +1,68 @@
+<div class="academy-container" *ngIf="!loading">
+    <!-- Top Stats Row -->
+    <div class="stats-row">
+        <div class="stat-bubble card">
+            <div class="stat-icon-container xp-icon">
+                <span class="material-symbols-outlined">bolt</span>
+            </div>
+            <div class="stat-details">
+                <p class="stat-label">TOTAL XP</p>
+                <h3 class="stat-value">{{user?.totalXp || 1250 | number}}</h3>
+            </div>
+        </div>
+        <div class="stat-bubble card">
+            <div class="stat-icon-container streak-icon">
+                <span class="material-symbols-outlined">local_fire_department</span>
+            </div>
+            <div class="stat-details">
+                <p class="stat-label">STREAK</p>
+                <h3 class="stat-value">{{user?.currentStreak || 12}} Days</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Heading -->
+    <div class="academy-header">
+        <h1>Chess Quizzes</h1>
+        <p>Master the board one challenge at a time.</p>
+    </div>
+
+    <!-- Modules Grid -->
+    <div class="modules-grid">
+        <div class="module-card card" *ngFor="let module of modules">
+            <div class="card-image-wrapper">
+                <img [src]="module.image" [alt]="module.name" class="module-image">
+                <div class="module-badge" [ngClass]="module.level.toLowerCase()">
+                    {{module.level}}
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <h3 class="module-name">{{module.name}}</h3>
+                <div class="module-meta">
+                    <div class="meta-item">
+                        <span class="material-symbols-outlined">quiz</span>
+                        <span>{{module.questionsCount || (module.level === 'TIMED' ? 'Unlimited' : 10)}} Questions</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <span>{{module.duration}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Action -->
+    <div class="bottom-action">
+        <button class="chunky-button chunky-button-player continue-btn">
+            CONTINUE LEARNING
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+    </div>
+</div>
+
+<div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading Academy...</p>
+</div>

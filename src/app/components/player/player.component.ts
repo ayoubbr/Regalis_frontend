@@ -9,4 +9,10 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './player.component.html',
   styleUrl: './player.component.css'
 })
-export class PlayerComponent {}
+export class PlayerComponent {
+  isSidebarVisible = true;
+
+  toggleSidebar() {
+    this.isSidebarVisible = !this.isSidebarVisible;
+  }
+}

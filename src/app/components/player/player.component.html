@@ -1,41 +1,41 @@
 <div class="player-layout">
     <!-- Sidebar Navigation -->
-    <aside class="sidebar">
+    <aside class="sidebar" [class.collapsed]="!isSidebarVisible">
         <div class="brand">
             <div class="brand-icon">
                 <span class="material-symbols-outlined">castle</span>
             </div>
-            <h2 class="brand-name">Regalis</h2>
+            <h2 class="brand-name" *ngIf="isSidebarVisible">Regalis</h2>
         </div>
 
         <nav class="nav-menu">
-            <a routerLink="/player/adventure" routerLinkActive="active" class="nav-item">
+            <a routerLink="/player/adventure" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Adventure'">
                 <span class="material-symbols-outlined">map</span>
-                <span>Adventure</span>
+                <span *ngIf="isSidebarVisible">Adventure</span>
             </a>
-            <a routerLink="/player/profile" routerLinkActive="active" class="nav-item">
+            <a routerLink="/player/profile" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Profile'">
                 <span class="material-symbols-outlined">person</span>
-                <span>Profile</span>
+                <span *ngIf="isSidebarVisible">Profile</span>
             </a>
-            <a routerLink="/player/academy" routerLinkActive="active" class="nav-item">
+            <a routerLink="/player/academy" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Academy'">
                 <span class="material-symbols-outlined">school</span>
-                <span>Academy</span>
+                <span *ngIf="isSidebarVisible">Academy</span>
             </a>
-            <a routerLink="/player/arena" routerLinkActive="active" class="nav-item">
+            <a routerLink="/player/arena" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Arena'">
                 <span class="material-symbols-outlined">swords</span>
-                <span>Arena</span>
+                <span *ngIf="isSidebarVisible">Arena</span>
             </a>
-            <a routerLink="/player/market" routerLinkActive="active" class="nav-item">
+            <a routerLink="/player/market" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Market'">
                 <span class="material-symbols-outlined">shopping_cart</span>
-                <span>Market</span>
+                <span *ngIf="isSidebarVisible">Market</span>
             </a>
-            <a routerLink="/player/settings" routerLinkActive="active" class="nav-item">
+            <a routerLink="/player/settings" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Settings'">
                 <span class="material-symbols-outlined">settings</span>
-                <span>Settings</span>
+                <span *ngIf="isSidebarVisible">Settings</span>
             </a>
         </nav>
 
-        <div class="sidebar-footer">
+        <div class="sidebar-footer" *ngIf="isSidebarVisible">
             <div class="xp-card">
                 <div class="flex-between">
                     <p class="xp-label">XP PROGRESS</p>
@@ -59,6 +59,16 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
-        <router-outlet></router-outlet>
+        <header class="top-nav-bar">
+            <button class="toggle-sidebar-btn" (click)="toggleSidebar()" [attr.title]="isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'">
+                <span class="material-symbols-outlined">
+                    {{ isSidebarVisible ? 'menu_open' : 'menu' }}
+                </span>
+            </button>
+        </header>
+
+        <div class="content-viewport">
+            <router-outlet></router-outlet>
+        </div>
     </main>
 </div>

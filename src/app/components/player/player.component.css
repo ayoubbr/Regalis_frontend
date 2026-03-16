@@ -14,6 +14,14 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+    padding: 2rem 0.75rem;
 }
 
 .brand {
@@ -150,8 +158,43 @@
 .main-content {
     flex-grow: 1;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    overflow: hidden;
+}
+
+.top-nav-bar {
+    height: 60px;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--slate-100);
+    background: white;
+}
+
+.toggle-sidebar-btn {
+    background: none;
+    border: none;
+    color: var(--slate-600);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.toggle-sidebar-btn:hover {
+    background: var(--slate-50);
+    color: var(--player-primary-active);
+}
+
+.content-viewport {
+    flex-grow: 1;
     overflow-y: auto;
-    background: white; /* As seen in design background is very light or white */
+    background-color: #f0f2f5;
 }
 
 @media (max-width: 1024px) {
