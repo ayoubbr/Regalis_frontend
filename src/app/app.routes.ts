@@ -9,6 +9,7 @@ import { ManagePuzzlesComponent } from './components/admin/manage-puzzles/manage
 import { ManageChallengesComponent } from './components/admin/manage-challenges/manage-challenges.component';
 import { PlayerComponent } from './components/player/player.component';
 import { AdventureComponent } from './components/player/adventure/adventure.component';
+import { ProfileComponent } from './components/player/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -54,6 +55,10 @@ export const routes: Routes = [
         path: 'player',
         component: PlayerComponent,
         children: [
+            {
+                path: 'profile',
+                component: ProfileComponent
+            },
             {
                 path: 'adventure',
                 component: AdventureComponent

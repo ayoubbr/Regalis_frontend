@@ -1,0 +1,136 @@
+<div class="profile-container" *ngIf="!loading">
+    <div class="profile-header card">
+        <div class="header-main">
+            <div class="avatar-container">
+                <div class="avatar-ring">
+                    <img src="https://i.pravatar.cc/150?u=KingRegalis" alt="User Avatar" class="user-avatar">
+                </div>
+                <div class="verify-badge">
+                    <span class="material-symbols-outlined">verified</span>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <div class="username-row">
+                    <h1 class="username">King Regalis</h1>
+                    <span class="random-text">(Grandmaster Level)</span>
+                </div>
+                <p class="user-meta">Level {{user?.level || 42}} Chess Master • Joined Oct 2023</p>
+                
+                <div class="badges-row">
+                    <div class="mini-badge elo-badge">
+                        <span class="material-symbols-outlined star-icon icon-colored">star</span>
+                        <span class="badge-text">2,450 ELO</span>
+                    </div>
+                    <div class="mini-badge rank-badge">
+                        <span class="material-symbols-outlined military-icon icon-colored">military_tech</span>
+                        <span class="badge-text">Grandmaster</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="chunky-button chunky-button-player edit-btn">
+            Edit Profile
+        </button>
+    </div>
+
+    <div class="profile-grid">
+        <!-- Left Column: Statistics -->
+        <div class="stats-column">
+            <div class="section-title">
+                <span class="material-symbols-outlined title-icon">analytics</span>
+                <h2>Statistics</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card card">
+                    <p class="stat-label">TOTAL EXPERIENCE</p>
+                    <div class="stat-value-container">
+                        <h3 class="stat-value">{{user?.totalXp | number}}</h3>
+                        <span class="stat-change">+1,200 XP today</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill" [style.width.%]="getXpProgress()"></div>
+                    </div>
+                    <p class="stat-footer">{{1000 - (user?.totalXp || 0) % 1000}} XP until Level {{ (user?.level || 0) + 1 }}</p>
+                </div>
+
+                <div class="stat-card card">
+                    <p class="stat-label">DAILY STREAK</p>
+                    <div class="stat-value-container">
+                        <span class="material-symbols-outlined streak-icon">local_fire_department</span>
+                        <h3 class="stat-value">{{user?.currentStreak}} Days</h3>
+                    </div>
+                    <p class="stat-footer">Personal Best: 24 Days</p>
+                </div>
+
+                <div class="stat-card card">
+                    <p class="stat-label">GAMES PLAYED</p>
+                    <div class="stat-value-container">
+                        <h3 class="stat-value">1,248</h3>
+                        <div class="win-rate-indicator">
+                            <span class="dot win">W</span>
+                            <span class="dot win">W</span>
+                            <span class="dot loss">L</span>
+                        </div>
+                    </div>
+                    <p class="stat-footer">78% Win Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Achievements & Activity -->
+        <div class="achievements-column">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="material-symbols-outlined title-icon">emoji_events</span>
+                    <h2>Achievements</h2>
+                </div>
+                <button class="view-all-link">View All</button>
+            </div>
+
+            <div class="achievements-grid">
+                <div class="achievement-card card" *ngFor="let ach of achievements.slice(0, 4)" [ngClass]="{'locked': !ach.unlocked}">
+                    <div class="achievement-icon" [style.background]="ach.unlocked ? '#fff8e1' : '#f1f5f9'">
+                        <span class="material-symbols-outlined" [style.color]="ach.unlocked ? '#ffc107' : '#94a3b8'">
+                            {{ ach.unlocked ? 'rewarded_ads' : 'lock' }}
+                        </span>
+                    </div>
+                    <div class="achievement-info">
+                        <h4 class="achievement-name">{{ach.name}}</h4>
+                        <p class="achievement-desc">{{ach.description}}</p>
+                        <div class="achievement-tag" *ngIf="ach.unlocked">
+                            <span class="tag-status">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title recent-activity-title">
+                <span class="material-symbols-outlined title-icon">history</span>
+                <h2>Recent Activity</h2>
+            </div>
+
+            <div class="activity-list card">
+                <div class="activity-item" *ngFor="let activity of recentActivity; let last = last">
+                    <div class="activity-icon-container" [style.background]="activity.iconColor + '20'">
+                        <span class="material-symbols-outlined" [style.color]="activity.iconColor">{{activity.icon}}</span>
+                    </div>
+                    <div class="activity-details">
+                        <h4 class="activity-title">{{activity.title}}</h4>
+                        <p class="activity-meta">{{activity.time}} • {{activity.meta}}</p>
+                    </div>
+                    <div class="activity-xp">
+                        {{activity.xp}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading Profile...</p>
+</div>
