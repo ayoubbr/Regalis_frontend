@@ -1,0 +1,357 @@
+.adventure-page {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3rem;
+    padding: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.adventure-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.adventure-header {
+    margin-bottom: 2rem;
+}
+
+.adventure-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--slate-900);
+}
+
+.adventure-subtitle {
+    font-size: 1.1rem;
+    color: var(--slate-500);
+    margin-top: 0.25rem;
+}
+
+.roadmap-viewport {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 3rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.path-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+}
+
+.node-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+/* 3D Chunky Node Base */
+.chunky-node {
+    width: 90px;
+    height: 90px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.node-inner {
+    width: 100%;
+    height: 80px;
+    background: #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    transition: background 0.2s ease;
+}
+
+.node-shadow {
+    width: 100%;
+    height: 80px;
+    background: #cbd5e1;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    z-index: 1;
+}
+
+.chunky-node span {
+    font-size: 40px;
+    color: white;
+}
+
+/* Node Variants */
+.chunky-node.completed .node-inner {
+    background: var(--player-primary);
+}
+
+.chunky-node.completed .node-shadow {
+    background: var(--player-primary-active);
+}
+
+.chunky-node.active .node-inner {
+    background: var(--player-primary);
+}
+
+.chunky-node.active .node-shadow {
+    background: var(--player-primary-active);
+}
+
+.chunky-node.active .node-inner::after {
+    /* content: ''; */
+    position: absolute;
+    top: -10px;
+    left: -12px;
+    right: -12px;
+    bottom: -30px;
+    border: 3px solid var(--player-primary);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.chunky-node.locked .node-inner {
+    background: #e5e7eb;
+}
+
+.chunky-node.locked .node-shadow {
+    background: #d1d5db;
+}
+
+.chunky-node.locked span {
+    color: #9ca3af;
+}
+
+.chunky-node.special .node-inner {
+    background: #ffc107;
+}
+
+.chunky-node.special .node-shadow {
+    background: #e6a700;
+}
+
+/* Hover & Active Effects */
+.chunky-node:hover:not(.locked) {
+    transform: translateY(-2px);
+}
+
+.chunky-node:active:not(.locked) {
+    transform: translateY(6px);
+}
+
+.chunky-node:active:not(.locked) .node-shadow {
+    bottom: -4px;
+}
+
+/* Start Popout */
+.node-popout {
+    position: absolute;
+    top: -50px;
+    background: #141022;
+    color: var(--player-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+.node-popout::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #141022;
+}
+
+/* Active Indicator (Pointer) */
+.active-indicator {
+    position: absolute;
+    right: -100px;
+    top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: bounceHoriz 2s infinite;
+}
+
+@keyframes bounceHoriz {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(10px);
+    }
+}
+
+.active-indicator span {
+    color: #ffc107;
+    font-size: 48px;
+}
+
+.indicator-badge {
+    background: #ffc107;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.node-title {
+    margin-top: 1.5rem;
+    font-weight: 800;
+    color: var(--slate-500);
+    font-size: 1rem;
+}
+
+.adventure-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border: 2px solid var(--slate-100);
+    border-radius: var(--radius-lg);
+    background: white;
+}
+
+/* Sidebar Styles */
+.adventure-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.auth-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 0.9rem;
+}
+
+.secondary-auth {
+    background: white;
+    border: 2px solid var(--slate-200);
+    box-shadow: 0 4px 0 0 var(--slate-200);
+    color: var(--slate-700);
+}
+
+.sidebar-widget {
+    background: white;
+    border: 2px solid var(--slate-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.widget-header h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--slate-900);
+}
+
+.widget-header span {
+    color: var(--player-primary-active);
+}
+
+.widget-content p {
+    font-size: 0.9rem;
+    color: var(--slate-500);
+    line-height: 1.5;
+}
+
+.text-link {
+    background: none;
+    border: none;
+    color: var(--player-primary-active);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    padding: 0;
+}
+
+.friend-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.friend-avatars {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background-size: cover;
+    margin-left: -10px;
+}
+
+.avatar:first-child {
+    margin-left: 0;
+}
+
+.avatar.more {
+    background: #00e676;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: white;
+}
+
+.friend-stats p {
+    font-size: 0.9rem;
+    color: var(--slate-500);
+    font-weight: 500;
+}
+
+.chunky-button-player {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: var(--radius-xl);
+}
+
+@media (max-width: 1200px) {
+    .adventure-page {
+        grid-template-columns: 1fr;
+    }
+
+    .adventure-sidebar {
+        display: none;
+    }
+}

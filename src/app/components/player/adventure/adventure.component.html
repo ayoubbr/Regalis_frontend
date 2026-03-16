@@ -1,0 +1,91 @@
+<div class="adventure-page">
+    <div class="adventure-main">
+        <header class="adventure-header">
+            <h1 class="adventure-title">The Grand Journey</h1>
+            <p class="adventure-subtitle">Chapter 2: The Knight's Gambit</p>
+        </header>
+
+        <div class="roadmap-viewport">
+            <div class="path-container">
+                <div *ngFor="let module of modules; let i = index" 
+                     class="node-wrapper"
+                     [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
+                    
+                    <!-- Node Label (Popout) -->
+                    <!-- <div class="node-popout" *ngIf="i === 2">
+                        <span>START</span>
+                    </div> -->
+
+                    <!-- Chunky Node -->
+                    <div class="chunky-node" 
+                         [ngClass]="{
+                            'completed': i < 2,
+                            'active': i === 2,
+                            'locked': i > 2,
+                            'special': i % 5 === 4
+                         }">
+                        <div class="node-inner">
+                            <span class="material-symbols-outlined">{{getNodeIcon(i)}}</span>
+                        </div>
+                        <div class="node-shadow"></div>
+                    </div>
+
+                    <!-- Module Name Title -->
+                    <div class="node-title" >
+                        {{module.name}}
+                    </div>
+
+                    <!-- Current Position Pointer -->
+                    <div class="active-indicator" *ngIf="i === 2">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <div class="indicator-badge">YOU ARE HERE!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="adventure-footer">
+            <div class="friend-stats">
+                <div class="friend-avatars">
+                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/32?img=1')"></div>
+                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/32?img=2')"></div>
+                    <div class="avatar more">+12</div>
+                </div>
+                <p>14 friends are currently playing this chapter</p>
+            </div>
+            <button class="chunky-button chunky-button-player">
+                CONTINUE QUEST
+                <span class="material-symbols-outlined">play_arrow</span>
+            </button>
+        </footer>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="adventure-sidebar">
+        <div class="auth-section">
+            <button class="chunky-button chunky-button-player auth-btn">LOG IN</button>
+            <button class="chunky-button auth-btn secondary-auth">SIGN UP</button>
+        </div>
+
+        <div class="sidebar-widget">
+            <div class="widget-header">
+                <span class="material-symbols-outlined">leaderboard</span>
+                <h3>Leaderboard</h3>
+            </div>
+            <div class="widget-content">
+                <p>Join the league to compete with other players!</p>
+                <button class="text-link">VIEW LEAGUE</button>
+            </div>
+        </div>
+
+        <div class="sidebar-widget">
+            <div class="widget-header">
+                <span class="material-symbols-outlined">local_fire_department</span>
+                <h3>Active Streaks</h3>
+            </div>
+            <div class="widget-content">
+                <p>You have a 15-day streak! Keep it going!</p>
+            </div>
+        </div>
+    </aside>
+</div>

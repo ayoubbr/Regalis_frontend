@@ -7,6 +7,8 @@ import { UserManagementComponent } from './components/admin/user-management/user
 import { UserDetailsComponent } from './components/admin/user-details/user-details.component';
 import { ManagePuzzlesComponent } from './components/admin/manage-puzzles/manage-puzzles.component';
 import { ManageChallengesComponent } from './components/admin/manage-challenges/manage-challenges.component';
+import { PlayerComponent } from './components/player/player.component';
+import { AdventureComponent } from './components/player/adventure/adventure.component';
 
 export const routes: Routes = [
     {
@@ -47,5 +49,25 @@ export const routes: Routes = [
                 pathMatch: 'full'
             }
         ]
+    },
+    {
+        path: 'player',
+        component: PlayerComponent,
+        children: [
+            {
+                path: 'adventure',
+                component: AdventureComponent
+            },
+            {
+                path: '',
+                redirectTo: 'adventure',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
+        path: '',
+        redirectTo: 'player',
+        pathMatch: 'full'
     }
 ];

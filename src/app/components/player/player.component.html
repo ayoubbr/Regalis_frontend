@@ -1,0 +1,60 @@
+<div class="player-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <span class="material-symbols-outlined">castle</span>
+            </div>
+            <h2 class="brand-name">Regalis</h2>
+        </div>
+
+        <nav class="nav-menu">
+            <a routerLink="/player/adventure" routerLinkActive="active" class="nav-item">
+                <span class="material-symbols-outlined">map</span>
+                <span>Adventure</span>
+            </a>
+            <a routerLink="/player/academy" routerLinkActive="active" class="nav-item">
+                <span class="material-symbols-outlined">school</span>
+                <span>Academy</span>
+            </a>
+            <a routerLink="/player/arena" routerLinkActive="active" class="nav-item">
+                <span class="material-symbols-outlined">swords</span>
+                <span>Arena</span>
+            </a>
+            <a routerLink="/player/market" routerLinkActive="active" class="nav-item">
+                <span class="material-symbols-outlined">shopping_cart</span>
+                <span>Market</span>
+            </a>
+            <a routerLink="/player/settings" routerLinkActive="active" class="nav-item">
+                <span class="material-symbols-outlined">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="xp-card">
+                <div class="flex-between">
+                    <p class="xp-label">XP PROGRESS</p>
+                    <p class="xp-value">650 / 1000</p>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <p class="xp-status">350 XP until you reach Baron status!</p>
+            </div>
+
+            <div class="king-card">
+                <div class="flex-center">
+                    <span class="material-symbols-outlined icon-large">crown</span>
+                    <span class="king-name">King Regalis</span>
+                </div>
+                <p class="king-quote">"Huzzah! Your endgame tactics are improving. Ready for the next quest?"</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>
