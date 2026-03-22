@@ -25,6 +25,10 @@
                 <span class="material-symbols-outlined">leaderboard</span>
                 <span *ngIf="isSidebarVisible">Leaderboard</span>
             </a>
+            <a routerLink="/player/challenges" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Challenges'">
+                <span class="material-symbols-outlined">extension</span>
+                <span *ngIf="isSidebarVisible">Challenges</span>
+            </a>
             <a routerLink="/player/arena" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Arena'">
                 <span class="material-symbols-outlined">swords</span>
                 <span *ngIf="isSidebarVisible">Arena</span>

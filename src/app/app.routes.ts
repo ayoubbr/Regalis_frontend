@@ -12,6 +12,7 @@ import { AdventureComponent } from './components/player/adventure/adventure.comp
 import { ProfileComponent } from './components/player/profile/profile.component';
 import { AcademyComponent } from './components/player/academy/academy.component';
 import { LeaderboardComponent } from './components/player/leaderboard/leaderboard.component';
+import { ChallengesPuzzlesComponent } from './components/player/challenges-puzzles/challenges-puzzles.component';
 
 export const routes: Routes = [
     {
@@ -72,6 +73,10 @@ export const routes: Routes = [
             {
                 path: 'leaderboard',
                 component: LeaderboardComponent
+            },
+            {
+                path: 'challenges',
+                component: ChallengesPuzzlesComponent
             },
             {
                 path: '',
