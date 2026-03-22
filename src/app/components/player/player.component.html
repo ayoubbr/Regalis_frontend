@@ -21,6 +21,10 @@
                 <span class="material-symbols-outlined">school</span>
                 <span *ngIf="isSidebarVisible">Academy</span>
             </a>
+            <a routerLink="/player/leaderboard" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Leaderboard'">
+                <span class="material-symbols-outlined">leaderboard</span>
+                <span *ngIf="isSidebarVisible">Leaderboard</span>
+            </a>
             <a routerLink="/player/arena" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Arena'">
                 <span class="material-symbols-outlined">swords</span>
                 <span *ngIf="isSidebarVisible">Arena</span>

@@ -1,0 +1,138 @@
+<div class="leaderboard-container">
+  <header class="leaderboard-header">
+    <div class="header-content">
+      <h2 class="leaderboard-title">Global Leaderboard</h2>
+      <p class="leaderboard-subtitle">{{ selectedPeriod | titlecase }} League • Season ends in 2 days</p>
+    </div>
+    <div class="header-actions">
+      <div class="period-selector">
+        <button 
+          (click)="switchPeriod(periods.WEEKLY)"
+          [class.active]="selectedPeriod === periods.WEEKLY"
+          class="period-btn"
+        >Weekly</button>
+        <button 
+          (click)="switchPeriod(periods.MONTHLY)"
+          [class.active]="selectedPeriod === periods.MONTHLY"
+          class="period-btn"
+        >Monthly</button>
+        <button 
+          (click)="switchPeriod(periods.ALL_TIME)"
+          [class.active]="selectedPeriod === periods.ALL_TIME"
+          class="period-btn"
+        >All Time</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="scroll-area">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <!-- Podium -->
+      <div class="podium-section">
+        <div *ngFor="let player of podiumPlayers; let i = index" 
+             class="podium-item"
+             [ngClass]="'rank-' + player.rank">
+          
+          <div class="avatar-wrapper">
+            <!-- Crown for #1 -->
+            <div *ngIf="player.rank === 1" class="crown-icon">
+              <span class="material-symbols-outlined icon-filled">emoji_events</span>
+            </div>
+            
+            <div class="avatar-box"
+                 [ngClass]="'border-rank-' + player.rank">
+              <img [src]="player.avatar" [alt]="player.username" class="avatar-img">
+            </div>
+            <div class="rank-number"
+                 [ngClass]="'bg-rank-' + player.rank">
+              {{ player.rank }}
+            </div>
+          </div>
+
+          <div class="podium-info-card"
+               [ngClass]="'card-rank-' + player.rank">
+            <div *ngIf="player.rank === 1" class="card-decoration"></div>
+            <h3 class="player-name">{{ player.username }}</h3>
+            <p class="player-xp">{{ player.xp | number }} XP</p>
+            <p class="player-league">{{ player.league }} League</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th class="col-rank">Rank</th>
+              <th class="col-player">Player</th>
+              <th class="col-league">League</th>
+              <th class="col-stats">Wins / Losses</th>
+              <th class="col-xp">Total XP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let player of remainingPlayers" class="table-row">
+              <td class="cell-rank">{{ player.rank }}</td>
+              <td class="cell-player">
+                <div class="player-info">
+                  <div class="player-avatar">
+                    <img [src]="player.avatar" [alt]="player.username">
+                  </div>
+                  <div class="player-details">
+                    <p class="username">{{ player.username }}</p>
+                    <p class="title">{{ player.title }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-league">
+                <span class="league-badge"
+                      [ngClass]="'badge-' + player.league.toLowerCase()">
+                  {{ player.league }}
+                </span>
+              </td>
+              <td class="cell-stats">{{ player.wins }} / {{ player.losses }}</td>
+              <td class="cell-xp">{{ player.xp | number }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <button class="view-all-btn">View Full Rankings</button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- User Status Bar -->
+  <div *ngIf="currentUserEntry" class="user-status-bar">
+    <div class="status-card">
+      <div class="user-info">
+        <div class="user-rank">
+          {{ currentUserEntry.rank }}
+        </div>
+        <div class="user-avatar">
+          <img [src]="currentUserEntry.avatar" alt="You">
+        </div>
+        <div class="user-text">
+          <p class="user-name">You ({{ currentUserEntry.username }})</p>
+          <div class="user-stats-row">
+            <span class="xp-badge">{{ currentUserEntry.xp | number }} XP</span>
+            <span class="daily-boost">+120 Today 🔥</span>
+          </div>
+        </div>
+      </div>
+      <div class="status-actions">
+        <div class="league-info">
+          <p class="league-label">Current League</p>
+          <p class="league-value">{{ currentUserEntry.league }} IV</p>
+        </div>
+        <a class="profile-btn" routerLink="/player/profile">View Profile</a>
+      </div>
+    </div>
+  </div>
+</div>
