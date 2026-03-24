@@ -210,3 +210,31 @@
         padding: 1rem;
     }
 }
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.username {
+    font-weight: 700;
+    color: var(--slate-700);
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: var(--slate-400);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}

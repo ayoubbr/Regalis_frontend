@@ -115,8 +115,62 @@
 .main-content {
     flex: 1;
     margin-left: 18rem;
-    padding: 2.5rem;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-nav-bar {
+    height: 64px;
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid var(--slate-100);
+}
+
+.content-viewport {
+    flex-grow: 1;
+    padding: 2.5rem;
+    background: var(--bg-light);
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.username {
+    font-weight: 700;
+    color: var(--slate-700);
+}
+
+.badget-admin {
+    background: #fee2e2;
+    color: #ef4444;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: var(--slate-400);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+    color: #ef4444;
+    background: #fef2f2;
 }
 
 /* Dark Mode support */

@@ -73,6 +73,13 @@
                     {{ isSidebarVisible ? 'menu_open' : 'menu' }}
                 </span>
             </button>
+            <div style="flex-grow: 1;"></div>
+            <div class="user-nav">
+                <span class="username">{{ currentUser?.username }}</span>
+                <button class="logout-btn" (click)="logout()" title="Logout">
+                    <span class="material-symbols-outlined">logout</span>
+                </button>
+            </div>
         </header>
 
         <div class="content-viewport">

@@ -1,0 +1,45 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="brand-icon">
+                <span class="material-symbols-outlined icon-filled">castle</span>
+            </div>
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Log in to continue your adventure</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">person</span>
+                    <input type="text" id="username" formControlName="username" placeholder="Enter your username"
+                        [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">lock</span>
+                    <input type="password" id="password" formControlName="password" placeholder="••••••••"
+                        [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                </div>
+            </div>
+
+            <div *ngIf="errorMessage" class="error-message">
+                <span class="material-symbols-outlined">error</span>
+                {{ errorMessage }}
+            </div>
+
+            <button type="submit" class="chunky-button chunky-button-primary auth-submit" [disabled]="loading">
+                <span *ngIf="!loading">Launch Game</span>
+                <span *ngIf="loading" class="loader"></span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>New explorer? <a routerLink="/register">Create an account</a></p>
+        </div>
+    </div>
+</div>

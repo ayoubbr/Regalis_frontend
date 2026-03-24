@@ -1,0 +1,76 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="brand-icon">
+                <span class="material-symbols-outlined icon-filled">person_add</span>
+            </div>
+            <h1 class="auth-title">Join Regalis</h1>
+            <p class="auth-subtitle">Start your learning journey today</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+            <div class="name-grid">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="firstName" formControlName="firstName" placeholder="John"
+                            [class.error]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="lastName" formControlName="lastName" placeholder="Doe"
+                            [class.error]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">person</span>
+                    <input type="text" id="username" formControlName="username" placeholder="johndoe"
+                        [class.error]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">mail</span>
+                    <input type="email" id="email" formControlName="email" placeholder="john@example.com"
+                        [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">lock</span>
+                    <input type="password" id="password" formControlName="password" placeholder="••••••••"
+                        [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                </div>
+            </div>
+
+            <div *ngIf="errorMessage" class="error-message">
+                <span class="material-symbols-outlined">error</span>
+                {{ errorMessage }}
+            </div>
+
+            <div *ngIf="successMessage" class="success-message">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ successMessage }}
+            </div>
+
+            <button type="submit" class="chunky-button chunky-button-primary auth-submit" [disabled]="loading">
+                <span *ngIf="!loading">Create Account</span>
+                <span *ngIf="loading" class="loader"></span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already joined? <a routerLink="/login">Log in here</a></p>
+        </div>
+    </div>
+</div>

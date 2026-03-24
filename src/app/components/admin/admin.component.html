@@ -56,6 +56,18 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
-        <router-outlet></router-outlet>
+        <header class="top-nav-bar">
+            <div style="flex-grow: 1;"></div>
+            <div class="user-nav">
+                <span class="badget-admin">ADMIN</span>
+                <span class="username">{{ currentUser?.username }}</span>
+                <button class="logout-btn" (click)="logout()" title="Logout">
+                    <span class="material-symbols-outlined">logout</span>
+                </button>
+            </div>
+        </header>
+        <div class="content-viewport">
+            <router-outlet></router-outlet>
+        </div>
     </main>
 </div>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-player',
@@ -11,8 +12,18 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class PlayerComponent {
   isSidebarVisible = true;
+  currentUser: any;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.currentUser = this.authService.currentUserValue;
+  }
 
   toggleSidebar() {
     this.isSidebarVisible = !this.isSidebarVisible;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

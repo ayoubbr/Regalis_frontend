@@ -15,10 +15,22 @@ import { LeaderboardComponent } from './components/player/leaderboard/leaderboar
 import { ChallengesPuzzlesComponent } from './components/player/challenges-puzzles/challenges-puzzles.component';
 import { ActiveQuizComponent } from './components/player/active-quiz/active-quiz.component';
 
+import { authGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
+    {
+        path: 'login',
+        loadComponent: () => import('./components/auth/login/login.component').then(m => m.LoginComponent)
+    },
+    {
+        path: 'register',
+        loadComponent: () => import('./components/auth/register/register.component').then(m => m.RegisterComponent)
+    },
     {
         path: 'admin',
         component: AdminComponent,
+        canActivate: [authGuard],
+        data: { roles: ['ADMIN'] },
         children: [
             {
                 path: 'dashboard',
@@ -58,6 +70,7 @@ export const routes: Routes = [
     {
         path: 'player',
         component: PlayerComponent,
+        canActivate: [authGuard],
         children: [
             {
                 path: 'academy',
