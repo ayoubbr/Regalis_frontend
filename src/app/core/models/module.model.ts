@@ -3,6 +3,7 @@ export interface Module {
     name: string;
     description: string;
     orderIndex: number;
+    lessonCount: number;
 }
 
 export interface ModuleCreateDTO {

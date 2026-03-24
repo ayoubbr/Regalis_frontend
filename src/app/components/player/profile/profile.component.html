@@ -12,12 +12,12 @@
             
             <div class="user-info">
                 <div class="username-row">
-                    <h1 class="username">King Regalis</h1>
-                    <span class="random-text">(Grandmaster Level)</span>
+                    <h1 class="username">{{user?.username}}</h1>
+                    <span class="random-text">({{getRank()}})</span>
                 </div>
-                <p class="user-meta">Level {{user?.level || 42}} Chess Master • Joined Oct 2023</p>
+                <p class="user-meta">Level {{user?.level || 1}} Chess Explorer • Joined {{user?.createdAt | date:'MMM yyyy'}}</p>
                 
-                <div class="badges-row">
+                <!-- <div class="badges-row">
                     <div class="mini-badge elo-badge">
                         <span class="material-symbols-outlined star-icon icon-colored">star</span>
                         <span class="badge-text">2,450 ELO</span>
@@ -26,7 +26,7 @@
                         <span class="material-symbols-outlined military-icon icon-colored">military_tech</span>
                         <span class="badge-text">Grandmaster</span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 

@@ -7,7 +7,7 @@
             </div>
             <div class="stat-details">
                 <p class="stat-label">TOTAL XP</p>
-                <h3 class="stat-value">{{user?.totalXp || 1250 | number}}</h3>
+                <h3 class="stat-value">{{user?.totalXp || 0 | number}}</h3>
             </div>
         </div>
         <div class="stat-bubble card">
@@ -16,7 +16,7 @@
             </div>
             <div class="stat-details">
                 <p class="stat-label">STREAK</p>
-                <h3 class="stat-value">{{user?.currentStreak || 12}} Days</h3>
+                <h3 class="stat-value">{{user?.currentStreak || 0}} Days</h3>
             </div>
         </div>
     </div>

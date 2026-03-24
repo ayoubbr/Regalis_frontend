@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
+const USER_API = 'http://localhost:8080/api/users/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,9 +18,14 @@ export class AuthService {
   public currentUser: Observable<any>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<any>(
-      JSON.parse(localStorage.getItem('currentUser') || '{}'));
+    const savedUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.currentUserSubject = new BehaviorSubject<any>(savedUser);
     this.currentUser = this.currentUserSubject.asObservable();
+    
+    // Auto update profile on app load if logged in
+    if (this.isLoggedIn()) {
+      this.updateUserProfile().subscribe();
+    }
   }
 
   public get currentUserValue(): any {
@@ -30,15 +36,33 @@ export class AuthService {
     return this.http.post(AUTH_API + 'signin', {
       username,
       password
-    }, httpOptions).pipe(map(user => {
-      // login successful if there's a jwt token in the response
-      if (user && (user as any).token) {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-      }
-      return user;
-    }));
+    }, httpOptions).pipe(
+      switchMap((user: any) => {
+        if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          // Fetch full profile immediately
+          return this.updateUserProfile();
+        }
+        return of(user);
+      })
+    );
+  }
+
+  updateUserProfile(): Observable<any> {
+    return this.http.get(USER_API + 'me').pipe(
+      map(profile => {
+        const currentUser = this.currentUserValue;
+        const updatedUser = { ...currentUser, ...profile };
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        this.currentUserSubject.next(updatedUser);
+        return updatedUser;
+      }),
+      catchError(err => {
+        console.error('Error updating user profile', err);
+        return of(this.currentUserValue);
+      })
+    );
   }
 
   register(user: any): Observable<any> {
@@ -46,19 +70,18 @@ export class AuthService {
   }
 
   logout(): void {
-    // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next({});
   }
 
   isLoggedIn(): boolean {
     const user = this.currentUserValue;
-    return user && user.token;
+    return !!(user && user.token);
   }
 
   getRoles(): string[] {
     const user = this.currentUserValue;
-    return user ? user.roles : [];
+    return user && user.roles ? user.roles : [];
   }
 
   getToken(): string | null {

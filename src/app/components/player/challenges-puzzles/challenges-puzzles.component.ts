@@ -6,6 +6,7 @@ import { DailyChallengeService } from '../../../core/services/daily-challenge.se
 import { UserProgressService } from '../../../core/services/user-progress.service';
 import { LessonService } from '../../../core/services/lesson.service';
 import { UserService } from '../../../core/services/user.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Challenge, ChallengeStatus } from '../../../core/models/challenge.model';
 import { DailyChallenge } from '../../../core/models/daily-challenge.model';
 import { UserProgress } from '../../../core/models/user-progress.model';
@@ -40,15 +41,21 @@ export class ChallengesPuzzlesComponent implements OnInit {
   private userProgressService = inject(UserProgressService);
   private lessonService = inject(LessonService);
   private userService = inject(UserService);
+  private authService = inject(AuthService);
 
-  userId = 1; // Assuming current user ID is 1
+  userId = 0;
   todayChallenge: EnrichedDailyChallenge | null = null;
   userChallenges: EnrichedChallenge[] = [];
   inProgressLessons: EnrichedLesson[] = [];
   loading = true;
 
   ngOnInit(): void {
-    this.loadData();
+    this.authService.currentUser.subscribe(user => {
+      if (user && user.id) {
+        this.userId = user.id;
+        this.loadData();
+      }
+    });
   }
 
   loadData(): void {

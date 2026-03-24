@@ -4,6 +4,7 @@ import { LeaderboardService } from '../../../core/services/leaderboard.service';
 import { UserService } from '../../../core/services/user.service';
 import { LeaderboardEntry, Period } from '../../../core/models/leaderboard.model';
 import { User } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/auth.service';
 import { forkJoin, map, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { RouterLink } from "@angular/router";
@@ -28,6 +29,8 @@ export class LeaderboardComponent implements OnInit {
   private leaderboardService = inject(LeaderboardService);
   private userService = inject(UserService);
 
+  private authService = inject(AuthService);
+
   leaderboard: EnrichedLeaderboardEntry[] = [];
   podiumPlayers: EnrichedLeaderboardEntry[] = [];
   remainingPlayers: EnrichedLeaderboardEntry[] = [];
@@ -45,6 +48,8 @@ export class LeaderboardComponent implements OnInit {
     this.selectedPeriod = period;
     this.loading = true;
     
+    const currentUserId = this.authService.currentUserValue.id;
+
     forkJoin({
       entries: this.leaderboardService.getLeaderboard(period).pipe(catchError(() => of([]))),
       users: this.userService.getAll().pipe(catchError(() => of([])))
@@ -59,11 +64,11 @@ export class LeaderboardComponent implements OnInit {
             { id: 3, period: period, xp: 12110, rank: 3, userId: 3 },
             { id: 4, period: period, xp: 9820, rank: 4, userId: 4 },
             { id: 5, period: period, xp: 8450, rank: 5, userId: 5 },
-            { id: 6, period: period, xp: 7100, rank: 6, userId: 99 },
+            { id: 6, period: period, xp: 7100, rank: 6, userId: currentUserId },
           ];
         }
 
-        const mockUsernames = ['KingRegalis', 'Alex_G', 'Sarah.Sun', 'Leo_The_Great', 'Mia_Codes', 'Zoe_Infinity'];
+        const mockUsernames = ['KingRegalis', 'Alex_G', 'Sarah.Sun', 'Leo_The_Great', 'Mia_Codes', 'ExpertPlayer'];
 
         return finalEntries.map((entry, index) => {
           const user = users.find(u => u.id === entry.userId);
@@ -90,8 +95,7 @@ export class LeaderboardComponent implements OnInit {
 
       this.remainingPlayers = this.leaderboard.slice(3);
       
-      // Mock current user as ID 1
-      this.currentUserEntry = this.leaderboard.find(e => e.userId === 1) || null;
+      this.currentUserEntry = this.leaderboard.find(e => e.userId === currentUserId) || null;
       this.loading = false;
     });
   }

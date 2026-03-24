@@ -5,23 +5,18 @@
             <p class="adventure-subtitle">Chapter 2: The Knight's Gambit</p>
         </header>
 
-        <div class="roadmap-viewport">
+        <div class="roadmap-viewport" *ngIf="!loading">
             <div class="path-container">
                 <div *ngFor="let module of modules; let i = index" 
                      class="node-wrapper"
                      [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
                     
-                    <!-- Node Label (Popout) -->
-                    <!-- <div class="node-popout" *ngIf="i === 2">
-                        <span>START</span>
-                    </div> -->
-
                     <!-- Chunky Node -->
                     <div class="chunky-node" 
                          [ngClass]="{
-                            'completed': i < 2,
-                            'active': i === 2,
-                            'locked': i > 2,
+                            'completed': module.status === 'completed',
+                            'active': module.status === 'active',
+                            'locked': module.status === 'locked',
                             'special': i % 5 === 4
                          }">
                         <div class="node-inner">
@@ -36,7 +31,7 @@
                     </div>
 
                     <!-- Current Position Pointer -->
-                    <div class="active-indicator" *ngIf="i === 2">
+                    <div class="active-indicator" *ngIf="module.status === 'active'">
                         <span class="material-symbols-outlined">location_on</span>
                         <div class="indicator-badge">YOU ARE HERE!</div>
                     </div>
@@ -44,7 +39,12 @@
             </div>
         </div>
 
-        <footer class="adventure-footer">
+        <div class="loading-state" *ngIf="loading">
+            <div class="spinner"></div>
+            <p>Loading your journey...</p>
+        </div>
+
+        <footer class="adventure-footer" *ngIf="!loading">
             <div class="friend-stats">
                 <div class="friend-avatars">
                     <div class="avatar" style="background-image: url('https://i.pravatar.cc/32?img=1')"></div>
@@ -61,10 +61,19 @@
     </div>
 
     <!-- Right Sidebar -->
-    <aside class="adventure-sidebar">
-        <div class="auth-section">
-            <button class="chunky-button chunky-button-player auth-btn">LOG IN</button>
-            <button class="chunky-button auth-btn secondary-auth">SIGN UP</button>
+    <aside class="adventure-sidebar" *ngIf="!loading">
+        <div class="sidebar-widget profile-widget">
+            <div class="widget-header">
+                <span class="material-symbols-outlined">account_circle</span>
+                <h3>Your Character</h3>
+            </div>
+            <div class="widget-content">
+                <p class="sidebar-username">{{ (authService.currentUser | async)?.username }}</p>
+                <div class="sidebar-xp-row">
+                    <span class="material-symbols-outlined">bolt</span>
+                    <span>{{ (authService.currentUser | async)?.totalXp | number }} XP</span>
+                </div>
+            </div>
         </div>
 
         <div class="sidebar-widget">
@@ -73,8 +82,8 @@
                 <h3>Leaderboard</h3>
             </div>
             <div class="widget-content">
-                <p>Join the league to compete with other players!</p>
-                <button class="text-link">VIEW LEAGUE</button>
+                <p>You are ranked #{{ (authService.currentUser | async)?.rank || '...' }} this week!</p>
+                <button class="text-link" routerLink="/player/leaderboard">VIEW LEAGUE</button>
             </div>
         </div>
 
@@ -84,7 +93,7 @@
                 <h3>Active Streaks</h3>
             </div>
             <div class="widget-content">
-                <p>You have a 15-day streak! Keep it going!</p>
+                <p>You have a {{ (authService.currentUser | async)?.currentStreak || 0 }}-day streak! Keep it going!</p>
             </div>
         </div>
     </aside>

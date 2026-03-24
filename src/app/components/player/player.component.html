@@ -9,35 +9,43 @@
         </div>
 
         <nav class="nav-menu">
-            <a routerLink="/player/adventure" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Adventure'">
+            <a routerLink="/player/adventure" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Adventure'">
                 <span class="material-symbols-outlined">map</span>
                 <span *ngIf="isSidebarVisible">Adventure</span>
             </a>
-            <a routerLink="/player/profile" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Profile'">
+            <a routerLink="/player/profile" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Profile'">
                 <span class="material-symbols-outlined">person</span>
                 <span *ngIf="isSidebarVisible">Profile</span>
             </a>
-            <a routerLink="/player/academy" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Academy'">
+            <a routerLink="/player/academy" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Academy'">
                 <span class="material-symbols-outlined">school</span>
                 <span *ngIf="isSidebarVisible">Academy</span>
             </a>
-            <a routerLink="/player/leaderboard" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Leaderboard'">
+            <a routerLink="/player/leaderboard" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Leaderboard'">
                 <span class="material-symbols-outlined">leaderboard</span>
                 <span *ngIf="isSidebarVisible">Leaderboard</span>
             </a>
-            <a routerLink="/player/challenges" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Challenges'">
+            <a routerLink="/player/challenges" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Challenges'">
                 <span class="material-symbols-outlined">extension</span>
                 <span *ngIf="isSidebarVisible">Challenges</span>
             </a>
-            <a routerLink="/player/arena" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Arena'">
+            <a routerLink="/player/arena" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Arena'">
                 <span class="material-symbols-outlined">swords</span>
                 <span *ngIf="isSidebarVisible">Arena</span>
             </a>
-            <a routerLink="/player/market" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Market'">
+            <a routerLink="/player/market" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Market'">
                 <span class="material-symbols-outlined">shopping_cart</span>
                 <span *ngIf="isSidebarVisible">Market</span>
             </a>
-            <a routerLink="/player/settings" routerLinkActive="active" class="nav-item" [attr.title]="isSidebarVisible ? '' : 'Settings'">
+            <a routerLink="/player/settings" routerLinkActive="active" class="nav-item"
+                [attr.title]="isSidebarVisible ? '' : 'Settings'">
                 <span class="material-symbols-outlined">settings</span>
                 <span *ngIf="isSidebarVisible">Settings</span>
             </a>
@@ -47,20 +55,12 @@
             <div class="xp-card">
                 <div class="flex-between">
                     <p class="xp-label">XP PROGRESS</p>
-                    <p class="xp-value">650 / 1000</p>
+                    <p class="xp-value">{{ (currentUser?.totalXp || 0) % 1000 }} / 1000</p>
                 </div>
                 <div class="progress-container">
-                    <div class="progress-fill" style="width: 65%"></div>
+                    <div class="progress-fill" [style.width.%]="(currentUser?.totalXp || 0) % 1000 / 10"></div>
                 </div>
-                <p class="xp-status">350 XP until you reach Baron status!</p>
-            </div>
-
-            <div class="king-card">
-                <div class="flex-center">
-                    <span class="material-symbols-outlined icon-large">crown</span>
-                    <span class="king-name">King Regalis</span>
-                </div>
-                <p class="king-quote">"Huzzah! Your endgame tactics are improving. Ready for the next quest?"</p>
+                <p class="xp-status">{{ 1000 - ((currentUser?.totalXp || 0) % 1000) }} XP until your next level!</p>
             </div>
         </div>
     </aside>
@@ -68,7 +68,8 @@
     <!-- Main Content Area -->
     <main class="main-content">
         <header class="top-nav-bar">
-            <button class="toggle-sidebar-btn" (click)="toggleSidebar()" [attr.title]="isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'">
+            <button class="toggle-sidebar-btn" (click)="toggleSidebar()"
+                [attr.title]="isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'">
                 <span class="material-symbols-outlined">
                     {{ isSidebarVisible ? 'menu_open' : 'menu' }}
                 </span>

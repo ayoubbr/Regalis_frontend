@@ -7,6 +7,7 @@ import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-academy',
@@ -18,14 +19,22 @@ import { catchError } from 'rxjs/operators';
 export class AcademyComponent implements OnInit {
   private moduleService = inject(ModuleService);
   private userService = inject(UserService);
+  private authService = inject(AuthService);
 
   modules: any[] = [];
-  user: User | null = null;
+  user: any = null;
   loading = true;
 
   ngOnInit(): void {
-    const userId = 1; // Placeholder ID
+    this.authService.currentUser.subscribe(currUser => {
+      if (currUser && currUser.id) {
+        this.loadAcademyData(currUser.id);
+      }
+    });
+  }
 
+  private loadAcademyData(userId: number): void {
+    this.loading = true;
     forkJoin({
       modules: this.moduleService.getAll().pipe(catchError(() => of([]))),
       user: this.userService.getById(userId).pipe(catchError(() => of(null)))

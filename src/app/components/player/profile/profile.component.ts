@@ -6,6 +6,7 @@ import { User } from '../../../core/models/user.model';
 import { Achievement, UserAchievement } from '../../../core/models/achievement.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,16 +19,24 @@ export class ProfileComponent implements OnInit {
   private userService = inject(UserService);
   private achievementService = inject(AchievementService);
 
-  user: User | null = null;
+  private authService = inject(AuthService);
+  
+  user: any = null;
   achievements: (Achievement & { unlocked?: boolean, unlockedDate?: string })[] = [];
   recentActivity: any[] = [];
   
   loading = true;
 
   ngOnInit(): void {
-    // For now using ID 1 as placeholder, usually would come from an auth service
-    const userId = 1;
+    this.authService.currentUser.subscribe(currUser => {
+      if (currUser && currUser.id) {
+        this.loadUserData(currUser.id);
+      }
+    });
+  }
 
+  private loadUserData(userId: number): void {
+    this.loading = true;
     forkJoin({
       user: this.userService.getById(userId).pipe(catchError(() => of(null))),
       allAchievements: this.achievementService.getAll().pipe(catchError(() => of([]))),
@@ -45,34 +54,25 @@ export class ProfileComponent implements OnInit {
         };
       });
 
-      // Simulated activities
+      // Simulated activities (could also be fetched if there was an endpoint)
       this.recentActivity = [
         {
-          type: 'match',
-          title: "Won against 'ChessNerd99'",
-          time: '2 hours ago',
-          meta: 'Blitz 3+0',
-          xp: '+15 ELO',
-          icon: 'add_circle',
-          iconColor: '#00e676'
-        },
-        {
-          type: 'achievement',
-          title: "Unlocked 'Streak Master' badge",
-          time: 'Yesterday',
-          meta: 'Milestone',
-          xp: '+500 XP',
-          icon: 'emoji_events',
+          type: 'milestone',
+          title: `Reached Level ${this.user?.level || 1}`,
+          time: 'Recently',
+          meta: 'Level Up',
+          xp: '+0 XP',
+          icon: 'trending_up',
           iconColor: '#855ef7'
         },
         {
-          type: 'tournament',
-          title: "Entered 'Winter Classic 2024'",
-          time: '2 days ago',
-          meta: 'Tournament',
-          xp: 'Registration Confirmed',
-          icon: 'calendar_today',
-          iconColor: '#2196f3'
+          type: 'streak',
+          title: `${this.user?.currentStreak || 0} Day Streak!`,
+          time: 'Today',
+          meta: 'Daily Focus',
+          xp: '+50 XP',
+          icon: 'local_fire_department',
+          iconColor: '#ff9800'
         }
       ];
 

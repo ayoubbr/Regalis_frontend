@@ -15,7 +15,9 @@ export class PlayerComponent {
   currentUser: any;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.currentUser = this.authService.currentUserValue;
+    this.authService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
   toggleSidebar() {
