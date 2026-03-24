@@ -3,7 +3,9 @@ export interface Module {
     name: string;
     description: string;
     orderIndex: number;
+    imageUrl?: string;
     lessonCount: number;
+    puzzleCount: number;
 }
 
 export interface ModuleCreateDTO {

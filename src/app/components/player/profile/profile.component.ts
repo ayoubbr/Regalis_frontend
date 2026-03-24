@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
 
   private authService = inject(AuthService);
   
-  user: any = null;
+  currentUser: any = null;
   achievements: (Achievement & { unlocked?: boolean, unlockedDate?: string })[] = [];
   recentActivity: any[] = [];
   
@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit {
       allAchievements: this.achievementService.getAll().pipe(catchError(() => of([]))),
       userAchievements: this.achievementService.getUserAchievements(userId).pipe(catchError(() => of([])))
     }).subscribe(({ user, allAchievements, userAchievements }) => {
-      this.user = user;
+      this.currentUser = user;
       
       // Merge achievements with user status
       this.achievements = allAchievements.map(ach => {
@@ -58,7 +58,7 @@ export class ProfileComponent implements OnInit {
       this.recentActivity = [
         {
           type: 'milestone',
-          title: `Reached Level ${this.user?.level || 1}`,
+          title: `Reached Level ${this.currentUser?.level || 1}`,
           time: 'Recently',
           meta: 'Level Up',
           xp: '+0 XP',
@@ -67,7 +67,7 @@ export class ProfileComponent implements OnInit {
         },
         {
           type: 'streak',
-          title: `${this.user?.currentStreak || 0} Day Streak!`,
+          title: `${this.currentUser?.currentStreak || 0} Day Streak!`,
           time: 'Today',
           meta: 'Daily Focus',
           xp: '+50 XP',
@@ -81,15 +81,15 @@ export class ProfileComponent implements OnInit {
   }
 
   getXpProgress(): number {
-    if (!this.user) return 0;
+    if (!this.currentUser) return 0;
     // Simple logic: every 1000 XP is a level
-    return (this.user.totalXp % 1000) / 10;
+    return (this.currentUser.totalXp % 1000) / 10;
   }
 
   getRank(): string {
-    if (!this.user) return 'Beginner';
-    if (this.user.totalXp > 10000) return 'Grandmaster';
-    if (this.user.totalXp > 5000) return 'Master';
+    if (!this.currentUser) return 'Beginner';
+    if (this.currentUser.totalXp > 10000) return 'Grandmaster';
+    if (this.currentUser.totalXp > 5000) return 'Master';
     return 'Chess Apprentice';
   }
 }

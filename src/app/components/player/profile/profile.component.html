@@ -3,8 +3,9 @@
         <div class="header-main">
             <div class="avatar-container">
                 <div class="avatar-ring">
-                    <img src="https://i.pravatar.cc/150?u=KingRegalis" alt="User Avatar" class="user-avatar">
+                    <img [src]="currentUser?.imageUrl || 'assets/images/default-avatar.png'" alt="Avatar" class="user-avatar">
                 </div>
+                <div class="level-badge">{{ currentUser?.level }}</div>
                 <div class="verify-badge">
                     <span class="material-symbols-outlined">verified</span>
                 </div>
@@ -12,10 +13,10 @@
             
             <div class="user-info">
                 <div class="username-row">
-                    <h1 class="username">{{user?.username}}</h1>
+                    <h1 class="username">{{currentUser?.username}}</h1>
                     <span class="random-text">({{getRank()}})</span>
                 </div>
-                <p class="user-meta">Level {{user?.level || 1}} Chess Explorer • Joined {{user?.createdAt | date:'MMM yyyy'}}</p>
+                <p class="user-meta">Level {{currentUser?.level || 1}} Chess Explorer • Joined {{currentUser?.createdAt | date:'MMM yyyy'}}</p>
                 
                 <!-- <div class="badges-row">
                     <div class="mini-badge elo-badge">
@@ -47,20 +48,20 @@
                 <div class="stat-card card">
                     <p class="stat-label">TOTAL EXPERIENCE</p>
                     <div class="stat-value-container">
-                        <h3 class="stat-value">{{user?.totalXp | number}}</h3>
+                        <h3 class="stat-value">{{currentUser?.totalXp | number}}</h3>
                         <span class="stat-change">+1,200 XP today</span>
                     </div>
                     <div class="progress-container">
                         <div class="progress-fill" [style.width.%]="getXpProgress()"></div>
                     </div>
-                    <p class="stat-footer">{{1000 - (user?.totalXp || 0) % 1000}} XP until Level {{ (user?.level || 0) + 1 }}</p>
+                    <p class="stat-footer">{{1000 - (currentUser?.totalXp || 0) % 1000}} XP until Level {{ (currentUser?.level || 0) + 1 }}</p>
                 </div>
 
                 <div class="stat-card card">
                     <p class="stat-label">DAILY STREAK</p>
                     <div class="stat-value-container">
                         <span class="material-symbols-outlined streak-icon">local_fire_department</span>
-                        <h3 class="stat-value">{{user?.currentStreak}} Days</h3>
+                        <h3 class="stat-value">{{currentUser?.currentStreak}} Days</h3>
                     </div>
                     <p class="stat-footer">Personal Best: 24 Days</p>
                 </div>

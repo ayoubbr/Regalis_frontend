@@ -13,6 +13,7 @@ import { ProfileComponent } from './components/player/profile/profile.component'
 import { AcademyComponent } from './components/player/academy/academy.component';
 import { LeaderboardComponent } from './components/player/leaderboard/leaderboard.component';
 import { ChallengesPuzzlesComponent } from './components/player/challenges-puzzles/challenges-puzzles.component';
+import { DailyChallengeComponent } from './components/player/daily-challenge/daily-challenge.component';
 import { ActiveQuizComponent } from './components/player/active-quiz/active-quiz.component';
 
 import { authGuard } from './core/guards/auth.guard';
@@ -95,6 +96,10 @@ export const routes: Routes = [
             {
                 path: 'quiz-demo',
                 component: ActiveQuizComponent
+            },
+            {
+                path: 'daily-challenge',
+                component: DailyChallengeComponent
             },
             {
                 path: 'arena',

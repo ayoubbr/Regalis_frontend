@@ -8,8 +8,9 @@ export interface User {
     username: string;
     email: string;
     firstName?: string;
-    lastName?: string;
-    role: Role;
+    lastName: string;
+    role: string;
+    imageUrl: string;
     totalXp: number;
     level: number;
     currentStreak: number;

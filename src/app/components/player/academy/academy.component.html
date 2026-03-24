@@ -31,24 +31,28 @@
     <div class="modules-grid">
         <div class="module-card card" *ngFor="let module of modules">
             <div class="card-image-wrapper">
-                <img [src]="module.image" [alt]="module.name" class="module-image">
-                <div class="module-badge" [ngClass]="module.level.toLowerCase()">
-                    {{module.level}}
+                <img [src]="module.imageUrl || 'assets/images/module-placeholder.jpg'" [alt]="module.name" class="module-image">
+                <div class="module-badge">
+                    <span class="material-symbols-outlined">school</span>
                 </div>
             </div>
             
             <div class="card-content">
                 <h3 class="module-name">{{module.name}}</h3>
+                <p class="module-description">{{module.description}}</p>
+                
                 <div class="module-meta">
                     <div class="meta-item">
-                        <span class="material-symbols-outlined">quiz</span>
-                        <span>{{module.questionsCount || (module.level === 'TIMED' ? 'Unlimited' : 10)}} Questions</span>
+                        <span class="material-symbols-outlined">book</span>
+                        <span>{{module.lessonCount}} Lessons</span>
                     </div>
                     <div class="meta-item">
-                        <span class="material-symbols-outlined">schedule</span>
-                        <span>{{module.duration}}</span>
+                        <span class="material-symbols-outlined">extension</span>
+                        <span>{{module.puzzleCount}} Puzzles</span>
                     </div>
                 </div>
+                
+                <button class="chunky-button chunky-button-player btn-block" style="margin-top: 1.5rem;">Start Learning</button>
             </div>
         </div>
     </div>
