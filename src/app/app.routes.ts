@@ -13,6 +13,7 @@ import { ProfileComponent } from './components/player/profile/profile.component'
 import { AcademyComponent } from './components/player/academy/academy.component';
 import { LeaderboardComponent } from './components/player/leaderboard/leaderboard.component';
 import { ChallengesPuzzlesComponent } from './components/player/challenges-puzzles/challenges-puzzles.component';
+import { ActiveQuizComponent } from './components/player/active-quiz/active-quiz.component';
 
 export const routes: Routes = [
     {
@@ -77,6 +78,14 @@ export const routes: Routes = [
             {
                 path: 'challenges',
                 component: ChallengesPuzzlesComponent
+            },
+            {
+                path: 'quiz-demo',
+                component: ActiveQuizComponent
+            },
+            {
+                path: 'arena',
+                component: ActiveQuizComponent
             },
             {
                 path: '',

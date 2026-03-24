@@ -1,0 +1,118 @@
+<div class="quiz-overlay">
+  <div class="quiz-container">
+    <!-- Header -->
+    <header class="quiz-header">
+      <div class="header-left">
+        <div class="logo-box">
+          <span class="material-symbols-outlined">castle</span>
+        </div>
+        <div class="header-text">
+          <h1 class="header-title">{{ title }}</h1>
+          <p class="header-subtitle">{{ subtitle }}</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="close()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </header>
+
+    <div class="quiz-content">
+      <!-- Top Section: Progress & Reward -->
+      <section class="status-section">
+        <div class="progress-info">
+          <div class="progress-text-row">
+            <span class="label">PROGRESS</span>
+            <h2 class="question-counter">Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}</h2>
+            <div class="reward-tag" *ngIf="currentQuestion.xpReward">
+              EMERALD LEAGUE POINTS: +{{ currentQuestion.xpReward }}
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="main-layout">
+        <!-- Sidebar: Timer -->
+        <aside class="timer-sidebar">
+          <div class="timer-box">
+            <div class="timer-label">MINUTES</div>
+            <div class="timer-value">
+              {{ minutes }}
+              <span class="material-symbols-outlined icon-faded">schedule</span>
+            </div>
+          </div>
+          <div class="timer-box seconds-box">
+            <div class="timer-label">SECONDS</div>
+            <div class="timer-value">
+              {{ seconds }}
+              <span class="material-symbols-outlined icon-faded">timer</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center: Character & Question -->
+        <div class="question-area">
+          <div class="character-card">
+            <div class="character-avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=KingRegalis" alt="King Regalis">
+              <div class="hint-badge">
+                <span class="material-symbols-outlined">lightbulb</span>
+              </div>
+            </div>
+            <div class="character-speech">
+              <h4 class="character-name">King Regalis</h4>
+              <p class="character-quote">"{{ currentQuestion.hint }}"</p>
+            </div>
+          </div>
+
+          <h2 class="question-text">{{ currentQuestion.text }}</h2>
+
+          <!-- Options Grid -->
+          <div class="options-grid">
+            <button *ngFor="let option of currentQuestion.options" 
+                    class="option-card"
+                    [ngClass]="getOptionClass(option)"
+                    (click)="selectOption(option.id)">
+              <div class="option-label" [ngClass]="getOptionClass(option)">{{ option.label }}</div>
+              <span class="option-text">{{ option.text }}</span>
+              <div class="status-icon" *ngIf="isAnswerChecked && option.id === currentQuestion.correctOptionId">
+                <span class="material-symbols-outlined">check_circle</span>
+              </div>
+              <div class="status-icon" *ngIf="isAnswerChecked && option.id === selectedOptionId && option.id !== currentQuestion.correctOptionId">
+                <span class="material-symbols-outlined">cancel</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="quiz-footer">
+      <button class="footer-btn secondary-btn" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+        <span class="material-symbols-outlined">arrow_back</span> PREVIOUS
+      </button>
+      
+      <div class="footer-center" *ngIf="isAnswerChecked">
+        <p class="feedback-msg" [ngClass]="results[currentQuestionIndex]?.isCorrect ? 'correct-text' : 'incorrect-text'">
+          {{ results[currentQuestionIndex]?.isCorrect ? 'Excellent! That is correct.' : 'Oops! Better luck next time.' }}
+        </p>
+      </div>
+
+      <button *ngIf="!isAnswerChecked" 
+              class="footer-btn check-btn" 
+              (click)="checkAnswer()" 
+              [disabled]="!selectedOptionId">
+        CHECK <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+      
+      <button *ngIf="isAnswerChecked" 
+              class="footer-btn check-btn" 
+              (click)="nextQuestion()">
+        {{ currentQuestionIndex === questions.length - 1 ? 'FINISH' : 'CONTINUE' }} <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </footer>
+  </div>
+</div>
