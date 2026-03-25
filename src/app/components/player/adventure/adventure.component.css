@@ -180,7 +180,7 @@
 /* Active Indicator (Pointer) */
 .active-indicator {
     position: absolute;
-    right: -100px;
+    right: -145px;
     top: 20px;
     display: flex;
     align-items: center;

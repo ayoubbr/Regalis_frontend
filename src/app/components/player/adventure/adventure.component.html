@@ -1,63 +1,51 @@
 <div class="adventure-page">
     <div class="adventure-main">
-        <header class="adventure-header">
-            <h1 class="adventure-title">The Grand Journey</h1>
-            <p class="adventure-subtitle">Chapter 2: The Knight's Gambit</p>
-        </header>
+        <ng-container *ngFor="let module of modules; let modIdx = index">
+            <header class="adventure-header">
+                <h1 class="adventure-title">{{module.name}}</h1>
+                <p class="adventure-subtitle">Chapter {{module.orderIndex}}: {{module.description}}</p>
+            </header>
 
-        <div class="roadmap-viewport" *ngIf="!loading">
-            <div class="path-container">
-                <div *ngFor="let module of modules; let i = index" 
-                     class="node-wrapper"
-                     [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
-                    
-                    <!-- Chunky Node -->
-                    <div class="chunky-node" 
-                         [ngClass]="{
-                            'completed': module.status === 'completed',
-                            'active': module.status === 'active',
-                            'locked': module.status === 'locked',
-                            'special': i % 5 === 4
-                         }">
-                        <div class="node-inner">
-                            <span class="material-symbols-outlined">{{getNodeIcon(i)}}</span>
+            <div class="roadmap-viewport" *ngIf="!loading">
+                <div class="path-container">
+                    <div *ngFor="let puzzle of module.puzzles; let i = index" 
+                         class="node-wrapper"
+                         [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
+                        
+                        <!-- Chunky Node -->
+                        <div class="chunky-node" 
+                             (click)="startPuzzle(puzzle)"
+                             [ngClass]="{
+                                'completed': puzzle.status === 'completed',
+                                'active': puzzle.status === 'active',
+                                'locked': puzzle.status === 'locked',
+                                'special': i % 5 === 4
+                             }">
+                            <div class="node-inner">
+                                <span class="material-symbols-outlined">{{getNodeIcon(puzzle.status, i)}}</span>
+                            </div>
+                            <div class="node-shadow"></div>
                         </div>
-                        <div class="node-shadow"></div>
-                    </div>
 
-                    <!-- Module Name Title -->
-                    <div class="node-title" >
-                        {{module.name}}
-                    </div>
+                        <!-- Puzzle Label -->
+                        <div class="node-title" >
+                            {{puzzle.title}}
+                        </div>
 
-                    <!-- Current Position Pointer -->
-                    <div class="active-indicator" *ngIf="module.status === 'active'">
-                        <span class="material-symbols-outlined">location_on</span>
-                        <div class="indicator-badge">YOU ARE HERE!</div>
+                        <!-- Current Position Pointer -->
+                        <div class="active-indicator" *ngIf="puzzle.status === 'active'">
+                            <span class="material-symbols-outlined">location_on</span>
+                            <div class="indicator-badge">YOU ARE HERE!</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
 
         <div class="loading-state" *ngIf="loading">
             <div class="spinner"></div>
             <p>Loading your journey...</p>
         </div>
-
-        <footer class="adventure-footer" *ngIf="!loading">
-            <div class="friend-stats">
-                <div class="friend-avatars">
-                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/32?img=1')"></div>
-                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/32?img=2')"></div>
-                    <div class="avatar more">+12</div>
-                </div>
-                <p>14 friends are currently playing this chapter</p>
-            </div>
-            <button class="chunky-button chunky-button-player">
-                CONTINUE QUEST
-                <span class="material-symbols-outlined">play_arrow</span>
-            </button>
-        </footer>
     </div>
 
     <!-- Right Sidebar -->
@@ -97,4 +85,12 @@
             </div>
         </div>
     </aside>
+
+    <!-- Active Situation Overlay -->
+    <app-active-situation 
+        *ngIf="selectedPuzzle" 
+        [puzzle]="selectedPuzzle" 
+        (completed)="onPuzzleCompleted()"
+        (closed)="closePuzzle()">
+    </app-active-situation>
 </div>

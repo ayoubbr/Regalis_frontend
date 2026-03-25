@@ -3,15 +3,20 @@ import { CommonModule } from '@angular/common';
 import { ModuleService } from '../../../core/services/module.service';
 import { Module } from '../../../core/models/module.model';
 import { AuthService } from '../../../core/services/auth.service';
-import { UserProgressService } from '../../../core/services/user-progress.service';
+import { UserPuzzleService } from '../../../core/services/user-puzzle.service';
+import { PuzzleService } from '../../../core/services/puzzle.service';
 import { forkJoin } from 'rxjs';
 
 import { RouterModule } from '@angular/router';
+import { Quiz } from '../../../core/models/quiz.model';
+import { Puzzle } from '../../../core/models/puzzle.model';
+import { ActiveQuizComponent } from '../active-quiz/active-quiz.component';
+import { ActiveSituationComponent } from '../active-situation/active-situation.component';
 
 @Component({
   selector: 'app-adventure',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ActiveQuizComponent, ActiveSituationComponent],
   templateUrl: './adventure.component.html',
   styleUrl: './adventure.component.css'
 })
@@ -19,11 +24,14 @@ export class AdventureComponent implements OnInit {
   modules: any[] = [];
   roadPath: string = '';
   loading = true;
+  selectedQuiz: Quiz | null = null;
+  selectedPuzzle: Puzzle | null = null;
   
   constructor(
     private moduleService: ModuleService,
+    private puzzleService: PuzzleService,
     public authService: AuthService,
-    private userProgressService: UserProgressService
+    private userPuzzleService: UserPuzzleService
   ) {}
 
   ngOnInit(): void {
@@ -38,32 +46,37 @@ export class AdventureComponent implements OnInit {
     this.loading = true;
     forkJoin({
       allModules: this.moduleService.getAll(),
-      userProgress: this.userProgressService.getUserProgress(userId)
-    }).subscribe(({ allModules, userProgress }) => {
+      allPuzzles: this.puzzleService.getAll(),
+      userPuzzles: this.userPuzzleService.getUserAttempts(userId)
+    }).subscribe(({ allModules, allPuzzles, userPuzzles }) => {
       const sortedModules = allModules.sort((a, b) => a.orderIndex - b.orderIndex);
       
       let foundActive = false;
 
       this.modules = sortedModules.map((mod, index) => {
-        // Mocking the status based on order for now until we have lesson mapping in progress
-        const completedCount = userProgress.filter(p => p.completed).length; 
+        const modPuzzles = allPuzzles.filter(p => p.moduleId === mod.id);
         
-        // Assume 3 lessons per module if lessonCount is missing
-        const lessonsPerModule = mod.lessonCount || 3;
-        const modulesCompleted = Math.floor(completedCount / lessonsPerModule);
+        const mappedPuzzles = modPuzzles.map((puzzle, puzzleIndex) => {
+            const isCompleted = userPuzzles.some(p => p.puzzleId === puzzle.id && p.solved);
+            
+            let status = 'locked';
+            if (isCompleted) {
+              status = 'completed';
+            } else if (!foundActive) {
+              status = 'active';
+              foundActive = true;
+            }
 
-        let status = 'locked';
-        if (index < modulesCompleted) {
-          status = 'completed';
-        } else if (!foundActive) {
-          status = 'active';
-          foundActive = true;
-        }
+            return {
+              ...puzzle,
+              status: status,
+              label: `Puzzle ${puzzleIndex + 1}`
+            };
+        });
 
         return {
           ...mod,
-          status: status,
-          label: mod.name
+          puzzles: mappedPuzzles
         };
       });
 
@@ -78,11 +91,28 @@ export class AdventureComponent implements OnInit {
     return offsets[index % offsets.length];
   }
 
-  getNodeIcon(index: number): string {
-      const mod = this.modules[index];
-      if (mod?.status === 'completed') return 'check_circle';
-      if (mod?.status === 'active') return 'star';
+  getNodeIcon(status: string, index: number): string {
+      if (status === 'completed') return 'check_circle';
+      if (status === 'active') return 'star';
       if (index % 5 === 4) return 'trophy';
       return 'lock';
+  }
+
+  startPuzzle(puzzle: any): void {
+      if (puzzle.status === 'locked') return;
+      this.selectedPuzzle = puzzle;
+  }
+
+  closePuzzle(): void {
+      this.selectedPuzzle = null;
+  }
+
+  onPuzzleCompleted(): void {
+      // Refresh or handle completion
+      this.authService.currentUser.subscribe(user => {
+          if (user && user.id) {
+              this.loadAdventure(user.id);
+          }
+      });
   }
 }
