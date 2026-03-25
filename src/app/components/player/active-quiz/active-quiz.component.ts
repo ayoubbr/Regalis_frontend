@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuizQuestion, QuizResult, QuizOption } from '../../../core/models/quiz.model';
+import { Quiz, QuestionResponseDTO, QuizResult, QuizOption, QuizQuestion } from '../../../core/models/quiz.model';
 
 @Component({
   selector: 'app-active-quiz',
@@ -10,13 +10,13 @@ import { QuizQuestion, QuizResult, QuizOption } from '../../../core/models/quiz.
   styleUrl: './active-quiz.component.css'
 })
 export class ActiveQuizComponent implements OnInit, OnDestroy {
-  @Input() title: string = 'Regalis Quiz';
-  @Input() subtitle: string = 'CHALLENGE SERIES';
-  @Input() questions: QuizQuestion[] = [];
+  @Input() quiz: Quiz | null = null;
   @Input() initialTime: number = 600; // 10 minutes in seconds
 
   @Output() completed = new EventEmitter<QuizResult[]>();
   @Output() closed = new EventEmitter<void>();
+
+  questions: QuizQuestion[] = [];
 
   currentQuestionIndex: number = 0;
   selectedOptionId: string | null = null;
@@ -33,10 +33,29 @@ export class ActiveQuizComponent implements OnInit, OnDestroy {
     this.startTimer();
     this.startTime = Date.now();
     
-    // For demo purposes, if no questions provided, load some mock ones
-    if (this.questions.length === 0) {
+    if (this.quiz && this.quiz.questions) {
+      this.questions = this.quiz.questions.map(q => this.mapQuestion(q));
+    } else if (this.questions.length === 0) {
       this.loadMockQuestions();
     }
+  }
+
+  private mapQuestion(q: QuestionResponseDTO): QuizQuestion {
+    const optionLabels = ['A', 'B', 'C', 'D'];
+    const parsedOptions: QuizOption[] = q.options.split(';').map((opt, idx) => ({
+      id: opt.trim(),
+      label: optionLabels[idx % optionLabels.length],
+      text: opt.trim()
+    }));
+
+    return {
+      id: q.id,
+      text: q.text,
+      options: parsedOptions,
+      correctOptionId: q.correctOptionId,
+      hint: q.hint,
+      xpReward: q.xpReward
+    };
   }
 
   ngOnDestroy(): void {

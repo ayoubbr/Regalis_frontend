@@ -1,5 +1,5 @@
-<div class="quiz-overlay">
-  <div class="quiz-container">
+<div class="quiz-overlay" *ngIf="quiz">
+  <div class="quiz-container arena-theme">
     <!-- Header -->
     <header class="quiz-header">
       <div class="header-left">
@@ -7,8 +7,8 @@
           <span class="material-symbols-outlined">castle</span>
         </div>
         <div class="header-text">
-          <h1 class="header-title">{{ title }}</h1>
-          <p class="header-subtitle">{{ subtitle }}</p>
+          <h1 class="header-title">{{ quiz.title }}</h1>
+          <p class="header-subtitle">CHALLENGE SERIES</p>
         </div>
       </div>
       <button class="close-btn" (click)="close()">
@@ -17,14 +17,19 @@
     </header>
 
     <div class="quiz-content">
+      <!-- Background Image / Arena -->
+      <div class="arena-background" [style.background-image]="quiz.imageUrl ? 'url(' + quiz.imageUrl + ')' : 'none'">
+        <div class="arena-overlay"></div>
+      </div>
+
       <!-- Top Section: Progress & Reward -->
       <section class="status-section">
         <div class="progress-info">
           <div class="progress-text-row">
             <span class="label">PROGRESS</span>
             <h2 class="question-counter">Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}</h2>
-            <div class="reward-tag" *ngIf="currentQuestion.xpReward">
-              EMERALD LEAGUE POINTS: +{{ currentQuestion.xpReward }}
+            <div class="reward-tag" *ngIf="currentQuestionIndex < questions.length && questions[currentQuestionIndex].xpReward">
+              REWARD: +{{ questions[currentQuestionIndex].xpReward }} XP
             </div>
           </div>
           <div class="progress-bar-container">
@@ -33,7 +38,7 @@
         </div>
       </section>
 
-      <div class="main-layout">
+      <div class="main-layout" *ngIf="questions.length > 0">
         <!-- Sidebar: Timer -->
         <aside class="timer-sidebar">
           <div class="timer-box">
@@ -63,7 +68,7 @@
             </div>
             <div class="character-speech">
               <h4 class="character-name">King Regalis</h4>
-              <p class="character-quote">"{{ currentQuestion.hint }}"</p>
+              <p class="character-quote">"{{ currentQuestion.hint || 'Good luck, traveler!' }}"</p>
             </div>
           </div>
 
@@ -71,21 +76,24 @@
 
           <!-- Options Grid -->
           <div class="options-grid">
-            <button *ngFor="let option of currentQuestion.options" 
-                    class="option-card"
-                    [ngClass]="getOptionClass(option)"
-                    (click)="selectOption(option.id)">
+            <button *ngFor="let option of currentQuestion.options" class="option-card"
+              [ngClass]="getOptionClass(option)" (click)="selectOption(option.id)">
               <div class="option-label" [ngClass]="getOptionClass(option)">{{ option.label }}</div>
               <span class="option-text">{{ option.text }}</span>
               <div class="status-icon" *ngIf="isAnswerChecked && option.id === currentQuestion.correctOptionId">
                 <span class="material-symbols-outlined">check_circle</span>
               </div>
-              <div class="status-icon" *ngIf="isAnswerChecked && option.id === selectedOptionId && option.id !== currentQuestion.correctOptionId">
+              <div class="status-icon"
+                *ngIf="isAnswerChecked && option.id === selectedOptionId && option.id !== currentQuestion.correctOptionId">
                 <span class="material-symbols-outlined">cancel</span>
               </div>
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="loading-questions" *ngIf="questions.length === 0">
+        <p>Preparing the challenge...</p>
       </div>
     </div>
 
@@ -94,24 +102,23 @@
       <button class="footer-btn secondary-btn" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
         <span class="material-symbols-outlined">arrow_back</span> PREVIOUS
       </button>
-      
+
       <div class="footer-center" *ngIf="isAnswerChecked">
-        <p class="feedback-msg" [ngClass]="results[currentQuestionIndex]?.isCorrect ? 'correct-text' : 'incorrect-text'">
-          {{ results[currentQuestionIndex]?.isCorrect ? 'Excellent! That is correct.' : 'Oops! Better luck next time.' }}
+        <p class="feedback-msg"
+          [ngClass]="results[currentQuestionIndex]?.isCorrect ? 'correct-text' : 'incorrect-text'">
+          {{ results[currentQuestionIndex]?.isCorrect ? 'Excellent! That is correct.' : 'Oops! Better luck next time.'
+          }}
         </p>
       </div>
 
-      <button *ngIf="!isAnswerChecked" 
-              class="footer-btn check-btn" 
-              (click)="checkAnswer()" 
-              [disabled]="!selectedOptionId">
+      <button *ngIf="!isAnswerChecked" class="footer-btn check-btn" (click)="checkAnswer()"
+        [disabled]="!selectedOptionId">
         CHECK <span class="material-symbols-outlined">arrow_forward</span>
       </button>
-      
-      <button *ngIf="isAnswerChecked" 
-              class="footer-btn check-btn" 
-              (click)="nextQuestion()">
-        {{ currentQuestionIndex === questions.length - 1 ? 'FINISH' : 'CONTINUE' }} <span class="material-symbols-outlined">arrow_forward</span>
+
+      <button *ngIf="isAnswerChecked" class="footer-btn check-btn" (click)="nextQuestion()">
+        {{ currentQuestionIndex === questions.length - 1 ? 'FINISH' : 'CONTINUE' }} <span
+          class="material-symbols-outlined">arrow_forward</span>
       </button>
     </footer>
   </div>
