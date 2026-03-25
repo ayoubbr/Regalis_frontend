@@ -27,35 +27,49 @@
         <p>Master the board one challenge at a time.</p>
     </div>
 
-    <!-- Modules Grid -->
+    <!-- Quizzes Grid -->
     <div class="modules-grid">
-        <div class="module-card card" *ngFor="let module of modules">
+        <div class="module-card card" *ngFor="let quiz of quizzes" [ngClass]="{'completed': quiz.completed}">
             <div class="card-image-wrapper">
-                <img [src]="module.imageUrl || 'assets/images/module-placeholder.jpg'" [alt]="module.name" class="module-image">
-                <div class="module-badge">
-                    <span class="material-symbols-outlined">school</span>
+                <img [src]="quiz.image || 'assets/images/quiz-placeholder.jpg'" [alt]="quiz.title" class="module-image">
+                <div class="module-badge" *ngIf="quiz.completed">
+                    <span class="material-symbols-outlined">check_circle</span>
+                </div>
+                <div class="module-badge" *ngIf="!quiz.completed">
+                    <span class="material-symbols-outlined">quiz</span>
                 </div>
             </div>
             
             <div class="card-content">
-                <h3 class="module-name">{{module.name}}</h3>
-                <p class="module-description">{{module.description}}</p>
+                <div class="level-tag">{{quiz.level}}</div>
+                <h3 class="module-name">{{quiz.title}}</h3>
+                <p class="module-description">{{quiz.content}}</p>
                 
                 <div class="module-meta">
                     <div class="meta-item">
-                        <span class="material-symbols-outlined">book</span>
-                        <span>{{module.lessonCount}} Lessons</span>
+                        <span class="material-symbols-outlined">schedule</span>
+                        <span>{{quiz.duration}}</span>
                     </div>
                     <div class="meta-item">
-                        <span class="material-symbols-outlined">extension</span>
-                        <span>{{module.puzzleCount}} Puzzles</span>
+                        <span class="material-symbols-outlined">bolt</span>
+                        <span>{{quiz.xpReward}} XP</span>
                     </div>
                 </div>
                 
-                <button class="chunky-button chunky-button-player btn-block" style="margin-top: 1.5rem;">Start Learning</button>
+                <button class="chunky-button chunky-button-player btn-block" style="margin-top: 1.5rem;" (click)="startQuiz(quiz)">
+                    {{quiz.completed ? 'Review Quiz' : 'Start Quiz'}}
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- Active Quiz Overlay -->
+    <app-active-quiz 
+        *ngIf="selectedQuiz" 
+        [quiz]="selectedQuiz" 
+        (completed)="onQuizCompleted($event)"
+        (closed)="closeQuiz()">
+    </app-active-quiz>
 
     <!-- Bottom Action -->
     <div class="bottom-action">
