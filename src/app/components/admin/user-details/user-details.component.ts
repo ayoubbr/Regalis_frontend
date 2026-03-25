@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { AchievementService } from '../../../core/services/achievement.service';
-import { UserProgressService } from '../../../core/services/user-progress.service';
-import { LessonService } from '../../../core/services/lesson.service';
+import { UserQuizService } from '../../../core/services/user-quiz.service';
+import { QuizService } from '../../../core/services/quiz.service';
 import { User } from '../../../core/models/user.model';
 import { Achievement, UserAchievement } from '../../../core/models/achievement.model';
-import { UserProgress } from '../../../core/models/user-progress.model';
-import { Lesson } from '../../../core/models/lesson.model';
+import { UserQuiz } from '../../../core/models/user-quiz.model';
+import { Quiz } from '../../../core/models/quiz.model';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -22,14 +22,14 @@ export class UserDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private userService = inject(UserService);
   private achievementService = inject(AchievementService);
-  private userProgressService = inject(UserProgressService);
-  private lessonService = inject(LessonService);
+  private userQuizService = inject(UserQuizService);
+  private quizService = inject(QuizService);
 
   userId: number | null = null;
   user: User | null = null;
   unlockedAchievements: (UserAchievement & { details?: Achievement })[] = [];
   allAchievements: Achievement[] = [];
-  progress: (UserProgress & { lessonName?: string })[] = [];
+  progress: (UserQuiz & { quizName?: string })[] = [];
   isLoading = true;
 
   ngOnInit(): void {
@@ -50,8 +50,8 @@ export class UserDetailsComponent implements OnInit {
       user: this.userService.getById(this.userId),
       userAchievements: this.achievementService.getUserAchievements(this.userId),
       allAchievements: this.achievementService.getAll(),
-      userProgress: this.userProgressService.getUserProgress(this.userId),
-      allLessons: this.lessonService.getAll()
+      userQuiz: this.userQuizService.getUserQuiz(this.userId),
+      allQuizzes: this.quizService.getAll()
     }).subscribe({
       next: (data) => {
         this.user = data.user;
@@ -63,10 +63,10 @@ export class UserDetailsComponent implements OnInit {
           details: this.allAchievements.find(a => a.id === ua.achievementId)
         }));
 
-        // Map lesson names to progress
-        this.progress = data.userProgress.map(p => ({
+        // Map quiz names to progress
+        this.progress = data.userQuiz.map(p => ({
           ...p,
-          lessonName: data.allLessons.find(l => l.id === p.lessonId)?.title
+          quizName: data.allQuizzes.find(l => l.id === p.quizId)?.title
         }));
 
         this.isLoading = false;

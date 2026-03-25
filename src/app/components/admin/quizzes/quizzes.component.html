@@ -1,11 +1,11 @@
 <div class="page-header">
     <div class="header-text">
-        <h1 class="page-title">Lesson Management</h1>
+        <h1 class="page-title">Quiz Management</h1>
         <p class="page-subtitle">Create and organize your masterclass curriculum</p>
     </div>
     <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
         <span class="material-symbols-outlined">add_circle</span>
-        Add New Lesson
+        Add New Quiz
     </button>
 </div>
 
@@ -13,7 +13,7 @@
 <div class="card filter-card">
     <div class="search-box">
         <span class="material-symbols-outlined search-icon">search</span>
-        <input type="text" class="search-input" placeholder="Search lessons by title, module, or tags..."
+        <input type="text" class="search-input" placeholder="Search quizzes by title, module, or tags..."
             [(ngModel)]="searchQuery" (input)="onSearch()">
     </div>
     <div class="filter-group">
@@ -30,24 +30,24 @@
     </div>
 </div>
 
-<!-- Lessons List -->
-<div class="lessons-list">
-    <div *ngFor="let lesson of filteredLessons" class="card lesson-card">
-        <div class="lesson-icon-container">
-            <span class="material-symbols-outlined lesson-icon">{{ getLessonIcon(lesson) }}</span>
+<!-- Quizzes List -->
+<div class="quizzes-list">
+    <div *ngFor="let quiz of filteredQuizzes" class="card quiz-card">
+        <div class="quiz-icon-container">
+            <span class="material-symbols-outlined quiz-icon">{{ getQuizIcon(quiz) }}</span>
         </div>
 
-        <div class="lesson-info">
-            <div class="lesson-badges">
-                <span class="badge" [ngClass]="getModuleBadgeClass(lesson)">{{ getModuleName(lesson) }}</span>
-                <span class="badge" [ngClass]="getDifficultyBadgeClass(lesson)">{{ getDifficultyLabel(lesson) }}</span>
+        <div class="quiz-info">
+            <div class="quiz-badges">
+                <span class="badge" [ngClass]="getModuleBadgeClass(quiz)">{{ getModuleName(quiz) }}</span>
+                <span class="badge" [ngClass]="getDifficultyBadgeClass(quiz)">{{ getDifficultyLabel(quiz) }}</span>
             </div>
-            <h3 class="lesson-title">{{ lesson.title }}</h3>
-            <p class="lesson-description">{{ lesson.content | slice:0:80 }}{{ lesson.content.length > 80 ? '...' : '' }}
+            <h3 class="quiz-title">{{ quiz.title }}</h3>
+            <p class="quiz-description">{{ quiz.content | slice:0:80 }}{{ quiz.content.length > 80 ? '...' : '' }}
             </p>
         </div>
 
-        <div class="lesson-stats">
+        <div class="quiz-stats">
             <div class="stat-item">
                 <p class="stat-label">Status</p>
                 <div class="status-indicator">
@@ -57,31 +57,31 @@
             </div>
             <div class="stat-item">
                 <p class="stat-label">Reward</p>
-                <p class="stat-value reward">{{ lesson.xpReward }} XP</p>
+                <p class="stat-value reward">{{ quiz.xpReward }} XP</p>
             </div>
         </div>
 
-        <div class="lesson-actions">
-            <button class="chunky-button chunky-button-secondary" (click)="onEdit(lesson)">
+        <div class="quiz-actions">
+            <button class="chunky-button chunky-button-secondary" (click)="onEdit(quiz)">
                 <span class="material-symbols-outlined">edit</span>
                 Edit
             </button>
-            <button class="chunky-button chunky-button-danger" (click)="onDelete(lesson.id)">
+            <button class="chunky-button chunky-button-danger" (click)="onDelete(quiz.id)">
                 <span class="material-symbols-outlined">delete</span>
             </button>
         </div>
     </div>
 
     <!-- Empty state -->
-    <div *ngIf="filteredLessons.length === 0" class="empty-state">
+    <div *ngIf="filteredQuizzes.length === 0" class="empty-state">
         <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
-        <p>No lessons found matching your criteria.</p>
+        <p>No quizzes found matching your criteria.</p>
     </div>
 </div>
 
 <!-- Pagination -->
 <div class="pagination">
-    <p class="pagination-info">Showing {{ filteredLessons.length }} lessons</p>
+    <p class="pagination-info">Showing {{ filteredQuizzes.length }} quizzes</p>
     <div class="pagination-controls">
         <button class="chunky-button chunky-button-secondary">Previous</button>
         <button class="chunky-button chunky-button-primary">Next</button>
@@ -92,29 +92,29 @@
 <div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
     <div class="card modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h2 class="modal-title">{{ isEditing ? 'Edit Lesson' : 'Create New Lesson' }}</h2>
+            <h2 class="modal-title">{{ isEditing ? 'Edit Quiz' : 'Create New Quiz' }}</h2>
             <button class="close-button" (click)="closeModal()">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
 
-        <form (ngSubmit)="saveLesson()" #lessonForm="ngForm" class="modal-body">
+        <form (ngSubmit)="saveQuiz()" #quizForm="ngForm" class="modal-body">
             <div class="form-group">
-                <label class="form-label">Lesson Title</label>
+                <label class="form-label">Quiz Title</label>
                 <input type="text" name="title" class="form-input" placeholder="e.g. Mastering the Sicilian Defense"
-                    [(ngModel)]="currentLesson.title" required>
+                    [(ngModel)]="currentQuiz.title" required>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Module</label>
-                    <select name="moduleId" class="form-select" [(ngModel)]="currentLesson.moduleId" required>
+                    <select name="moduleId" class="form-select" [(ngModel)]="currentQuiz.moduleId" required>
                         <option *ngFor="let mod of modules" [value]="mod.id">{{ mod.name }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Difficulty</label>
-                    <select name="difficulty" class="form-select" [(ngModel)]="currentLesson.difficulty" required>
+                    <select name="difficulty" class="form-select" [(ngModel)]="currentQuiz.difficulty" required>
                         <option [value]="1">Beginner</option>
                         <option [value]="2">Intermediate</option>
                         <option [value]="3">Advanced</option>
@@ -124,21 +124,21 @@
 
             <div class="form-group">
                 <label class="form-label">XP Reward</label>
-                <input type="number" name="xpReward" class="form-input" [(ngModel)]="currentLesson.xpReward" required>
+                <input type="number" name="xpReward" class="form-input" [(ngModel)]="currentQuiz.xpReward" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Content</label>
                 <textarea name="content" class="form-textarea" rows="5"
-                    placeholder="Enter lesson content, markdown supported..." [(ngModel)]="currentLesson.content"
+                    placeholder="Enter quiz content, markdown supported..." [(ngModel)]="currentQuiz.content"
                     required></textarea>
             </div>
 
             <div class="modal-actions">
                 <button type="button" class="chunky-button chunky-button-secondary"
                     (click)="closeModal()">Cancel</button>
-                <button type="submit" class="chunky-button chunky-button-primary" [disabled]="!lessonForm.valid">
-                    {{ isEditing ? 'Save Changes' : 'Create Lesson' }}
+                <button type="submit" class="chunky-button chunky-button-primary" [disabled]="!quizForm.valid">
+                    {{ isEditing ? 'Save Changes' : 'Create Quiz' }}
                 </button>
             </div>
         </form>

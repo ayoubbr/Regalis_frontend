@@ -88,18 +88,18 @@
             </div>
         </div>
 
-        <!-- Lesson Progress Section -->
+        <!-- Quiz Progress Section -->
         <div class="card grid-section">
             <div class="section-header">
                 <h3 class="section-title">
                     <span class="material-symbols-outlined">menu_book</span>
-                    Lesson Progress
+                    Quiz Progress
                 </h3>
             </div>
             <div class="progress-list">
                 <div class="progress-item" *ngFor="let p of progress">
                     <div class="progress-info">
-                        <h4 class="lesson-name">{{ p.lessonName || 'Unknown Lesson' }}</h4>
+                        <h4 class="quiz-name">{{ p.quizName || 'Unknown Quiz' }}</h4>
                         <span class="progress-status" [class.completed]="p.completed">
                             {{ p.completed ? 'Completed' : 'Started' }}
                         </span>
@@ -109,7 +109,7 @@
                     </div>
                 </div>
                 <div class="empty-section" *ngIf="progress.length === 0">
-                    <p>No lesson progress data available.</p>
+                    <p>No quiz progress data available.</p>
                 </div>
             </div>
         </div>

@@ -252,7 +252,7 @@
     border-radius: var(--radius-md);
 }
 
-.lesson-name {
+.quiz-name {
     font-size: 1rem;
     font-weight: 800;
     color: var(--slate-900);
@@ -310,7 +310,7 @@
 
 /* Dark Mode */
 .dark .back-button { background-color: var(--card-dark); border-color: var(--slate-800); color: var(--slate-400); }
-.dark .page-title, .dark .user-full-name, .dark .section-title, .dark .achievement-name, .dark .lesson-name { color: white; }
+.dark .page-title, .dark .user-full-name, .dark .section-title, .dark .achievement-name, .dark .quiz-name { color: white; }
 .dark .profile-hero { background: linear-gradient(135deg, var(--card-dark) 0%, var(--slate-900) 100%); border-bottom: 1px solid var(--slate-800); }
 .dark .stat-card { background-color: var(--slate-900); border-color: var(--slate-800); }
 .dark .stat-value { color: white; }

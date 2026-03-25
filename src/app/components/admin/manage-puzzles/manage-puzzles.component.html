@@ -6,37 +6,9 @@
             <p class="page-subtitle">Manage and curate the royal chess challenges.</p>
         </div>
         <div class="header-actions">
-            <button class="chunky-button btn-secondary" (click)="openCategoryModal()">
-                <span class="material-symbols-outlined">category</span>
-                MANAGE CATEGORIES
-            </button>
             <button class="chunky-button btn-primary" (click)="openCreateModal()">
                 <span class="material-symbols-outlined">add_circle</span>
                 CREATE PUZZLE
-            </button>
-        </div>
-    </div>
-
-    <!-- Filters Section -->
-    <div class="filters-section">
-        <div class="filter-group">
-            <span class="filter-label">CATEGORY:</span>
-            <button class="filter-btn" [class.active]="selectedCategoryId === null"
-                (click)="filterByCategory(null)">All</button>
-            @for (cat of categories; track cat.id) {
-            <button class="filter-btn" [class.active]="selectedCategoryId === cat.id"
-                (click)="filterByCategory(cat.id)">
-                {{cat.name}}
-            </button>
-            }
-        </div>
-        <div class="search-group">
-            <div class="search-input-wrapper">
-                <span class="material-symbols-outlined search-icon">search</span>
-                <input class="search-input" placeholder="Search puzzle ID..." type="text" />
-            </div>
-            <button class="chunky-button btn-search">
-                Filter
             </button>
         </div>
     </div>
@@ -56,21 +28,20 @@
         } @else if (error) {
         <div class="state-message error">{{ error }}</div>
         } @else if (filteredPuzzles.length === 0) {
-        <div class="state-message">No puzzles found matching your criteria.</div>
+        <div class="state-message">No puzzles found.</div>
         } @else {
         <div class="table-body">
             @for (puzzle of filteredPuzzles; track puzzle.id) {
             <div class="table-row grid-4-cols">
                 <div class="col-preview">
                     <div class="preview-img-container">
-                        <img [src]="getFenImageUrl(puzzle.fenPosition)" [alt]="'Puzzle ' + puzzle.id"
+                        <img [src]="getFenImageUrl(puzzle.fenPosition)" [alt]="puzzle.title"
                             class="preview-img" onerror="this.src='https://placehold.co/100x100?text=FEN'" />
                     </div>
                 </div>
                 <div class="col-details">
-                    <div class="puzzle-id">#PZ-{{puzzle.id}}</div>
-                    <div class="puzzle-desc">Category: {{ getCategoryName(puzzle.categoryId) }} | Module: {{
-                        getModuleName(puzzle.moduleId) }}</div>
+                    <div class="puzzle-title">{{puzzle.title}}</div>
+                    <div class="puzzle-desc">Module: {{ getModuleName(puzzle.moduleId) }}</div>
                 </div>
                 <div class="col-elo">
                     <div class="elo-badge">
@@ -125,6 +96,16 @@
             <form [formGroup]="puzzleForm" (ngSubmit)="savePuzzle()" class="puzzle-form">
 
                 <div class="form-group full-width">
+                    <label>Title</label>
+                    <input type="text" formControlName="title" placeholder="e.g. Back Rank Mate" class="form-input">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Description</label>
+                    <textarea formControlName="description" placeholder="Describe the puzzle goals..." class="form-input" rows="3"></textarea>
+                </div>
+
+                <div class="form-group full-width">
                     <label>FEN Position</label>
                     <input type="text" formControlName="fenPosition"
                         placeholder="e.g. rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" class="form-input">
@@ -162,16 +143,6 @@
                     </div>
                 </div>
 
-                <div class="form-group full-width">
-                    <label>Category</label>
-                    <select formControlName="categoryId" class="form-input">
-                        <option value="">Select a Category</option>
-                        @for (cat of categories; track cat.id) {
-                        <option [value]="cat.id">{{ cat.name }}</option>
-                        }
-                    </select>
-                </div>
-
                 <div class="modal-footer">
                     <button type="button" class="chunky-button btn-secondary"
                         (click)="closeCreateModal()">Cancel</button>
@@ -180,49 +151,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-    }
-
-    <!-- Manage Categories Modal -->
-    @if (isManagingCategories) {
-    <div class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>Manage Categories</h3>
-                <button class="btn-close" (click)="closeCategoryModal()">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-            </div>
-
-            <div class="modal-body list-body">
-                <!-- Add new category form -->
-                <form [formGroup]="categoryForm" (ngSubmit)="createCategory()" class="add-inline-form">
-                    <div class="form-group inline-flex">
-                        <input type="text" formControlName="name" placeholder="Category Name" class="form-input">
-                        <button type="submit" class="chunky-button btn-primary"
-                            [disabled]="categoryForm.invalid">Add</button>
-                    </div>
-                </form>
-
-                <!-- List of categories -->
-                <div class="items-list">
-                    @for (cat of categories; track cat.id) {
-                    <div class="list-item">
-                        <span class="item-name">{{ cat.name }}</span>
-                        <button class="btn-icon delete" (click)="deleteCategory(cat.id)" title="Delete Category">
-                            <span class="material-symbols-outlined">delete</span>
-                        </button>
-                    </div>
-                    } @empty {
-                    <div class="state-message">No categories found. Add one above.</div>
-                    }
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="chunky-button btn-secondary" (click)="closeCategoryModal()">Close</button>
-            </div>
         </div>
     </div>
     }
