@@ -1,19 +1,16 @@
 import { AdminComponent } from './components/admin/admin.component';
 import { Routes } from '@angular/router';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
-import { LessonsComponent } from './components/admin/lessons/lessons.component';
+import { QuizzesComponent } from './components/admin/quizzes/quizzes.component';
 import { ModulesComponent } from './components/admin/modules/modules.component';
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 import { UserDetailsComponent } from './components/admin/user-details/user-details.component';
 import { ManagePuzzlesComponent } from './components/admin/manage-puzzles/manage-puzzles.component';
-import { ManageChallengesComponent } from './components/admin/manage-challenges/manage-challenges.component';
 import { PlayerComponent } from './components/player/player.component';
 import { AdventureComponent } from './components/player/adventure/adventure.component';
 import { ProfileComponent } from './components/player/profile/profile.component';
 import { AcademyComponent } from './components/player/academy/academy.component';
 import { LeaderboardComponent } from './components/player/leaderboard/leaderboard.component';
-import { ChallengesPuzzlesComponent } from './components/player/challenges-puzzles/challenges-puzzles.component';
-import { DailyChallengeComponent } from './components/player/daily-challenge/daily-challenge.component';
 import { ActiveQuizComponent } from './components/player/active-quiz/active-quiz.component';
 
 import { authGuard } from './core/guards/auth.guard';
@@ -38,8 +35,8 @@ export const routes: Routes = [
                 component: AdminDashboardComponent
             },
             {
-                path: 'lessons',
-                component: LessonsComponent
+                path: 'quizzes',
+                component: QuizzesComponent
             },
             {
                 path: 'modules',
@@ -56,10 +53,6 @@ export const routes: Routes = [
             {
                 path: 'puzzles',
                 component: ManagePuzzlesComponent
-            },
-            {
-                path: 'challenges',
-                component: ManageChallengesComponent
             },
             {
                 path: '',
@@ -90,16 +83,8 @@ export const routes: Routes = [
                 component: LeaderboardComponent
             },
             {
-                path: 'challenges',
-                component: ChallengesPuzzlesComponent
-            },
-            {
                 path: 'quiz-demo',
                 component: ActiveQuizComponent
-            },
-            {
-                path: 'daily-challenge',
-                component: DailyChallengeComponent
             },
             {
                 path: 'arena',
