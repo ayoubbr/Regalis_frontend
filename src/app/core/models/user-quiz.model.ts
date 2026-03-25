@@ -1,16 +1,16 @@
-export interface UserProgress {
+export interface UserQuiz {
     id: number;
     userId: number;
-    lessonId: number;
+    quizId: number;
     completed: boolean;
     completionDate: string | null; // LocalDateTime as ISO string
 }
 
-export interface UserProgressCreateDTO {
+export interface UserQuizCreateDTO {
     userId: number;
-    lessonId: number;
+    quizId: number;
 }
 
-export interface UserProgressUpdateDTO {
+export interface UserQuizUpdateDTO {
     completed: boolean;
 }

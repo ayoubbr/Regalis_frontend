@@ -1,4 +1,4 @@
-export interface UserPuzzleAttempt {
+export interface UserPuzzle {
     id: number;
     userId: number;
     puzzleId: number;
@@ -9,7 +9,7 @@ export interface UserPuzzleAttempt {
     attemptDate: string; // LocalDateTime as ISO string
 }
 
-export interface UserPuzzleAttemptCreateDTO {
+export interface UserPuzzleCreateDTO {
     userId: number;
     puzzleId: number;
     attemptsCount: number;

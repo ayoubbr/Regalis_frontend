@@ -4,7 +4,7 @@ export interface Module {
     description: string;
     orderIndex: number;
     imageUrl?: string;
-    lessonCount: number;
+    quizCount: number;
     puzzleCount: number;
 }
 
