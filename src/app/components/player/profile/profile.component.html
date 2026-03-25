@@ -49,7 +49,7 @@
                     <p class="stat-label">TOTAL EXPERIENCE</p>
                     <div class="stat-value-container">
                         <h3 class="stat-value">{{currentUser?.totalXp | number}}</h3>
-                        <span class="stat-change">+1,200 XP today</span>
+                        <!-- <span class="stat-change">+1,200 XP today</span> -->
                     </div>
                     <div class="progress-container">
                         <div class="progress-fill" [style.width.%]="getXpProgress()"></div>
@@ -63,20 +63,7 @@
                         <span class="material-symbols-outlined streak-icon">local_fire_department</span>
                         <h3 class="stat-value">{{currentUser?.currentStreak}} Days</h3>
                     </div>
-                    <p class="stat-footer">Personal Best: 24 Days</p>
-                </div>
-
-                <div class="stat-card card">
-                    <p class="stat-label">GAMES PLAYED</p>
-                    <div class="stat-value-container">
-                        <h3 class="stat-value">1,248</h3>
-                        <div class="win-rate-indicator">
-                            <span class="dot win">W</span>
-                            <span class="dot win">W</span>
-                            <span class="dot loss">L</span>
-                        </div>
-                    </div>
-                    <p class="stat-footer">78% Win Rate</p>
+                    <p class="stat-footer">Keep it up!</p>
                 </div>
             </div>
         </div>
