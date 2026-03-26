@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Quiz, QuestionResponseDTO, QuizResult, QuizOption, QuizQuestion } from '../../../core/models/quiz.model';
 
@@ -9,34 +9,26 @@ import { Quiz, QuestionResponseDTO, QuizResult, QuizOption, QuizQuestion } from 
   templateUrl: './active-quiz.component.html',
   styleUrl: './active-quiz.component.css'
 })
-export class ActiveQuizComponent implements OnInit, OnDestroy {
+export class ActiveQuizComponent implements OnInit {
   @Input() quiz: Quiz | null = null;
-  @Input() initialTime: number = 600; // 10 minutes in seconds
 
   @Output() completed = new EventEmitter<QuizResult[]>();
   @Output() closed = new EventEmitter<void>();
 
   questions: QuizQuestion[] = [];
+  hasError: boolean = false;
 
   currentQuestionIndex: number = 0;
   selectedOptionId: string | null = null;
   isAnswerChecked: boolean = false;
   
-  timeLeft: number = 0;
-  timerInterval: any;
-  
   results: QuizResult[] = [];
-  startTime: number = 0;
 
   ngOnInit(): void {
-    this.timeLeft = this.initialTime;
-    this.startTimer();
-    this.startTime = Date.now();
-    
-    if (this.quiz && this.quiz.questions) {
+    if (this.quiz && this.quiz.questions && this.quiz.questions.length > 0) {
       this.questions = this.quiz.questions.map(q => this.mapQuestion(q));
-    } else if (this.questions.length === 0) {
-      this.loadMockQuestions();
+    } else {
+      this.hasError = true;
     }
   }
 
@@ -58,10 +50,6 @@ export class ActiveQuizComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {
-    this.stopTimer();
-  }
-
   get currentQuestion(): QuizQuestion {
     return this.questions[this.currentQuestionIndex];
   }
@@ -69,36 +57,6 @@ export class ActiveQuizComponent implements OnInit, OnDestroy {
   get progressPercentage(): number {
     if (this.questions.length === 0) return 0;
     return ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
-  }
-
-  get formattedTime(): string {
-    const minutes = Math.floor(this.timeLeft / 60);
-    const seconds = this.timeLeft % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
-
-  get minutes(): string {
-    return Math.floor(this.timeLeft / 60).toString().padStart(2, '0');
-  }
-
-  get seconds(): string {
-    return (this.timeLeft % 60).toString().padStart(2, '0');
-  }
-
-  startTimer(): void {
-    this.timerInterval = setInterval(() => {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-      } else {
-        this.stopTimer();
-      }
-    }, 1000);
-  }
-
-  stopTimer(): void {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-    }
   }
 
   selectOption(optionId: string): void {
@@ -111,13 +69,12 @@ export class ActiveQuizComponent implements OnInit, OnDestroy {
     
     this.isAnswerChecked = true;
     const isCorrect = this.selectedOptionId === this.currentQuestion.correctOptionId;
-    const timeSpent = Math.floor((Date.now() - this.startTime) / 1000);
     
     this.results.push({
       questionId: this.currentQuestion.id,
       selectedOptionId: this.selectedOptionId,
       isCorrect: isCorrect,
-      timeSpent: timeSpent
+      timeSpent: 0
     });
   }
 
@@ -126,7 +83,6 @@ export class ActiveQuizComponent implements OnInit, OnDestroy {
       this.currentQuestionIndex++;
       this.selectedOptionId = null;
       this.isAnswerChecked = false;
-      this.startTime = Date.now();
     } else {
       this.completed.emit(this.results);
     }
@@ -151,36 +107,5 @@ export class ActiveQuizComponent implements OnInit, OnDestroy {
       return 'disabled';
     }
     return this.selectedOptionId === option.id ? 'selected' : '';
-  }
-
-  private loadMockQuestions(): void {
-    this.questions = [
-      {
-        id: 1,
-        text: 'Which of these ancient structures serves as the primary gateway to the Regalis Kingdom?',
-        options: [
-          { id: 'A', label: 'A', text: 'The Emerald Archway' },
-          { id: 'B', label: 'B', text: 'The Silver Spire' },
-          { id: 'C', label: 'C', text: 'Iron Citadel Gate' },
-          { id: 'D', label: 'D', text: 'Crystal Cascades' }
-        ],
-        correctOptionId: 'A',
-        hint: 'Hmm, this one is tricky! The architecture here is quite unique... what do you think?',
-        xpReward: 200
-      },
-      {
-        id: 2,
-        text: 'What is the highest title reachable in the Regalis Leaderboard?',
-        options: [
-          { id: 'A', label: 'A', text: 'Emerald King' },
-          { id: 'B', label: 'B', text: 'Grandmaster' },
-          { id: 'C', label: 'C', text: 'Regalis Champion' },
-          { id: 'D', label: 'D', text: 'Ancient Guardian' }
-        ],
-        correctOptionId: 'B',
-        hint: 'It sounds like someone who has mastered everything!',
-        xpReward: 150
-      }
-    ];
   }
 }
