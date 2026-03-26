@@ -92,7 +92,10 @@ export class AcademyComponent implements OnInit {
             };
             this.userQuizService.updateProgress(progId, updateDto).subscribe(() => {
                 this.selectedQuiz = null;
-                this.loadAcademyData(userId);
+                // Refresh global user state so profile/adventure pages show updated XP
+                this.authService.updateUserProfile().subscribe(() => {
+                    this.loadAcademyData(userId);
+                });
             });
         };
 
