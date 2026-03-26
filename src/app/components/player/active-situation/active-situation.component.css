@@ -1,194 +1,173 @@
-/* Root Overlay to match Quiz exactly */
+/* Duolingo light theme for ActiveSituationComponent */
 .arena-overlay {
   position: fixed;
   inset: 0;
-  background-color: #f6f8f7;
+  background-color: #ffffff;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #3c3c3c;
 }
 
 .arena-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
   width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
-/* --- Header Architecture --- */
+/* --- Header Architecture (Duolingo Style) --- */
 .arena-header {
-  padding: 1.5rem 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-left {
+  padding: 1rem 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  border-bottom: 2px solid #e5e5e5;
 }
-
-.logo-box {
-  background-color: #13ec6d;
-  color: #0d311c;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-box span { font-variation-settings: 'FILL' 1; font-size: 1.75rem; }
-
-.header-text { display: flex; flex-direction: column; }
-.header-title { font-size: 1.5rem; font-weight: 900; color: #1e293b; margin: 0; }
-.header-subtitle { font-size: 0.75rem; font-weight: 800; color: #64748b; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; }
 
 .close-btn {
-  background-color: white;
-  border: 1.5px solid #e2e8f0;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
+  background: none;
+  border: none;
+  color: #afafaf;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s;
 }
 
-.close-btn:hover { background-color: #f1f5f9; transform: scale(1.1); }
-
-/* --- Content Core --- */
-.arena-content {
-  flex: 1;
-  padding: 0 4rem 2rem 4rem;
-  overflow-y: auto;
-  position: relative;
-}
-
-/* Status Section (Pixel-Perfect Quiz Mirror) */
-.status-section {
-  background-color: white;
-  border-radius: 1.5rem;
-  padding: 2rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-  margin-bottom: 2.5rem;
-}
-
-.progress-info { width: 100%; }
-
-.progress-text-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.label { font-size: 0.625rem; font-weight: 900; color: #64748b; letter-spacing: 0.1em; }
-.counter-text { font-size: 1.25rem; font-weight: 900; color: #1e293b; margin: 0; }
-
-.reward-tag {
-  background-color: #dcfce7;
-  color: #13ec6d;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-}
+.close-btn:hover { color: #3c3c3c; }
 
 .progress-bar-container {
+  flex: 1;
   height: 1rem;
-  background-color: #f1f5f9;
-  border-radius: 9999px;
+  background-color: #e5e5e5;
+  border-radius: 1rem;
   overflow: hidden;
+  position: relative;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background-color: #13ec6d;
-  border-radius: 9999px;
-  transition: width 0.4s ease;
+  background-color: #58cc02;
+  border-radius: 1rem;
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  position: relative;
 }
 
-/* Main Arena Layout */
-.main-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr 240px;
-  gap: 3rem;
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  width: 90%;
+  height: 20%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
 }
 
-/* Sidebar Styling (Chunky 3D Cards) */
-.sidebar-box {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.glass-card {
-  background-color: white;
-  border: 4px solid #edeef1;
-  border-radius: 1.5rem;
-  padding: 1.5rem;
-  box-shadow: 0 8px 0 0 #edeef1;
-  transition: all 0.2s ease;
-}
-
-.character-card {
+.stats-group {
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 1rem;
-    text-align: center;
+    font-weight: 800;
+    color: #ff4b4b;
 }
 
-.avatar-box {
-  position: relative;
-  width: 5rem;
-  height: 5rem;
-}
+.stats-group span { display: flex; align-items: center; gap: 0.25rem; }
 
-.avatar-box img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #dbeafe;
-  border: 4px solid #6366f1;
-  object-fit: cover;
-}
-
-.character-name { font-weight: 900; color: #6366f1; margin: 0; font-size: 0.875rem; }
-.character-quote { font-style: italic; color: #475569; margin: 0; font-weight: 500; font-size: 0.85rem; line-height: 1.4; }
-
-/* Board Area */
-.board-area {
+/* --- Content Core --- */
+.arena-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Character & Instructions (Mobile Stack) */
+.instruction-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.character-avatar {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.character-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.speech-bubble {
+    position: relative;
+    background: #ffffff;
+    border: 2px solid #e5e5e5;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    flex: 1;
+    box-shadow: 0 4px 0 0 #e5e5e5;
+}
+
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border-left: 2px solid #e5e5e5;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.instruction-text {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0;
+    color: #3c3c3c;
+    line-height: 1.4;
+}
+
+/* Board Layout */
+.board-area {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
+  margin-bottom: 5rem; /* Space for fixed continue button */
 }
 
 .board-wrapper {
-  background-color: #f1f5f9;
-  padding: 1rem;
-  border-radius: 1.5rem;
-  border: 8px solid #cbd5e1;
-  box-shadow: 0 12px 0 0 #94a3b8;
+  background-color: #ffffff;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #e5e5e5;
+  box-shadow: 0 4px 0 0 #e5e5e5;
 }
 
 .chess-board {
   display: flex;
   flex-direction: column;
-  width: 520px;
-  height: 520px;
-  border: 4px solid #1e293b;
+  width: 450px;
+  height: 450px;
+  border-radius: 0.25rem;
+  overflow: hidden;
 }
 
 .board-row { display: flex; flex: 1; }
@@ -200,123 +179,128 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.2s;
 }
 
-.square.light { background-color: #f1f5f9; }
-.square.dark { background-color: #cbd5e1; }
+.square.light { background-color: #f7f7f7; }
+.square.dark { background-color: #e5e5e5; }
 
-.square:hover { filter: brightness(1.05); }
-.square.selected { background-color: rgba(19, 236, 109, 0.4) !important; box-shadow: inset 0 0 15px rgba(19, 236, 109, 0.6); }
-.square.last-move { background-color: rgba(254, 240, 138, 0.4) !important; }
-
-.coord-file { position: absolute; bottom: 2px; right: 2px; font-size: 0.6rem; font-weight: 900; opacity: 0.4; }
-.coord-rank { position: absolute; top: 2px; left: 2px; font-size: 0.6rem; font-weight: 900; opacity: 0.4; }
+.square:hover { background-color: #cecece; }
+.square.selected { background-color: #1cb0f6 !important; }
+.square.last-move { background-color: #ffc800 !important; }
 
 .piece img {
   width: 85%;
   height: 85%;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
-  transition: transform 0.2s ease;
+  transition: transform 0.2s;
 }
 
-.square:hover .piece img { transform: scale(1.1); }
+.square:hover .piece img { transform: translateY(-4px) scale(1.05); }
 
-/* Right Sidebar: Move History */
-.history-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.history-header h3 { font-size: 0.75rem; font-weight: 900; color: #64748b; margin: 0; }
-
-.moves-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-height: 300px;
-  overflow-y: auto;
+/* Bottom Action Area (Duolingo Style) */
+.action-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 2rem;
+    background: white;
+    border-top: 2px solid #e5e5e5;
+    display: flex;
+    justify-content: center;
+    z-index: 100;
 }
 
-.move-item {
-  background-color: #f8fafc;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  display: flex;
-  gap: 0.75rem;
-  font-weight: 800;
-  font-size: 0.875rem;
-  border: 2px solid transparent;
-}
-
-.move-num { color: #94a3b8; }
-.move-val { color: #1e293b; }
-
-/* --- Overlays & Stages --- */
-.stage-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 50;
-  background-color: rgba(246, 248, 247, 0.8);
-  backdrop-filter: blur(8px);
-  animation: fadeIn 0.4s ease forwards;
-}
-
-.intro-card, .result-card {
-  max-width: 480px;
-  width: 90%;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.action-container {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .chunky-button {
-  width: 100%;
-  padding: 1.25rem;
-  border-radius: 1.25rem;
-  font-weight: 900;
-  font-size: 1.125rem;
+  padding: 0.875rem 2rem;
+  border-radius: 1rem;
+  font-weight: 800;
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   border: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
+  min-width: 200px;
+  box-shadow: 0 4px 0 0 rgba(0,0,0,0.2);
 }
 
-.start-btn, .primary-btn {
-  background-color: #13ec6d;
+.primary-btn {
+  background-color: #1cb0f6;
   color: white;
-  box-shadow: 0 8px 0 0 #0db854;
+  box-shadow: 0 4px 0 0 #1899d6;
 }
 
-.start-btn:active, .primary-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 4px 0 0 #0db854;
+.primary-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #1899d6;
 }
 
-.resign-btn {
-    background-color: white;
-    color: #ef4444;
-    border: 4px solid #fee2e2;
-    box-shadow: 0 6px 0 0 #fee2e2;
-    margin-top: auto;
+.primary-btn:disabled {
+    background-color: #e5e5e5;
+    color: #afafaf;
+    box-shadow: 0 4px 0 0 #cecece;
+    cursor: not-allowed;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.success-btn {
+    background-color: #58cc02;
+    color: white;
+    box-shadow: 0 4px 0 0 #46a302;
 }
 
-@media (max-width: 1200px) {
-  .main-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .sidebar-box { flex-direction: row; justify-content: center; }
-  .chess-board { width: 100%; max-width: 450px; height: auto; aspect-ratio: 1; }
-  .arena-content { padding: 0 1.5rem 2rem 1.5rem; }
+.success-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #46a302;
+}
+
+/* Success/Failure States Overlay */
+.state-feedback {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+}
+
+.feedback-card {
+    text-align: center;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.feedback-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.success-icon { color: #58cc02; }
+.failure-icon { color: #ff4b4b; }
+
+.feedback-title { font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem; }
+.feedback-msg { color: #777; margin-bottom: 2rem; font-weight: 600; }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .arena-header { padding: 1rem; }
+    .instruction-section { flex-direction: column; text-align: center; gap: 0.5rem; }
+    .speech-bubble::before { left: 50%; top: -8px; transform: translateX(-50%) rotate(45deg); border-left: 2px solid #e5e5e5; border-top: 2px solid #e5e5e5; border-bottom: none; }
+    .chess-board { width: 90vw; height: 90vw; }
+    .action-container { flex-direction: column; gap: 1rem; }
+    .chunky-button { width: 100%; }
+}
+
+@media (min-width: 1000px) {
+    .chess-board { width: 480px; height: 480px; }
 }
