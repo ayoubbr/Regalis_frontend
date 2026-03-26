@@ -117,6 +117,11 @@ export class QuizzesComponent implements OnInit {
     }
   }
 
+  getQuizTotalXp(quiz: Quiz): number {
+    if (!quiz.questions || quiz.questions.length === 0) return 0;
+    return quiz.questions.reduce((sum, q) => sum + (q.xpReward || 0), 0);
+  }
+
   onEdit(quiz: Quiz): void {
     this.currentQuiz = { ...quiz };
     this.isEditing = true;
@@ -145,7 +150,6 @@ export class QuizzesComponent implements OnInit {
     title: '',
     content: '',
     difficulty: 1,
-    xpReward: 100,
     moduleId: null
   };
 
@@ -164,7 +168,6 @@ export class QuizzesComponent implements OnInit {
       title: '',
       content: '',
       difficulty: 1,
-      xpReward: 100,
       moduleId: this.modules.length > 0 ? this.modules[0].id : null
     };
   }

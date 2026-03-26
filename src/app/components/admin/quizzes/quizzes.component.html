@@ -57,7 +57,7 @@
             </div>
             <div class="stat-item">
                 <p class="stat-label">Reward</p>
-                <p class="stat-value reward">{{ quiz.xpReward }} XP</p>
+                <p class="stat-value reward">{{ getQuizTotalXp(quiz) }} XP</p>
             </div>
         </div>
 
@@ -122,10 +122,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">XP Reward</label>
-                <input type="number" name="xpReward" class="form-input" [(ngModel)]="currentQuiz.xpReward" required>
-            </div>
+
 
             <div class="form-group">
                 <label class="form-label">Content</label>

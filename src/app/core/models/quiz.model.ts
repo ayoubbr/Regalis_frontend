@@ -36,7 +36,6 @@ export interface Quiz {
     title: string;
     content: string;
     difficulty: number;
-    xpReward: number;
     moduleId: number;
     imageUrl?: string;
     questions: QuestionResponseDTO[];
@@ -46,7 +45,6 @@ export interface QuizCreateDTO {
     title: string;
     content: string;
     difficulty: number;
-    xpReward: number;
     moduleId: number;
     imageUrl?: string;
 }
@@ -55,7 +53,6 @@ export interface QuizUpdateDTO {
     title: string;
     content: string;
     difficulty: number;
-    xpReward: number;
     moduleId: number;
     imageUrl?: string;
 }

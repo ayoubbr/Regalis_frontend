@@ -1,9 +1,15 @@
 export interface UserQuiz {
     id: number;
-    userId: number;
     quizId: number;
+    quizTitle?: string;
     completed: boolean;
-    completionDate: string | null; // LocalDateTime as ISO string
+    score: number;
+    completionDate: string | null;
+}
+
+export interface UserAnswerDTO {
+    questionId: number;
+    selectedOptionId: string;
 }
 
 export interface UserQuizCreateDTO {
@@ -12,5 +18,6 @@ export interface UserQuizCreateDTO {
 }
 
 export interface UserQuizUpdateDTO {
-    completed: boolean;
+    completed?: boolean;
+    answers: UserAnswerDTO[];
 }

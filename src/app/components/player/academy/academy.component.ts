@@ -53,10 +53,13 @@ export class AcademyComponent implements OnInit {
       this.quizzes = quizzes.map((q) => {
         const progress = userQuizProgress.find(p => p.quizId === q.id);
         const module = modules.find(m => m.id === q.moduleId);
+        const totalXp = q.questions.reduce((sum: number, question: any) => sum + (question.xpReward || 0), 0);
         return {
           ...q,
           level: q.difficulty === 1 ? 'BEGINNER' : (q.difficulty === 2 ? 'INTERMEDIATE' : 'ADVANCED'),
           moduleTitle: module ? module.name : 'Basic Module',
+          xpReward: totalXp,
+          score: progress?.score || 0,
           image: q.imageUrl || 'assets/images/quiz-placeholder.jpg',
           completed: progress?.completed || false
         };
@@ -71,12 +74,36 @@ export class AcademyComponent implements OnInit {
   }
 
   onQuizCompleted(results: any[]): void {
-    console.log('Quiz completed:', results);
-    // Here logic to save results to backend via UserQuizService
-    this.selectedQuiz = null;
-    if (this.user) {
-        this.loadAcademyData(this.user.id); // Refresh data
-    }
+    if (!this.user || !this.selectedQuiz) return;
+
+    const quizId = this.selectedQuiz.id;
+    const userId = this.user.id;
+
+    // Check if progress exists, if not create it, then update
+    this.userQuizService.getUserQuiz(userId).subscribe(userQuizzes => {
+        let progress = userQuizzes.find(p => p.quizId === quizId);
+        
+        const updateLogic = (progId: number) => {
+            const updateDto = {
+                answers: results.map(r => ({
+                    questionId: r.questionId,
+                    selectedOptionId: r.selectedOptionId
+                }))
+            };
+            this.userQuizService.updateProgress(progId, updateDto).subscribe(() => {
+                this.selectedQuiz = null;
+                this.loadAcademyData(userId);
+            });
+        };
+
+        if (!progress) {
+            this.userQuizService.startQuiz({ userId, quizId }).subscribe(newProg => {
+                updateLogic(newProg.id);
+            });
+        } else {
+            updateLogic(progress.id);
+        }
+    });
   }
 
   closeQuiz(): void {
