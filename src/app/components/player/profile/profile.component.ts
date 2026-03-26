@@ -87,8 +87,8 @@ export class ProfileComponent implements OnInit {
 
   getRank(): string {
     if (!this.currentUser) return 'Beginner';
-    if (this.currentUser.totalXp > 10000) return 'Grandmaster';
-    if (this.currentUser.totalXp > 5000) return 'Master';
+    if (this.currentUser.totalXp > 1000) return 'Grandmaster';
+    if (this.currentUser.totalXp > 500) return 'Master';
     return 'Chess Apprentice';
   }
 }

@@ -29,33 +29,18 @@
                 <span class="material-symbols-outlined">leaderboard</span>
                 <span *ngIf="isSidebarVisible">Leaderboard</span>
             </a>
-            <a routerLink="/player/arena" routerLinkActive="active" class="nav-item"
-                [attr.title]="isSidebarVisible ? '' : 'Arena'">
-                <span class="material-symbols-outlined">swords</span>
-                <span *ngIf="isSidebarVisible">Arena</span>
-            </a>
-            <a routerLink="/player/market" routerLinkActive="active" class="nav-item"
-                [attr.title]="isSidebarVisible ? '' : 'Market'">
-                <span class="material-symbols-outlined">shopping_cart</span>
-                <span *ngIf="isSidebarVisible">Market</span>
-            </a>
-            <a routerLink="/player/settings" routerLinkActive="active" class="nav-item"
-                [attr.title]="isSidebarVisible ? '' : 'Settings'">
-                <span class="material-symbols-outlined">settings</span>
-                <span *ngIf="isSidebarVisible">Settings</span>
-            </a>
         </nav>
 
         <div class="sidebar-footer" *ngIf="isSidebarVisible">
             <div class="xp-card">
                 <div class="flex-between">
                     <p class="xp-label">XP PROGRESS</p>
-                    <p class="xp-value">{{ (currentUser?.totalXp || 0) % 1000 }} / 1000</p>
+                    <p class="xp-value">{{ (currentUser?.totalXp || 0) % 100 }} / 100</p>
                 </div>
                 <div class="progress-container">
-                    <div class="progress-fill" [style.width.%]="(currentUser?.totalXp || 0) % 1000 / 10"></div>
+                    <div class="progress-fill" [style.width.%]="(currentUser?.totalXp || 0) % 100"></div>
                 </div>
-                <p class="xp-status">{{ 1000 - ((currentUser?.totalXp || 0) % 1000) }} XP until your next level!</p>
+                <p class="xp-status">{{ 100 - ((currentUser?.totalXp || 0) % 100) }} XP until level  {{ (currentUser?.level || 0) + 1 }}!</p>
             </div>
         </div>
     </aside>
@@ -63,15 +48,30 @@
     <!-- Main Content Area -->
     <main class="main-content">
         <header class="top-nav-bar">
-            <button class="toggle-sidebar-btn" (click)="toggleSidebar()"
-                [attr.title]="isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'">
-                <span class="material-symbols-outlined">
-                    {{ isSidebarVisible ? 'menu_open' : 'menu' }}
-                </span>
-            </button>
-            <div style="flex-grow: 1;"></div>
-            <div class="user-nav">
-                <span class="username">{{ currentUser?.username }}</span>
+            <div class="header-left">
+                <button class="toggle-sidebar-btn" (click)="toggleSidebar()"
+                    [attr.title]="isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'">
+                    <span class="material-symbols-outlined">
+                        {{ isSidebarVisible ? 'menu_open' : 'menu' }}
+                    </span>
+                </button>
+            </div>
+            
+            <div class="header-center">
+                <!-- Can add breadcrumbs or page titles here in the future -->
+            </div>
+
+            <div class="header-right">
+                <div class="streak-badge" [title]="'Current Streak: ' + currentUser?.currentStreak + ' days'">
+                    <span class="material-symbols-outlined fire-icon">local_fire_department</span>
+                    <span class="streak-count">{{ currentUser?.currentStreak || 0 }}</span>
+                </div>
+
+                <div class="user-profile-nav" routerLink="/player/profile">
+                    <img [src]="currentUser?.imageUrl || 'assets/images/default-avatar.png'" alt="User" class="nav-avatar">
+                    <span class="username">{{ currentUser?.username }}</span>
+                </div>
+
                 <button class="logout-btn" (click)="logout()" title="Logout">
                     <span class="material-symbols-outlined">logout</span>
                 </button>

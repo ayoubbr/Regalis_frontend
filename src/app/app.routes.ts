@@ -87,10 +87,6 @@ export const routes: Routes = [
                 component: ActiveQuizComponent
             },
             {
-                path: 'arena',
-                component: ActiveQuizComponent
-            },
-            {
                 path: '',
                 redirectTo: 'adventure',
                 pathMatch: 'full'
