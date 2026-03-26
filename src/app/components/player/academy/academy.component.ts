@@ -25,6 +25,7 @@ export class AcademyComponent implements OnInit {
   private userQuizService = inject(UserQuizService);
   private userService = inject(UserService);
   private authService = inject(AuthService);
+  private moduleService = inject(ModuleService);
 
   quizzes: any[] = [];
   user: any = null;
@@ -44,30 +45,19 @@ export class AcademyComponent implements OnInit {
     forkJoin({
       quizzes: this.quizService.getAll().pipe(catchError(() => of([]))),
       userQuizProgress: this.userQuizService.getUserQuiz(userId).pipe(catchError(() => of([]))),
-      user: this.userService.getById(userId).pipe(catchError(() => of(null)))
-    }).subscribe(({ quizzes, userQuizProgress, user }) => {
+      user: this.userService.getById(userId).pipe(catchError(() => of(null))),
+      modules: this.moduleService.getAll().pipe(catchError(() => of([])))
+    }).subscribe(({ quizzes, userQuizProgress, user, modules }) => {
       this.user = user;
 
-      // Mock data enhancement for the "Academy" view based on design
-      const quizEnhancements = [
-        { level: 'BEGINNER', duration: '5 mins', 
-          image: 'https://images.unsplash.com/photo-1587888191477-e74ac6bc9c4b?q=80&w=1214&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        { level: 'INTERMEDIATE', duration: '8 mins', 
-          image: 'https://images.unsplash.com/photo-1619163413327-546fdb903195?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-        { level: 'ADVANCED', duration: '12 mins', 
-          image: 'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?q=80&w=600&auto=format&fit=crop' },
-        { level: 'TIMED', duration: '3 mins', 
-          image: 'https://images.unsplash.com/photo-1586165368502-1bad197a6461?q=80&w=1258&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }
-      ];
-
-      this.quizzes = quizzes.map((q, index) => {
-        const enhancement = quizEnhancements[index % quizEnhancements.length];
+      this.quizzes = quizzes.map((q) => {
         const progress = userQuizProgress.find(p => p.quizId === q.id);
+        const module = modules.find(m => m.id === q.moduleId);
         return {
           ...q,
-          level: enhancement.level,
-          duration: enhancement.duration,
-          image: q.imageUrl || enhancement.image,
+          level: q.difficulty === 1 ? 'BEGINNER' : (q.difficulty === 2 ? 'INTERMEDIATE' : 'ADVANCED'),
+          moduleTitle: module ? module.name : 'Basic Module',
+          image: q.imageUrl || 'assets/images/quiz-placeholder.jpg',
           completed: progress?.completed || false
         };
       });

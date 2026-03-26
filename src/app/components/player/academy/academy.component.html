@@ -47,8 +47,8 @@
                 
                 <div class="module-meta">
                     <div class="meta-item">
-                        <span class="material-symbols-outlined">schedule</span>
-                        <span>{{quiz.duration}}</span>
+                        <span class="material-symbols-outlined">menu_book</span>
+                        <span>{{quiz.moduleTitle || 'Basic Module'}}</span>
                     </div>
                     <div class="meta-item">
                         <span class="material-symbols-outlined">bolt</span>
@@ -73,7 +73,7 @@
 
     <!-- Bottom Action -->
     <div class="bottom-action">
-        <button class="chunky-button chunky-button-player continue-btn">
+        <button class="chunky-button chunky-button-player continue-btn" routerLink="/player/adventure">
             CONTINUE LEARNING
             <span class="material-symbols-outlined">arrow_forward</span>
         </button>
