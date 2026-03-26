@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { Puzzle, Situation } from '../../../core/models/puzzle.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 interface ChessSquare {
   id: string;
@@ -28,16 +30,28 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
   currentSituationIndex = 0;
   currentSituation: Situation | null = null;
   gameState: 'intro' | 'playing' | 'success' | 'failure' | 'finished' = 'intro';
-  
+
   board: ChessSquare[][] = [];
   selectedSquare: ChessSquare | null = null;
   moveHistory: string[] = [];
-  
+
   timer: any;
   seconds = 0;
   minutes = 0;
 
+  currentUserImageUrl: string = 'assets/images/characters/regalis-avatar.png';
+  private authSubscription?: Subscription;
+
+  constructor(private authService: AuthService) {}
+
   ngOnInit(): void {
+    // Subscribe to user image for premium avatar integration
+    this.authSubscription = this.authService.currentUser.subscribe(user => {
+      if (user && user.imageUrl) {
+        this.currentUserImageUrl = user.imageUrl;
+      }
+    });
+
     if (this.puzzle.situations && this.puzzle.situations.length > 0) {
       this.currentSituation = this.puzzle.situations[0];
       this.initializeBoard(this.currentSituation.fenPosition);
@@ -46,6 +60,7 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+    this.authSubscription?.unsubscribe();
   }
 
   initializeBoard(fen: string): void {
@@ -129,7 +144,7 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
   handleMove(from: ChessSquare, to: ChessSquare): void {
     const moveStr = `${from.id}${to.id}`;
     const expectedMoves = this.currentSituation?.solutionMoves.split(',') || [];
-    
+
     // Simulate move
     to.piece = from.piece;
     from.piece = null;
@@ -172,7 +187,9 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
   }
 
   get progressPercentage(): number {
-    if (!this.puzzle.situations) return 0;
+    if (!this.puzzle.situations || this.puzzle.situations.length === 0) return 0;
+    if (this.gameState === 'finished') return 100;
     return (this.currentSituationIndex / this.puzzle.situations.length) * 100;
   }
 }
+

@@ -1,171 +1,157 @@
 <div class="arena-overlay">
-   <div class="arena-container" [ngClass]="gameState">
+   <div class="arena-container arena-theme" [ngClass]="gameState">
 
-      <!-- Header: Arena Style -->
+      <!-- Header -->
       <header class="arena-header">
          <div class="header-left">
-            <div class="icon-orb">
+            <div class="logo-box">
                <span class="material-symbols-outlined">psychology</span>
             </div>
-            <div class="arena-info">
-               <h1 class="arena-title">{{ puzzle.title | uppercase }}</h1>
-               <p class="arena-subtitle">SITUATION {{ currentSituationIndex + 1 }} OF {{ puzzle.situations?.length || 0 }} • {{ minutes | number:'2.0' }}:{{ seconds | number:'2.0' }}
-               </p>
+            <div class="header-text">
+               <h1 class="header-title">{{ puzzle.title | uppercase }}</h1>
+               <p class="header-subtitle">REPAIRING THE REALM • {{ minutes | number:'2.0' }}:{{ seconds | number:'2.0' }}</p>
             </div>
          </div>
 
-         <div class="header-center">
-            <div class="progress-track">
-               <div class="progress-fill" [style.width.%]="progressPercentage"></div>
-               <div class="progress-labels">
-                  <span>{{ gameState === 'playing' ? 'FIND THE WINNING MOVE...' : 'SITUATION ANALYZED' }}</span>
-                  <span>XP reward: {{ puzzle.xpReward }} 🔥</span>
-               </div>
-            </div>
-         </div>
-
-         <button class="exit-btn" (click)="close()">
+         <button class="close-btn" (click)="close()">
             <span class="material-symbols-outlined">close</span>
          </button>
       </header>
 
       <!-- Main Content -->
       <div class="arena-content">
-
-         <!-- Stage 1: Intro -->
-         <div class="stage-overlay intro-stage" *ngIf="gameState === 'intro'">
-            <div class="intro-card glass-card">
-               <div class="character-preview">
-                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=KingRegalis" alt="King Regalis">
-                  <div class="badge-ring"></div>
+         
+         <!-- Top Section: Progress & Reward (Quiz Synchronized) -->
+         <section class="status-section" *ngIf="gameState !== 'intro' && gameState !== 'finished'">
+            <div class="progress-info">
+               <div class="progress-text-row">
+                  <div class="progress-labels-group">
+                    <span class="label">PROGRESS</span>
+                    <h2 class="counter-text">Situation {{ currentSituationIndex + 1 }} of {{ puzzle.situations?.length || 0 }}</h2>
+                  </div>
+                  <div class="reward-tag">
+                     REWARD: +{{ puzzle.xpReward }} XP
+                  </div>
                </div>
-               <h2>{{ puzzle.title }}</h2>
-               <p>{{ puzzle.description }}</p>
-               <div class="reward-preview">
-                  <span class="material-symbols-outlined">bolt</span>
-                  <span>+{{ puzzle.xpReward }} Experience Points</span>
+               <div class="progress-bar-container">
+                  <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
                </div>
-               <button class="chunky-button start-btn" (click)="startArenaMode()">
-                  REPAIR THE POSITION <span class="material-symbols-outlined">build</span>
-               </button>
             </div>
-         </div>
+         </section>
 
-         <!-- Stage 2: Playing -->
-         <div class="play-layout" *ngIf="gameState === 'playing' || gameState === 'success' || gameState === 'failure'">
-
-            <!-- Left: Character & Hints -->
-            <aside class="sidebar-left">
-               <div class="character-card glass-card">
-                  <div class="avatar-box">
-                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=KingRegalis" alt="King Regalis">
-                  </div>
-                  <div class="speech-bubble">
-                     <h4>KING REGALIS</h4>
-                     <p>"{{ currentSituation?.description || 'Analyze the board carefully. The king is watching.' }}"</p>
-                  </div>
-               </div>
-
-               <div class="tip-card glass-card">
-                  <div class="tip-header">
-                     <span class="material-symbols-outlined icon-yellow">lightbulb</span>
-                     <h5>MISSION</h5>
-                  </div>
-                  <p>Execute the sequence of moves that solves this tactical situation.</p>
-               </div>
-            </aside>
-
-            <!-- Center: Interactive Chess Board -->
-            <main class="board-area">
-               <div class="board-wrapper">
-                  <div class="chess-board">
-                     <ng-container *ngFor="let row of board; let ri = index">
-                        <div class="board-row">
-                           <div *ngFor="let square of row; let fi = index" class="square"
-                              [ngClass]="[square.color, square.isSelected ? 'selected' : '', square.isLastMove ? 'last-move' : '']"
-                              (click)="onSquareClick(square)">
-
-                              <!-- Labels (File) -->
-                              <span class="coord-file" *ngIf="ri === 7">{{ square.id.charAt(0) }}</span>
-                              <!-- Labels (Rank) -->
-                              <span class="coord-rank" *ngIf="fi === 0">{{ square.id.charAt(1) }}</span>
-
-                              <div class="piece" *ngIf="square.piece">
-                                 <img [src]="'assets/images/pieces/' + square.piece + '.svg'" [alt]="square.piece">
-                              </div>
-                           </div>
-                        </div>
-                     </ng-container>
-                  </div>
-               </div>
-            </main>
-
-            <!-- Right: Move History -->
-            <aside class="sidebar-right">
-               <div class="history-card glass-card">
-                  <div class="history-header">
-                     <h3>STAGED MOVES</h3>
-                  </div>
-                  <div class="moves-list">
-                     <div class="no-moves" *ngIf="moveHistory.length === 0">Waiting for your first move...</div>
-                     <div class="move-item" *ngFor="let move of moveHistory; let i = index">
-                        <span class="move-num">{{ i + 1 }}.</span>
-                        <span class="move-val">{{ move }}</span>
+         <div class="content-body">
+            <!-- Stage 1: Intro (Premium Glassmorphism) -->
+            <div class="stage-overlay intro-stage" *ngIf="gameState === 'intro'">
+               <div class="intro-card glass-card">
+                  <div class="character-preview">
+                     <div class="avatar-box">
+                        <img [src]="currentUserImageUrl" alt="Player">
                      </div>
                   </div>
-               </div>
-
-               <button class="resign-btn" (click)="close()">
-                  ABANDON
-               </button>
-            </aside>
-         </div>
-
-         <!-- Stage 3: Success -->
-         <div class="stage-overlay result-stage" *ngIf="gameState === 'success'">
-            <div class="result-card glass-card success">
-               <div class="result-icon">
-                  <span class="material-symbols-outlined">verified</span>
-               </div>
-               <h2>SITUATION SOLVED!</h2>
-               <p>Excellent tactical vision. You've repaired the position.</p>
-
-               <div class="result-actions">
-                  <button class="chunky-button primary-btn" (click)="nextSituation()">
-                     {{ (currentSituationIndex + 1 < (puzzle.situations?.length || 0)) ? 'NEXT SITUATION' : 'FINISH PUZZLE' }}
+                  <h2>{{ puzzle.title }}</h2>
+                  <p>{{ puzzle.description }}</p>
+                  <div class="reward-preview">
+                     <span class="material-symbols-outlined">bolt</span>
+                     <span>+{{ puzzle.xpReward }} Experience Points</span>
+                  </div>
+                  <button class="chunky-button start-btn" (click)="startArenaMode()">
+                     REPAIR THE POSITION <span class="material-symbols-outlined">build</span>
                   </button>
                </div>
             </div>
-         </div>
 
-         <!-- Stage 4: Final Results -->
-         <div class="stage-overlay result-stage" *ngIf="gameState === 'finished'">
-            <div class="result-card glass-card success">
-               <div class="result-icon">
-                  <span class="material-symbols-outlined">workspace_premium</span>
-               </div>
-               <h2>MISSION ACCOMPLISHED!</h2>
-               <p>You have successfully repaired all situations in this puzzle.</p>
-
-               <div class="result-stats">
-                  <div class="res-stat">
-                     <span class="label">TOTAL XP</span>
-                     <span class="val">+{{ puzzle.xpReward }}</span>
+            <!-- Stage 2: Playing (Chunky 3D Sidebars) -->
+            <div class="main-layout" *ngIf="gameState === 'playing' || gameState === 'success' || gameState === 'failure'">
+               
+               <!-- Left Sidebar -->
+               <aside class="sidebar-box">
+                  <div class="character-card glass-card">
+                     <div class="avatar-box">
+                        <img [src]="currentUserImageUrl" alt="Player">
+                     </div>
+                     <div class="character-speech">
+                        <h4 class="character-name">COMMANDER</h4>
+                        <p class="character-quote">"{{ currentSituation?.description || 'Victory is within reach. Analyze every line.' }}"</p>
+                     </div>
                   </div>
-                  <div class="res-stat">
-                     <span class="label">SITUATIONS</span>
-                     <span class="val">{{ puzzle.situations?.length }}</span>
-                  </div>
-               </div>
 
-               <div class="result-actions">
-                  <button class="chunky-button primary-btn" (click)="close()">
-                     CONTINUE JOURNEY
+                  <div class="mission-card glass-card">
+                     <div class="history-header">
+                        <span class="material-symbols-outlined">flag</span>
+                        <h3>OBJECTIVE</h3>
+                     </div>
+                     <p class="character-quote">Execute the perfect continuation to solve this tactical riddle.</p>
+                  </div>
+               </aside>
+
+               <!-- Center: Interactive Chess Board -->
+               <main class="board-area">
+                  <div class="board-wrapper">
+                     <div class="chess-board">
+                        <ng-container *ngFor="let row of board; let ri = index">
+                           <div class="board-row">
+                              <div *ngFor="let square of row; let fi = index" class="square"
+                                 [ngClass]="[square.color, square.isSelected ? 'selected' : '', square.isLastMove ? 'last-move' : '']"
+                                 (click)="onSquareClick(square)">
+
+                                 <span class="coord-file" *ngIf="ri === 7">{{ square.id.charAt(0) }}</span>
+                                 <span class="coord-rank" *ngIf="fi === 0">{{ square.id.charAt(1) }}</span>
+
+                                 <div class="piece" *ngIf="square.piece">
+                                    <img [src]="'assets/images/pieces/' + square.piece + '.png'" [alt]="square.piece">
+                                 </div>
+                              </div>
+                           </div>
+                        </ng-container>
+                     </div>
+                  </div>
+               </main>
+
+               <!-- Right Sidebar -->
+               <aside class="sidebar-box">
+                  <div class="history-card glass-card">
+                     <div class="history-header">
+                        <span class="material-symbols-outlined">history</span>
+                        <h3>STAGED MOVES</h3>
+                     </div>
+                     <div class="moves-list">
+                        <div class="no-moves" *ngIf="moveHistory.length === 0">Waiting for first strike...</div>
+                        <div class="move-item" *ngFor="let move of moveHistory; let i = index">
+                           <span class="move-num">{{ i + 1 }}.</span>
+                           <span class="move-val">{{ move | uppercase }}</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <button class="chunky-button resign-btn" (click)="close()">
+                     ABANDON <span class="material-symbols-outlined">logout</span>
+                  </button>
+               </aside>
+            </div>
+
+            <!-- Stage 3: Results Overlay -->
+            <div class="stage-overlay result-stage" *ngIf="gameState === 'success' || gameState === 'finished'">
+               <div class="result-card glass-card">
+                  <div class="result-icon-orb">
+                     <span class="material-symbols-outlined">{{ gameState === 'finished' ? 'workspace_premium' : 'verified' }}</span>
+                  </div>
+                  <h2>{{ gameState === 'finished' ? 'PUZZLE COMPLETE!' : 'POSITION REPAIRED!' }}</h2>
+                  <p>{{ gameState === 'finished' ? 'You have mastered this tactical challenge.' : 'Your vision was sharp. Move forward.' }}</p>
+
+                  <div class="result-stats" *ngIf="gameState === 'finished'">
+                     <div class="res-stat">
+                        <span class="label">REWARD</span>
+                        <span class="val">+{{ puzzle.xpReward }} XP</span>
+                     </div>
+                  </div>
+
+                  <button class="chunky-button primary-btn" (click)="gameState === 'finished' ? close() : nextSituation()">
+                     {{ gameState === 'finished' ? 'CONTINUE JOURNEY' : 'NEXT SITUATION' }} <span class="material-symbols-outlined">arrow_forward</span>
                   </button>
                </div>
             </div>
-         </div>
 
+         </div>
       </div>
    </div>
 </div>
