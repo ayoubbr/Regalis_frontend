@@ -82,8 +82,7 @@ export class ProfileComponent implements OnInit {
 
   getXpProgress(): number {
     if (!this.currentUser) return 0;
-    // Simple logic: every 1000 XP is a level
-    return (this.currentUser.totalXp % 1000) / 10;
+    return (this.currentUser.totalXp % 100);
   }
 
   getRank(): string {

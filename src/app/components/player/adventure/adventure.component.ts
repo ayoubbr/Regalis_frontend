@@ -108,7 +108,10 @@ export class AdventureComponent implements OnInit {
   }
 
   onPuzzleCompleted(): void {
-      // Refresh or handle completion
+      // Refresh user profile to get new XP/Level from backend
+      this.authService.updateUserProfile().subscribe();
+      
+      // Refresh adventure layout
       this.authService.currentUser.subscribe(user => {
           if (user && user.id) {
               this.loadAdventure(user.id);

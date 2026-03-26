@@ -8,14 +8,11 @@
 
             <div class="roadmap-viewport" *ngIf="!loading">
                 <div class="path-container">
-                    <div *ngFor="let puzzle of module.puzzles; let i = index" 
-                         class="node-wrapper"
-                         [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
-                        
+                    <div *ngFor="let puzzle of module.puzzles; let i = index" class="node-wrapper"
+                        [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
+
                         <!-- Chunky Node -->
-                        <div class="chunky-node" 
-                             (click)="startPuzzle(puzzle)"
-                             [ngClass]="{
+                        <div class="chunky-node" (click)="startPuzzle(puzzle)" [ngClass]="{
                                 'completed': puzzle.status === 'completed',
                                 'active': puzzle.status === 'active',
                                 'locked': puzzle.status === 'locked',
@@ -28,7 +25,7 @@
                         </div>
 
                         <!-- Puzzle Label -->
-                        <div class="node-title" >
+                        <div class="node-title">
                             {{puzzle.title}}
                         </div>
 
@@ -59,7 +56,7 @@
                 <p class="sidebar-username">{{ (authService.currentUser | async)?.username }}</p>
                 <div class="sidebar-xp-row">
                     <span class="material-symbols-outlined">bolt</span>
-                    <span>{{ (authService.currentUser | async)?.totalXp | number }} XP</span>
+                    <span>{{ ((authService.currentUser | async)?.totalXp | number) }} XP</span>
                 </div>
             </div>
         </div>
@@ -87,10 +84,7 @@
     </aside>
 
     <!-- Active Situation Overlay -->
-    <app-active-situation 
-        *ngIf="selectedPuzzle" 
-        [puzzle]="selectedPuzzle" 
-        (completed)="onPuzzleCompleted()"
+    <app-active-situation *ngIf="selectedPuzzle" [puzzle]="selectedPuzzle" (completed)="onPuzzleCompleted()"
         (closed)="closePuzzle()">
     </app-active-situation>
 </div>

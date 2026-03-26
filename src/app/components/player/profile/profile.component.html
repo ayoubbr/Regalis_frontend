@@ -3,21 +3,23 @@
         <div class="header-main">
             <div class="avatar-container">
                 <div class="avatar-ring">
-                    <img [src]="currentUser?.imageUrl || 'assets/images/default-avatar.png'" alt="Avatar" class="user-avatar">
+                    <img [src]="currentUser?.imageUrl || 'assets/images/default-avatar.png'" alt="Avatar"
+                        class="user-avatar">
                 </div>
                 <div class="level-badge">{{ currentUser?.level }}</div>
                 <div class="verify-badge">
                     <span class="material-symbols-outlined">verified</span>
                 </div>
             </div>
-            
+
             <div class="user-info">
                 <div class="username-row">
                     <h1 class="username">{{currentUser?.username}}</h1>
                     <span class="random-text">({{getRank()}})</span>
                 </div>
-                <p class="user-meta">Level {{currentUser?.level || 1}} Chess Explorer • Joined {{currentUser?.createdAt | date:'MMM yyyy'}}</p>
-                
+                <p class="user-meta">Level {{currentUser?.level || 1}} Chess Explorer • Joined {{currentUser?.createdAt
+                    | date:'MMM yyyy'}}</p>
+
                 <!-- <div class="badges-row">
                     <div class="mini-badge elo-badge">
                         <span class="material-symbols-outlined star-icon icon-colored">star</span>
@@ -54,7 +56,7 @@
                     <div class="progress-container">
                         <div class="progress-fill" [style.width.%]="getXpProgress()"></div>
                     </div>
-                    <p class="stat-footer">{{1000 - (currentUser?.totalXp || 0) % 1000}} XP until Level {{ (currentUser?.level || 0) + 1 }}</p>
+                    <p class="stat-footer">{{ 100 - (currentUser?.totalXp % 100) }} XP until Level {{ (currentUser?.level || 0) + 1 }}</p>
                 </div>
 
                 <div class="stat-card card">
@@ -79,7 +81,8 @@
             </div>
 
             <div class="achievements-grid">
-                <div class="achievement-card card" *ngFor="let ach of achievements.slice(0, 4)" [ngClass]="{'locked': !ach.unlocked}">
+                <div class="achievement-card card" *ngFor="let ach of achievements.slice(0, 4)"
+                    [ngClass]="{'locked': !ach.unlocked}">
                     <div class="achievement-icon" [style.background]="ach.unlocked ? '#fff8e1' : '#f1f5f9'">
                         <span class="material-symbols-outlined" [style.color]="ach.unlocked ? '#ffc107' : '#94a3b8'">
                             {{ ach.unlocked ? 'rewarded_ads' : 'lock' }}
@@ -103,7 +106,8 @@
             <div class="activity-list card">
                 <div class="activity-item" *ngFor="let activity of recentActivity; let last = last">
                     <div class="activity-icon-container" [style.background]="activity.iconColor + '20'">
-                        <span class="material-symbols-outlined" [style.color]="activity.iconColor">{{activity.icon}}</span>
+                        <span class="material-symbols-outlined"
+                            [style.color]="activity.iconColor">{{activity.icon}}</span>
                     </div>
                     <div class="activity-details">
                         <h4 class="activity-title">{{activity.title}}</h4>
