@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Quiz, QuestionResponseDTO, QuizResult, QuizOption, QuizQuestion } from '../../../core/models/quiz.model';
+import { SoundService } from '../../../core/services/sound.service';
 
 @Component({
   selector: 'app-active-quiz',
@@ -10,6 +11,7 @@ import { Quiz, QuestionResponseDTO, QuizResult, QuizOption, QuizQuestion } from 
   styleUrl: './active-quiz.component.css'
 })
 export class ActiveQuizComponent implements OnInit {
+  private soundService = inject(SoundService);
   @Input() quiz: Quiz | null = null;
 
   @Output() completed = new EventEmitter<QuizResult[]>();
@@ -62,6 +64,7 @@ export class ActiveQuizComponent implements OnInit {
   selectOption(optionId: string): void {
     if (this.isAnswerChecked) return;
     this.selectedOptionId = optionId;
+    this.soundService.click();
   }
 
   checkAnswer(): void {
@@ -70,6 +73,12 @@ export class ActiveQuizComponent implements OnInit {
     this.isAnswerChecked = true;
     const isCorrect = this.selectedOptionId === this.currentQuestion.correctOptionId;
     
+    if (isCorrect) {
+      this.soundService.correct();
+    } else {
+      this.soundService.incorrect();
+    }
+
     this.results.push({
       questionId: this.currentQuestion.id,
       selectedOptionId: this.selectedOptionId,
@@ -84,6 +93,7 @@ export class ActiveQuizComponent implements OnInit {
       this.selectedOptionId = null;
       this.isAnswerChecked = false;
     } else {
+      this.soundService.complete();
       this.completed.emit(this.results);
     }
   }

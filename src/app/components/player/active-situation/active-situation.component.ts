@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Puzzle, Situation } from '../../../core/models/puzzle.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserSituationService } from '../../../core/services/user-situation.service';
+import { SoundService } from '../../../core/services/sound.service';
 
 interface ChessSquare {
   id: string;
@@ -42,6 +43,7 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
   currentUserImageUrl: string = 'assets/images/characters/regalis-avatar.png';
   private authSubscription?: Subscription;
   private userSituationService = inject(UserSituationService);
+  private soundService = inject(SoundService);
 
   constructor(private authService: AuthService) {}
 
@@ -152,7 +154,8 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
     to.isLastMove = true;
     
     this.lastUserMove = `${from.id}${to.id}`;
-    this.canContinue = true; // Enabled "CHECK" button
+    this.canContinue = true;
+    this.soundService.move();
   }
 
   private findSquareById(id: string): ChessSquare {
@@ -173,9 +176,11 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
               next: (res) => {
                   if (res.isCorrect) {
                       this.gameState = 'success';
+                      this.soundService.correct();
                   } else {
                       this.lives--;
                       this.gameState = 'failure';
+                      this.soundService.incorrect();
                       if (this.lives <= 0) {
                           // Handle game over logic
                       }
@@ -215,6 +220,7 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
       this.gameState = 'playing';
     } else {
       this.gameState = 'finished';
+      this.soundService.complete();
       this.completed.emit();
     }
   }
