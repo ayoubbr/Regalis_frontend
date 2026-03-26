@@ -80,7 +80,4 @@
     </div>
 </div>
 
-<div class="loading-state" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Loading Academy...</p>
-</div>
+<app-chess-loader *ngIf="loading" message="Loading Academy..."></app-chess-loader>

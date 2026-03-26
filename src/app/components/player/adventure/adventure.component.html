@@ -39,10 +39,7 @@
             </div>
         </ng-container>
 
-        <div class="loading-state" *ngIf="loading">
-            <div class="spinner"></div>
-            <p>Loading your journey...</p>
-        </div>
+        <app-chess-loader *ngIf="loading" message="Loading your journey..."></app-chess-loader>
     </div>
 
     <!-- Right Sidebar -->

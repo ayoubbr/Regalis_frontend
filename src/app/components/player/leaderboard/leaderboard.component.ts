@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { forkJoin, map, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { RouterLink } from "@angular/router";
+import { ChessLoaderComponent } from '../../../shared/components/chess-loader/chess-loader.component';
 
 interface EnrichedLeaderboardEntry extends LeaderboardEntry {
   username: string;
@@ -21,7 +22,7 @@ interface EnrichedLeaderboardEntry extends LeaderboardEntry {
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ChessLoaderComponent],
   templateUrl: './leaderboard.component.html',
   styleUrl: './leaderboard.component.css'
 })

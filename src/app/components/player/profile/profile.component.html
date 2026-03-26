@@ -124,7 +124,4 @@
     </div>
 </div>
 
-<div class="loading-state" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Loading Profile...</p>
-</div>
+<app-chess-loader *ngIf="loading" message="Loading Profile..."></app-chess-loader>

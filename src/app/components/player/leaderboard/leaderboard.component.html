@@ -27,9 +27,7 @@
 
   <div class="scroll-area">
     <!-- Loading State -->
-    <div *ngIf="loading" class="loading-state">
-      <div class="spinner"></div>
-    </div>
+    <app-chess-loader *ngIf="loading" message="Loading Leaderboard..."></app-chess-loader>
 
     <ng-container *ngIf="!loading">
       <!-- Podium -->

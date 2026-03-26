@@ -1,0 +1,113 @@
+.chess-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  min-height: 300px;
+  gap: 1.5rem;
+}
+
+/* Chess pieces row */
+.chess-pieces {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.piece {
+  font-size: 2.5rem;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: piece-drop 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.piece-1 {
+  color: #f59e0b;
+  animation-delay: 0s;
+}
+
+.piece-2 {
+  color: #8b5cf6;
+  animation-delay: 0.2s;
+}
+
+.piece-3 {
+  color: #3b82f6;
+  animation-delay: 0.4s;
+}
+
+.piece-4 {
+  color: #10b981;
+  animation-delay: 0.6s;
+}
+
+@keyframes piece-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.8);
+  }
+}
+
+/* Progress bar */
+.loader-bar {
+  width: 180px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.loader-bar-fill {
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981);
+  border-radius: 4px;
+  animation: bar-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes bar-slide {
+  0% {
+    width: 0%;
+    margin-left: 0;
+  }
+  50% {
+    width: 60%;
+    margin-left: 20%;
+  }
+  100% {
+    width: 0%;
+    margin-left: 100%;
+  }
+}
+
+/* Message */
+.loader-message {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  animation: pulse-text 2s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

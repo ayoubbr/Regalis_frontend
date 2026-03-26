@@ -12,11 +12,12 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
 import { ActiveQuizComponent } from '../active-quiz/active-quiz.component';
+import { ChessLoaderComponent } from '../../../shared/components/chess-loader/chess-loader.component';
 
 @Component({
   selector: 'app-academy',
   standalone: true,
-  imports: [CommonModule, RouterModule, ActiveQuizComponent],
+  imports: [CommonModule, RouterModule, ActiveQuizComponent, ChessLoaderComponent],
   templateUrl: './academy.component.html',
   styleUrl: './academy.component.css'
 })

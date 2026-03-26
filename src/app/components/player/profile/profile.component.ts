@@ -7,11 +7,12 @@ import { Achievement, UserAchievement } from '../../../core/models/achievement.m
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
+import { ChessLoaderComponent } from '../../../shared/components/chess-loader/chess-loader.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChessLoaderComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })

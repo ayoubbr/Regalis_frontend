@@ -12,11 +12,12 @@ import { Quiz } from '../../../core/models/quiz.model';
 import { Puzzle } from '../../../core/models/puzzle.model';
 import { ActiveQuizComponent } from '../active-quiz/active-quiz.component';
 import { ActiveSituationComponent } from '../active-situation/active-situation.component';
+import { ChessLoaderComponent } from '../../../shared/components/chess-loader/chess-loader.component';
 
 @Component({
   selector: 'app-adventure',
   standalone: true,
-  imports: [CommonModule, RouterModule, ActiveSituationComponent],
+  imports: [CommonModule, RouterModule, ActiveSituationComponent, ChessLoaderComponent],
   templateUrl: './adventure.component.html',
   styleUrl: './adventure.component.css'
 })
