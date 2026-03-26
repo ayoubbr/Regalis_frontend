@@ -165,23 +165,27 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
   }
 
   checkResult(): void {
-      if (!this.currentSituation) return;
+      if (!this.currentSituation || !this.lastUserMove) return;
 
-      const solution = this.currentSituation.solutionMoves; // e.g. "e2e4"
-      const isCorrect = this.lastUserMove === solution;
-      
-      if (isCorrect) {
-          this.gameState = 'success';
-          const userId = this.authService.currentUserValue?.id;
-          if (userId && this.currentSituation.id) {
-              this.userSituationService.completeSituation(userId, this.currentSituation.id).subscribe();
-          }
-      } else {
-          this.lives--;
-          this.gameState = 'failure';
-          if (this.lives <= 0) {
-              // Handle game over logic
-          }
+      const userId = this.authService.currentUserValue?.id;
+      if (userId && this.currentSituation.id) {
+          this.userSituationService.completeSituation(userId, this.currentSituation.id, this.lastUserMove).subscribe({
+              next: (res) => {
+                  if (res.isCorrect) {
+                      this.gameState = 'success';
+                  } else {
+                      this.lives--;
+                      this.gameState = 'failure';
+                      if (this.lives <= 0) {
+                          // Handle game over logic
+                      }
+                  }
+              },
+              error: (err) => {
+                  console.error('Error completing situation', err);
+                  this.gameState = 'failure';
+              }
+          });
       }
   }
 

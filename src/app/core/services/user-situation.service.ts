@@ -7,7 +7,8 @@ export interface UserSituation {
   id?: number;
   userId: number;
   situationId: number;
-  status: 'OPENED' | 'COMPLETED';
+  userMove?: string;
+  isCorrect?: boolean;
 }
 
 @Injectable({
@@ -21,7 +22,7 @@ export class UserSituationService {
     return this.http.post<UserSituation>(`${this.apiUrl}/${userId}/open/${situationId}`, {});
   }
 
-  completeSituation(userId: number, situationId: number): Observable<UserSituation> {
-    return this.http.post<UserSituation>(`${this.apiUrl}/${userId}/complete/${situationId}`, {});
+  completeSituation(userId: number, situationId: number, userMove: string): Observable<UserSituation> {
+    return this.http.post<UserSituation>(`${this.apiUrl}/${userId}/complete/${situationId}?userMove=${userMove}`, {});
   }
 }

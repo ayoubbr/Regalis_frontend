@@ -16,7 +16,7 @@ import { ActiveSituationComponent } from '../active-situation/active-situation.c
 @Component({
   selector: 'app-adventure',
   standalone: true,
-  imports: [CommonModule, RouterModule, ActiveQuizComponent, ActiveSituationComponent],
+  imports: [CommonModule, RouterModule, ActiveSituationComponent],
   templateUrl: './adventure.component.html',
   styleUrl: './adventure.component.css'
 })
