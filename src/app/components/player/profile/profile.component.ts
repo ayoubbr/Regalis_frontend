@@ -38,11 +38,11 @@ export class ProfileComponent implements OnInit {
   private loadUserData(userId: number): void {
     this.loading = true;
     forkJoin({
-      user: this.userService.getById(userId).pipe(catchError(() => of(null))),
       allAchievements: this.achievementService.getAll().pipe(catchError(() => of([]))),
       userAchievements: this.achievementService.getUserAchievements(userId).pipe(catchError(() => of([])))
-    }).subscribe(({ user, allAchievements, userAchievements }) => {
-      this.currentUser = user;
+    }).subscribe(({ allAchievements, userAchievements }) => {
+      // Use the global current user value from authService
+      this.currentUser = this.authService.currentUserValue;
       
       // Merge achievements with user status
       this.achievements = allAchievements.map(ach => {

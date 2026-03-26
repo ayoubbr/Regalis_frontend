@@ -14,6 +14,7 @@ export interface User {
     totalXp: number;
     level: number;
     currentStreak: number;
+    longestStreak: number;
     lastActiveDate: string; // LocalDate as ISO string
     createdAt: string; // LocalDateTime as ISO string
 }
