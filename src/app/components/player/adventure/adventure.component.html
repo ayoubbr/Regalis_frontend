@@ -27,6 +27,7 @@
                         <!-- Puzzle Label -->
                         <div class="node-title">
                             {{puzzle.title}}
+                            <span class="node-xp-badge" *ngIf="puzzle.xpReward">⚡ {{puzzle.xpReward}} XP</span>
                         </div>
 
                         <!-- Current Position Pointer -->

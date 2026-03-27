@@ -2,7 +2,7 @@
   <header class="leaderboard-header">
     <div class="header-content">
       <h2 class="leaderboard-title">Global Leaderboard</h2>
-      <p class="leaderboard-subtitle">{{ selectedPeriod | titlecase }} League • Season ends in 2 days</p>
+      <p class="leaderboard-subtitle">{{ selectedPeriod | titlecase }} Rankings</p>
     </div>
     <div class="header-actions">
       <div class="period-selector">
@@ -29,22 +29,35 @@
     <!-- Loading State -->
     <app-chess-loader *ngIf="loading" message="Loading Leaderboard..."></app-chess-loader>
 
-    <ng-container *ngIf="!loading">
+    <!-- Error State -->
+    <div *ngIf="hasError && !loading" class="empty-state">
+      <span class="material-symbols-outlined empty-icon">error</span>
+      <h3>Couldn't load leaderboard</h3>
+      <p>Please check your connection and try again.</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !hasError && players.length === 0" class="empty-state">
+      <span class="material-symbols-outlined empty-icon">leaderboard</span>
+      <h3>No rankings yet</h3>
+      <p>Complete quizzes and puzzles to earn XP and appear on the leaderboard!</p>
+    </div>
+
+    <ng-container *ngIf="!loading && !hasError && players.length > 0">
       <!-- Podium -->
-      <div class="podium-section">
-        <div *ngFor="let player of podiumPlayers; let i = index" 
+      <div class="podium-section" *ngIf="podiumPlayers.length > 0">
+        <div *ngFor="let player of podiumPlayers" 
              class="podium-item"
-             [ngClass]="'rank-' + player.rank">
+             [ngClass]="['rank-' + player.rank, isCurrentUser(player) ? 'is-me' : '']">
           
           <div class="avatar-wrapper">
-            <!-- Crown for #1 -->
             <div *ngIf="player.rank === 1" class="crown-icon">
               <span class="material-symbols-outlined icon-filled">emoji_events</span>
             </div>
             
             <div class="avatar-box"
                  [ngClass]="'border-rank-' + player.rank">
-              <img [src]="player.avatar" [alt]="player.username" class="avatar-img">
+              <img [src]="getAvatar(player)" [alt]="player.username" class="avatar-img">
             </div>
             <div class="rank-number"
                  [ngClass]="'bg-rank-' + player.rank">
@@ -54,83 +67,77 @@
 
           <div class="podium-info-card"
                [ngClass]="'card-rank-' + player.rank">
-            <div *ngIf="player.rank === 1" class="card-decoration"></div>
             <h3 class="player-name">{{ player.username }}</h3>
             <p class="player-xp">{{ player.xp | number }} XP</p>
-            <p class="player-league">{{ player.league }} League</p>
+            <p class="player-league">{{ getLeague(player.xp) }}</p>
           </div>
         </div>
       </div>
 
       <!-- Table -->
-      <div class="table-wrapper">
+      <div class="table-wrapper" *ngIf="tablePlayers.length > 0">
         <table class="leaderboard-table">
           <thead>
             <tr>
               <th class="col-rank">Rank</th>
               <th class="col-player">Player</th>
               <th class="col-league">League</th>
-              <th class="col-stats">Wins / Losses</th>
+              <th class="col-level">Level</th>
               <th class="col-xp">Total XP</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let player of remainingPlayers" class="table-row">
+            <tr *ngFor="let player of tablePlayers" 
+                class="table-row"
+                [class.is-me]="isCurrentUser(player)">
               <td class="cell-rank">{{ player.rank }}</td>
               <td class="cell-player">
                 <div class="player-info">
                   <div class="player-avatar">
-                    <img [src]="player.avatar" [alt]="player.username">
+                    <img [src]="getAvatar(player)" [alt]="player.username">
                   </div>
                   <div class="player-details">
                     <p class="username">{{ player.username }}</p>
-                    <p class="title">{{ player.title }}</p>
                   </div>
                 </div>
               </td>
               <td class="cell-league">
                 <span class="league-badge"
-                      [ngClass]="'badge-' + player.league.toLowerCase()">
-                  {{ player.league }}
+                      [ngClass]="'badge-' + getLeague(player.xp).toLowerCase()">
+                  {{ getLeague(player.xp) }}
                 </span>
               </td>
-              <td class="cell-stats">{{ player.wins }} / {{ player.losses }}</td>
+              <td class="cell-level">{{ player.level }}</td>
               <td class="cell-xp">{{ player.xp | number }}</td>
             </tr>
           </tbody>
         </table>
-        <div class="table-footer">
-          <button class="view-all-btn">View Full Rankings</button>
-        </div>
       </div>
     </ng-container>
   </div>
 
-  <!-- User Status Bar -->
-  <div *ngIf="currentUserEntry" class="user-status-bar">
-    <div class="status-card">
-      <div class="user-info">
-        <div class="user-rank">
-          {{ currentUserEntry.rank }}
-        </div>
-        <div class="user-avatar">
-          <img [src]="currentUserEntry.avatar" alt="You">
-        </div>
-        <div class="user-text">
-          <p class="user-name">You ({{ currentUserEntry.username }})</p>
-          <div class="user-stats-row">
-            <span class="xp-badge">{{ currentUserEntry.xp | number }} XP</span>
-            <span class="daily-boost">+120 Today 🔥</span>
+  <!-- Current User Bar -->
+  <div *ngIf="!loading && !hasError && players.length > 0" class="user-status-bar">
+    <ng-container *ngFor="let player of players">
+      <div *ngIf="isCurrentUser(player)" class="status-card">
+        <div class="user-info">
+          <div class="user-rank">{{ player.rank }}</div>
+          <div class="user-avatar">
+            <img [src]="getAvatar(player)" alt="You">
+          </div>
+          <div class="user-text">
+            <p class="user-name">You ({{ player.username }})</p>
+            <span class="xp-badge">{{ player.xp | number }} XP</span>
           </div>
         </div>
-      </div>
-      <div class="status-actions">
-        <div class="league-info">
-          <p class="league-label">Current League</p>
-          <p class="league-value">{{ currentUserEntry.league }} IV</p>
+        <div class="status-actions">
+          <div class="league-info">
+            <p class="league-label">League</p>
+            <p class="league-value">{{ getLeague(player.xp) }}</p>
+          </div>
+          <a class="profile-btn" routerLink="/player/profile">View Profile</a>
         </div>
-        <a class="profile-btn" routerLink="/player/profile">View Profile</a>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

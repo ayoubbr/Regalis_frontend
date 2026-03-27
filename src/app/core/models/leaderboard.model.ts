@@ -4,10 +4,13 @@ export enum Period {
     ALL_TIME = 'ALL_TIME'
 }
 
-export interface LeaderboardEntry {
+export interface LeaderboardPlayer {
     id: number;
     period: Period;
     xp: number;
     rank: number;
     userId: number;
+    username: string;
+    imageUrl: string | null;
+    level: number;
 }

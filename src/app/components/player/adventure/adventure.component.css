@@ -220,6 +220,20 @@
     font-weight: 800;
     color: var(--slate-500);
     font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.node-xp-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #d97706;
+    background: #fef3c7;
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    white-space: nowrap;
 }
 
 .adventure-footer {
