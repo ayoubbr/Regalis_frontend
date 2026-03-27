@@ -57,7 +57,7 @@
             
             <div class="avatar-box"
                  [ngClass]="'border-rank-' + player.rank">
-              <img [src]="getAvatar(player)" [alt]="player.username" class="avatar-img">
+              <div class="avatar-initial">{{ (player.username)[0].toUpperCase() }}</div>
             </div>
             <div class="rank-number"
                  [ngClass]="'bg-rank-' + player.rank">
@@ -94,7 +94,7 @@
               <td class="cell-player">
                 <div class="player-info">
                   <div class="player-avatar">
-                    <img [src]="getAvatar(player)" [alt]="player.username">
+                    <div class="avatar-initial-sm">{{ (player.username)[0].toUpperCase() }}</div>
                   </div>
                   <div class="player-details">
                     <p class="username">{{ player.username }}</p>
@@ -123,7 +123,7 @@
         <div class="user-info">
           <div class="user-rank">{{ player.rank }}</div>
           <div class="user-avatar">
-            <img [src]="getAvatar(player)" alt="You">
+            <div class="avatar-initial-sm">{{ (player.username)[0].toUpperCase() }}</div>
           </div>
           <div class="user-text">
             <p class="user-name">You ({{ player.username }})</p>

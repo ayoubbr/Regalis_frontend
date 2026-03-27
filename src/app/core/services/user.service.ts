@@ -11,8 +11,22 @@ export class UserService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/users`;
 
-    getAll(): Observable<User[]> {
-        return this.http.get<User[]>(this.apiUrl);
+    getAll(params: {
+        page?: number;
+        size?: number;
+        search?: string;
+        role?: string;
+        sort?: string;
+    } = {}): Observable<import('../models/user.model').PaginatedResponse<User>> {
+        let queryParams = new URLSearchParams();
+        if (params.page !== undefined) queryParams.set('page', params.page.toString());
+        if (params.size !== undefined) queryParams.set('size', params.size.toString());
+        if (params.search) queryParams.set('search', params.search);
+        if (params.role) queryParams.set('role', params.role);
+        if (params.sort) queryParams.set('sort', params.sort);
+
+        const url = queryParams.toString() ? `${this.apiUrl}?${queryParams.toString()}` : this.apiUrl;
+        return this.http.get<import('../models/user.model').PaginatedResponse<User>>(url);
     }
 
     getById(id: number): Observable<User> {

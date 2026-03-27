@@ -3,8 +3,10 @@
         <div class="header-main">
             <div class="avatar-container">
                 <div class="avatar-ring">
-                    <img [src]="currentUser?.imageUrl || 'assets/images/default-avatar.png'" alt="Avatar"
-                        class="user-avatar">
+                    <img *ngIf="currentUser?.imageUrl" [src]="currentUser?.imageUrl" alt="Avatar" class="user-avatar">
+                    <div *ngIf="!currentUser?.imageUrl" class="user-avatar avatar-initial">
+                        {{ ( currentUser?.username || 'U')[0].toUpperCase() }}
+                    </div>
                 </div>
                 <!-- <div class="level-badge">{{ currentUser?.level }}</div> -->
                 <div class="verify-badge">

@@ -153,6 +153,34 @@
     color: var(--slate-700);
 }
 
+.user-profile-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: default;
+}
+
+.nav-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--slate-200);
+}
+
+.nav-avatar-initial {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary, #855ef7), rgba(133, 94, 247, 0.6));
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .badget-admin {
     background: #fee2e2;
     color: #ef4444;

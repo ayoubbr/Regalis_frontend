@@ -264,6 +264,20 @@
     box-shadow: 0 0 0 2px white, 0 0 0 4px var(--player-primary-light);
 }
 
+.nav-avatar-initial {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary, #855ef7), rgba(133, 94, 247, 0.6));
+    color: white;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--player-primary);
+}
+
 .username {
     font-weight: 700;
     color: var(--slate-700);

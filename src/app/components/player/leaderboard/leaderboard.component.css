@@ -289,7 +289,31 @@
 
 .table-row:hover .player-avatar { border-color: var(--player-primary); }
 
-.player-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-initial {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary, #855ef7), rgba(133, 94, 247, 0.6));
+  color: white;
+  font-size: 2rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-initial-sm {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary, #855ef7), rgba(133, 94, 247, 0.6));
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .player-details .username { font-weight: 800; color: var(--slate-800); margin: 0; }
 .player-details .title { font-size: 0.75rem; color: var(--slate-400); font-weight: 700; margin: 0; }

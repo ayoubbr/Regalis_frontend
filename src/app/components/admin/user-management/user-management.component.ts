@@ -17,20 +17,27 @@ export class UserManagementComponent implements OnInit {
   private userService = inject(UserService);
   private toastService = inject(ToastService);
 
+  protected Math = Math;
+
   users: User[] = [];
-  filteredUsers: User[] = [];
-  searchQuery: string = '';
+  searchQuery = '';
+  roleFilter = '';
+  sortField = 'createdAt';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
+  // Pagination state
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
 
   // Modal state
   isModalOpen = false;
   isEditing = false;
   currentUser: any = {
-    username: '',
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    role: Role.USER
+    username: '', email: '', password: '',
+    firstName: '', lastName: '', role: Role.USER
   };
 
   roles = Object.values(Role);
@@ -40,10 +47,18 @@ export class UserManagementComponent implements OnInit {
   }
 
   loadUsers(): void {
-    this.userService.getAll().subscribe({
-      next: (data) => {
-        this.users = data;
-        this.applyFilters();
+    this.userService.getAll({
+      page: this.currentPage,
+      size: this.pageSize,
+      search: this.searchQuery,
+      role: this.roleFilter,
+      sort: `${this.sortField},${this.sortDirection}`
+    }).subscribe({
+      next: (response) => {
+        this.users = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
       },
       error: (err) => {
         console.error('Error fetching users', err);
@@ -52,17 +67,35 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  onSearch(): void {
-    this.applyFilters();
+  onSearch(): void { 
+    this.currentPage = 0;
+    this.loadUsers(); 
   }
 
-  applyFilters(): void {
-    this.filteredUsers = this.users.filter(user =>
-      user.username.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      user.firstName?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      user.lastName?.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  onRoleFilterChange(): void { 
+    this.currentPage = 0;
+    this.loadUsers(); 
+  }
+
+  onSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'desc';
+    }
+    this.currentPage = 0;
+    this.loadUsers();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadUsers();
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) return 'unfold_more';
+    return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
   // Modal actions
@@ -73,31 +106,21 @@ export class UserManagementComponent implements OnInit {
 
   onEdit(user: User): void {
     this.currentUser = {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      password: '',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      role: user.role
+      id: user.id, username: user.username, email: user.email,
+      password: '', firstName: user.firstName || '',
+      lastName: user.lastName || '', role: user.role
     };
     this.isEditing = true;
     this.isModalOpen = true;
   }
 
-  closeModal(): void {
-    this.isModalOpen = false;
-  }
+  closeModal(): void { this.isModalOpen = false; }
 
   resetForm(): void {
     this.isEditing = false;
     this.currentUser = {
-      username: '',
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      role: Role.USER
+      username: '', email: '', password: '',
+      firstName: '', lastName: '', role: Role.USER
     };
   }
 
@@ -106,7 +129,6 @@ export class UserManagementComponent implements OnInit {
       this.toastService.showError('Username and email are required.');
       return;
     }
-
     if (!this.isEditing && !this.currentUser.password) {
       this.toastService.showError('Password is required for new users.');
       return;
@@ -114,46 +136,19 @@ export class UserManagementComponent implements OnInit {
 
     if (this.isEditing) {
       const dto: any = {
-        email: this.currentUser.email,
-        firstName: this.currentUser.firstName,
-        lastName: this.currentUser.lastName,
-        role: this.currentUser.role
+        email: this.currentUser.email, firstName: this.currentUser.firstName,
+        lastName: this.currentUser.lastName, role: this.currentUser.role
       };
-      if (this.currentUser.password) {
-        dto.password = this.currentUser.password;
-      }
+      if (this.currentUser.password) dto.password = this.currentUser.password;
 
       this.userService.update(this.currentUser.id, dto).subscribe({
-        next: () => {
-          this.loadUsers();
-          this.closeModal();
-          this.toastService.showSuccess('User updated successfully!');
-        },
-        error: (err) => {
-          console.error('Error updating user', err);
-          this.toastService.showError('Failed to update user.');
-        }
+        next: () => { this.loadUsers(); this.closeModal(); this.toastService.showSuccess('User updated!'); },
+        error: () => this.toastService.showError('Failed to update user.')
       });
     } else {
-      const dto: any = {
-        username: this.currentUser.username,
-        email: this.currentUser.email,
-        password: this.currentUser.password,
-        firstName: this.currentUser.firstName,
-        lastName: this.currentUser.lastName,
-        role: this.currentUser.role
-      };
-
-      this.userService.create(dto).subscribe({
-        next: () => {
-          this.loadUsers();
-          this.closeModal();
-          this.toastService.showSuccess('User created successfully!');
-        },
-        error: (err) => {
-          console.error('Error creating user', err);
-          this.toastService.showError('Failed to create user.');
-        }
+      this.userService.create(this.currentUser).subscribe({
+        next: () => { this.loadUsers(); this.closeModal(); this.toastService.showSuccess('User created!'); },
+        error: () => this.toastService.showError('Failed to create user.')
       });
     }
   }
@@ -161,30 +156,21 @@ export class UserManagementComponent implements OnInit {
   onDelete(id: number): void {
     if (confirm('Are you sure you want to delete this user?')) {
       this.userService.delete(id).subscribe({
-        next: () => {
-          this.loadUsers();
-          this.toastService.showSuccess('User deleted successfully!');
-        },
-        error: (err) => {
-          console.error('Error deleting user', err);
-          this.toastService.showError('Failed to delete user.');
-        }
+        next: () => { this.loadUsers(); this.toastService.showSuccess('User deleted!'); },
+        error: () => this.toastService.showError('Failed to delete user.')
       });
     }
-  }
-
-  getUserInitials(user: User): string {
-    const first = user.firstName ? user.firstName[0] : '';
-    const last = user.lastName ? user.lastName[0] : '';
-    return (first + last).toUpperCase() || user.username[0].toUpperCase();
   }
 
   getRoleBadgeClass(role: string): string {
     switch (role?.toUpperCase()) {
       case 'ADMIN': return 'badge-red';
-      case 'PREMIUM': return 'badge-purple';
-      case 'INSTRUCTOR': return 'badge-blue';
       default: return 'badge-slate';
     }
+  }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 }

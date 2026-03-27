@@ -68,7 +68,10 @@
                 </div>
 
                 <div class="user-profile-nav" routerLink="/player/profile">
-                    <img [src]="currentUser?.imageUrl || 'assets/images/default-avatar.png'" alt="User" class="nav-avatar">
+                    <img *ngIf="currentUser?.imageUrl" [src]="currentUser?.imageUrl" alt="User" class="nav-avatar">
+                    <div *ngIf="!currentUser?.imageUrl" class="nav-avatar-initial">
+                        {{ (currentUser?.firstName || currentUser?.username || 'U')[0].toUpperCase() }}
+                    </div>
                     <span class="username">{{ currentUser?.username }}</span>
                 </div>
 

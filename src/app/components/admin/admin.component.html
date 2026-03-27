@@ -57,7 +57,13 @@
             <div style="flex-grow: 1;"></div>
             <div class="user-nav">
                 <span class="badget-admin">ADMIN</span>
-                <span class="username">{{ currentUser?.username }}</span>
+                <div class="user-profile-nav">
+                    <img *ngIf="currentUser?.imageUrl" [src]="currentUser?.imageUrl" alt="Admin" class="nav-avatar">
+                    <div *ngIf="!currentUser?.imageUrl" class="nav-avatar-initial">
+                        {{ (currentUser?.firstName || currentUser?.username || 'A')[0].toUpperCase() }}
+                    </div>
+                    <span class="username">{{ currentUser?.username }}</span>
+                </div>
                 <button class="logout-btn" (click)="logout()" title="Logout">
                     <span class="material-symbols-outlined">logout</span>
                 </button>

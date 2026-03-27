@@ -1,80 +1,138 @@
 <div class="page-header">
     <div class="header-text">
-        <h1 class="page-title">User Management</h1>
+        <h2 class="page-title">User Management</h2>
         <p class="page-subtitle">Manage your kingdom's students and administrators</p>
     </div>
     <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
         <span class="material-symbols-outlined">person_add</span>
-        Add New User
+        Add User
     </button>
 </div>
 
-<!-- Filters and Search -->
-<div class="card filter-card">
+<!-- Filters -->
+<div class="card filter-bar">
     <div class="search-box">
         <span class="material-symbols-outlined search-icon">search</span>
-        <input type="text" class="search-input" placeholder="Search by username, email, or name..."
+        <input type="text" class="search-input" placeholder="Search by name, username, or email..."
             [(ngModel)]="searchQuery" (input)="onSearch()">
     </div>
+    <select class="filter-select" [(ngModel)]="roleFilter" (change)="onRoleFilterChange()">
+        <option value="">All Roles</option>
+        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+    </select>
 </div>
 
-<!-- Users Directory -->
-<div class="users-grid">
-    <div *ngFor="let user of filteredUsers" class="card user-card">
-        <div class="user-header">
-            <div class="user-avatar-container">
-                <div class="user-avatar">{{ getUserInitials(user) }}</div>
-                <div class="status-dot online"></div>
-            </div>
-            <div class="user-role-badge">
-                <span class="badge" [ngClass]="getRoleBadgeClass(user.role)">{{ user.role }}</span>
-            </div>
-        </div>
+<!-- Users Table -->
+<div class="card table-container">
+    <table class="users-table" *ngIf="users.length > 0">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th class="sortable" (click)="onSort('totalXp')">
+                    XP
+                    <span class="material-symbols-outlined sort-icon">{{ getSortIcon('totalXp') }}</span>
+                </th>
+                <th class="sortable" (click)="onSort('level')">
+                    Level
+                    <span class="material-symbols-outlined sort-icon">{{ getSortIcon('level') }}</span>
+                </th>
+                <th class="sortable" (click)="onSort('currentStreak')">
+                    Streak
+                    <span class="material-symbols-outlined sort-icon">{{ getSortIcon('currentStreak') }}</span>
+                </th>
+                <th class="sortable" (click)="onSort('longestStreak')">
+                    Best
+                    <span class="material-symbols-outlined sort-icon">{{ getSortIcon('longestStreak') }}</span>
+                </th>
+                <th class="sortable" (click)="onSort('createdAt')">
+                    Joined
+                    <span class="material-symbols-outlined sort-icon">{{ getSortIcon('createdAt') }}</span>
+                </th>
+                <th class="sortable" (click)="onSort('lastActiveDate')">
+                    Last Active
+                    <span class="material-symbols-outlined sort-icon">{{ getSortIcon('lastActiveDate') }}</span>
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td class="user-cell">
+                    <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="" class="table-avatar">
+                    <div *ngIf="!user.imageUrl" class="table-avatar-initial">
+                        {{ (user.username)[0].toUpperCase() }}
+                    </div>
+                    <div>
+                        <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+                        <span class="user-handle">&#64;{{ user.username }}</span>
+                    </div>
+                </td>
+                <td class="email-cell">{{ user.email }}</td>
+                <td>
+                    <span class="badge" [ngClass]="getRoleBadgeClass(user.role)">{{ user.role }}</span>
+                </td>
+                <td class="num-cell">{{ user.totalXp | number }}</td>
+                <td class="num-cell">{{ user.level }}</td>
+                <td class="num-cell">
+                    <span class="streak-val">🔥 {{ user.currentStreak }}</span>
+                </td>
+                <td class="num-cell">{{ user.longestStreak }}</td>
+                <td class="date-cell">{{ formatDate(user.createdAt) }}</td>
+                <td class="date-cell">{{ formatDate(user.lastActiveDate) }}</td>
+                <td class="actions-cell">
+                    <button class="icon-btn" [routerLink]="['/admin/users/details', user.id]" title="Details">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                    <button class="icon-btn" (click)="onEdit(user)" title="Edit">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                    <button class="icon-btn danger" (click)="onDelete(user.id)" title="Delete">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <div class="user-body">
-            <h3 class="user-name">{{ user.firstName }} {{ user.lastName }}</h3>
-            <p class="user-handle">&#64;{{ user.username }}</p>
-            <p class="user-email">{{ user.email }}</p>
+    <!-- Pagination Footer -->
+    <div class="pagination-footer" *ngIf="totalPages > 0">
+        <div class="pagination-info">
+            Showing <strong>{{ (currentPage * pageSize) + 1 }}</strong> to 
+            <strong>{{ Math.min((currentPage + 1) * pageSize, totalElements) }}</strong> of 
+            <strong>{{ totalElements }}</strong> users
         </div>
-
-        <div class="user-stats">
-            <div class="stat-mini">
-                <span class="stat-mini-label">Total XP</span>
-                <span class="stat-mini-value">{{ user.totalXp | number }}</span>
-            </div>
-            <div class="stat-mini">
-                <span class="stat-mini-label">Level</span>
-                <span class="stat-mini-value">{{ (user.totalXp / 1000) + 1 | number:'1.0-0' }}</span>
-            </div>
-            <div class="stat-mini">
-                <span class="stat-mini-label">Streak</span>
-                <span class="stat-mini-value">{{ user.currentStreak }}</span>
-            </div>
-        </div>
-
-        <div class="user-actions">
-            <button class="chunky-button chunky-button-secondary" [routerLink]="['/admin/users/details', user.id]">
-                <span class="material-symbols-outlined">visibility</span>
-                Details
+        <div class="pagination-controls">
+            <button class="page-btn" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
+                <span class="material-symbols-outlined">chevron_left</span>
+                Previous
             </button>
-            <button class="chunky-button chunky-button-secondary" (click)="onEdit(user)">
-                <span class="material-symbols-outlined">edit</span>
-                Edit
-            </button>
-            <button class="chunky-button chunky-button-danger-outline" (click)="onDelete(user.id)">
-                <span class="material-symbols-outlined">delete</span>
+            
+            <div class="page-numbers">
+                <button *ngFor="let p of [].constructor(totalPages); let i = index" 
+                        class="page-num" 
+                        [class.active]="i === currentPage"
+                        (click)="onPageChange(i)">
+                    {{ i + 1 }}
+                </button>
+            </div>
+
+            <button class="page-btn" [disabled]="isLastPage" (click)="onPageChange(currentPage + 1)">
+                Next
+                <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </div>
     </div>
 
     <!-- Empty state -->
-    <div *ngIf="filteredUsers.length === 0" class="empty-state">
+    <div *ngIf="users.length === 0" class="empty-state">
         <span class="material-symbols-outlined empty-icon">group_off</span>
-        <p>No users found matching your search.</p>
+        <p>No users found matching your criteria.</p>
     </div>
 </div>
 
-<!-- User Modal -->
+<!-- User Modal (unchanged) -->
 <div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
     <div class="card modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
