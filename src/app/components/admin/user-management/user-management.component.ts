@@ -55,7 +55,7 @@ export class UserManagementComponent implements OnInit {
       sort: `${this.sortField},${this.sortDirection}`
     }).subscribe({
       next: (response) => {
-        this.users = response.content;
+        this.users = response.content;        
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
         this.isLastPage = response.last;

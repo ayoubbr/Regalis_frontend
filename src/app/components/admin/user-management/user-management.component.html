@@ -99,8 +99,8 @@
     <!-- Pagination Footer -->
     <div class="pagination-footer" *ngIf="totalPages > 0">
         <div class="pagination-info">
-            Showing <strong>{{ (currentPage * pageSize) + 1 }}</strong> to 
-            <strong>{{ Math.min((currentPage + 1) * pageSize, totalElements) }}</strong> of 
+            Showing <strong>{{ (currentPage * pageSize) + 1 }}</strong> to
+            <strong>{{ Math.min((currentPage + 1) * pageSize, totalElements) }}</strong> of
             <strong>{{ totalElements }}</strong> users
         </div>
         <div class="pagination-controls">
@@ -108,12 +108,10 @@
                 <span class="material-symbols-outlined">chevron_left</span>
                 Previous
             </button>
-            
+
             <div class="page-numbers">
-                <button *ngFor="let p of [].constructor(totalPages); let i = index" 
-                        class="page-num" 
-                        [class.active]="i === currentPage"
-                        (click)="onPageChange(i)">
+                <button *ngFor="let p of [].constructor(totalPages); let i = index" class="page-num"
+                    [class.active]="i === currentPage" (click)="onPageChange(i)">
                     {{ i + 1 }}
                 </button>
             </div>

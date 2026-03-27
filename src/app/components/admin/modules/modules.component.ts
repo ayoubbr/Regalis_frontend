@@ -82,7 +82,8 @@ export class ModulesComponent implements OnInit {
     currentModule: any = {
         name: '',
         description: '',
-        orderIndex: 0
+        orderIndex: 0,
+        imageUrl: ''
     };
 
     openCreateModal(): void {
@@ -99,7 +100,8 @@ export class ModulesComponent implements OnInit {
         this.currentModule = {
             name: '',
             description: '',
-            orderIndex: this.modules.length + 1
+            orderIndex: this.modules.length + 1,
+            imageUrl: ''
         };
     }
 
