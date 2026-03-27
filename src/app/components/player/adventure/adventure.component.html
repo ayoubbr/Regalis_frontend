@@ -2,7 +2,7 @@
     <div class="adventure-main">
         <ng-container *ngFor="let module of modules; let modIdx = index">
             <header class="adventure-header">
-                <h1 class="adventure-title">{{module.name}}</h1>
+                <h2 class="adventure-title">{{module.name}}</h2>
                 <p class="adventure-subtitle">Chapter {{module.orderIndex}}: {{module.description}}</p>
             </header>
 
@@ -12,22 +12,25 @@
                         [style.transform]="'translateX(' + getNodeOffset(i) + 'px)'">
 
                         <!-- Chunky Node -->
-                        <div class="chunky-node" (click)="startPuzzle(puzzle)" [ngClass]="{
-                                'completed': puzzle.status === 'completed',
-                                'active': puzzle.status === 'active',
-                                'locked': puzzle.status === 'locked',
-                                'special': i % 5 === 4
-                             }">
-                            <div class="node-inner">
-                                <span class="material-symbols-outlined">{{getNodeIcon(puzzle.status, i)}}</span>
+                        <div class="node-row">
+                            <span class="node-xp-badge" *ngIf="puzzle.xpReward">⚡ {{puzzle.xpReward}} XP</span>
+
+                            <div class="chunky-node" (click)="startPuzzle(puzzle)" [ngClass]="{
+                                    'completed': puzzle.status === 'completed',
+                                    'active': puzzle.status === 'active',
+                                    'locked': puzzle.status === 'locked',
+                                    'special': i % 5 === 4
+                                 }">
+                                <div class="node-inner">
+                                    <span class="material-symbols-outlined">{{getNodeIcon(puzzle.status, i)}}</span>
+                                </div>
+                                <div class="node-shadow"></div>
                             </div>
-                            <div class="node-shadow"></div>
                         </div>
 
                         <!-- Puzzle Label -->
                         <div class="node-title">
                             {{puzzle.title}}
-                            <span class="node-xp-badge" *ngIf="puzzle.xpReward">⚡ {{puzzle.xpReward}} XP</span>
                         </div>
 
                         <!-- Current Position Pointer -->
