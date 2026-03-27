@@ -17,11 +17,17 @@ export class AdminDashboardComponent implements OnInit {
     totalUsers: 0,
     activeNow: 0,
     totalModules: 0,
-    totalXP: '0',
-    popularModule: 'Opening Masterclass' // Still mocked for now as it needs more complex logic
+    totalPuzzles: 0,
+    totalQuizzes: 0,
+    totalXP: '0'
   };
 
   recentActivity: DashboardActivity[] = [];
+
+  // User growth chart data
+  chartLabels: string[] = [];
+  chartValues: number[] = [];
+  chartMax = 1;
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -33,11 +39,25 @@ export class AdminDashboardComponent implements OnInit {
         this.stats.totalUsers = data.totalUsers;
         this.stats.activeNow = data.activeUsers;
         this.stats.totalModules = data.totalModules;
+        this.stats.totalPuzzles = data.totalPuzzles;
+        this.stats.totalQuizzes = data.totalQuizzes;
         this.stats.totalXP = this.formatXP(data.totalXp);
         this.recentActivity = data.recentActivities;
+
+        // Build chart data
+        if (data.userGrowth) {
+          this.chartLabels = Object.keys(data.userGrowth);
+          this.chartValues = Object.values(data.userGrowth);
+          this.chartMax = Math.max(...this.chartValues, 1);
+        }
       },
       error: (err) => console.error('Error loading dashboard data', err)
     });
+  }
+
+  getBarHeight(value: number): string {
+    const percentage = (value / this.chartMax) * 100;
+    return Math.max(percentage, 5) + '%'; // min 5% so bar is visible
   }
 
   private formatXP(xp: number): string {

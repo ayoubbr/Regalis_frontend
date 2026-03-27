@@ -76,14 +76,14 @@
     margin-top: auto;
 }
 
-.weekly-goal {
+.platform-status {
     background-color: rgba(133, 94, 247, 0.05);
     border: 2px solid rgba(133, 94, 247, 0.2);
     border-radius: var(--radius-md);
     padding: 1rem;
 }
 
-.goal-label {
+.status-label {
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -92,23 +92,30 @@
     color: var(--slate-900);
 }
 
-.progress-bar {
-    width: 100%;
-    height: 0.75rem;
-    background-color: rgba(133, 94, 247, 0.2);
-    border-radius: var(--radius-full);
-    overflow: hidden;
+.status-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.progress-fill {
-    height: 100%;
-    background-color: var(--primary);
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
 }
 
-.goal-status {
-    font-size: 0.875rem;
+.status-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #10b981;
+}
+
+.status-version {
+    font-size: 0.75rem;
     font-weight: 500;
-    color: var(--slate-600);
+    color: var(--slate-400);
     margin-top: 0.5rem;
 }
 
@@ -179,26 +186,9 @@
     border-right-color: rgba(133, 94, 247, 0.05);
 }
 
-.dark .brand-name {
-    color: white;
-}
-
-.dark .nav-item {
-    color: var(--slate-400);
-}
-
-.dark .nav-item:hover {
-    color: var(--primary);
-}
-
-.dark .nav-item.active {
-    color: white;
-}
-
-.dark .goal-label {
-    color: white;
-}
-
-.dark .goal-status {
-    color: var(--slate-400);
-}
+.dark .brand-name { color: white; }
+.dark .nav-item { color: var(--slate-400); }
+.dark .nav-item:hover { color: var(--primary); }
+.dark .nav-item.active { color: white; }
+.dark .status-label { color: white; }
+.dark .status-version { color: var(--slate-500); }

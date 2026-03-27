@@ -1,111 +1,121 @@
-<div class="dashboard-header">
-    <div class="welcome-text">
-        <h1 class="page-title">Welcome back, Duo! 👋</h1>
-        <p class="page-subtitle">Here's what's happening in your kingdom today.</p>
-    </div>
-    <div class="header-actions">
-        <button class="chunky-button chunky-button-secondary">
-            <span class="material-symbols-outlined">download</span>
-            Export Report
-        </button>
-    </div>
-</div>
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h2 class="dashboard-title">Admin Dashboard</h2>
+            <p class="dashboard-subtitle">Platform overview & analytics</p>
+        </div>
+    </header>
 
-<!-- Stats Grid -->
-<div class="stats-grid">
-    <div class="card stat-card">
-        <div class="stat-icon-container users">
-            <span class="material-symbols-outlined">group</span>
-        </div>
-        <div class="stat-info">
-            <p class="stat-label">Total Users</p>
-            <h2 class="stat-value">{{ stats.totalUsers | number }}</h2>
-            <p class="stat-trend trend-up">
-                <span class="material-symbols-outlined">trending_up</span>
-                +12% this month
-            </p>
-        </div>
-    </div>
-
-    <div class="card stat-card">
-        <div class="stat-icon-container active">
-            <span class="material-symbols-outlined">bolt</span>
-        </div>
-        <div class="stat-info">
-            <p class="stat-label">Active Now</p>
-            <h2 class="stat-value">{{ stats.activeNow }}</h2>
-            <p class="stat-trend">Real-time status</p>
-        </div>
-    </div>
-
-    <div class="card stat-card">
-        <div class="stat-icon-container xp">
-            <span class="material-symbols-outlined">workspace_premium</span>
-        </div>
-        <div class="stat-info">
-            <p class="stat-label">XP Earned</p>
-            <h2 class="stat-value">{{ stats.totalXP }}</h2>
-            <p class="stat-trend trend-up">
-                <span class="material-symbols-outlined">trending_up</span>
-                New record!
-            </p>
-        </div>
-    </div>
-
-    <div class="card stat-card">
-        <div class="stat-icon-container modules">
-            <span class="material-symbols-outlined">category</span>
-        </div>
-        <div class="stat-info">
-            <p class="stat-label">Total Modules</p>
-            <h2 class="stat-value">{{ stats.totalModules }}</h2>
-            <p class="stat-trend">Organized by rank</p>
-        </div>
-    </div>
-</div>
-
-<div class="dashboard-content">
-    <!-- Main Chart Section -->
-    <div class="card chart-card">
-        <div class="chart-header">
-            <div>
-                <h3 class="card-title">User Growth</h3>
-                <p class="card-subtitle">Monthly performance analysis</p>
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="card stat-card">
+            <div class="stat-icon-container users">
+                <span class="material-symbols-outlined">group</span>
             </div>
-            <select class="filter-select-mini">
-                <option>Last 7 days</option>
-                <option>Last 30 days</option>
-                <option>Last year</option>
-            </select>
-        </div>
-        <div class="chart-placeholder">
-            <!-- Simulated chart bars -->
-            <div class="chart-bar" style="height: 40%"></div>
-            <div class="chart-bar" style="height: 60%"></div>
-            <div class="chart-bar" style="height: 45%"></div>
-            <div class="chart-bar" style="height: 80%"></div>
-            <div class="chart-bar" style="height: 65%"></div>
-            <div class="chart-bar" style="height: 90%"></div>
-            <div class="chart-bar" style="height: 75%"></div>
-        </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="card activity-card">
-        <h3 class="card-title mb-4">Recent Activity</h3>
-        <div class="activity-list">
-            <div *ngFor="let item of recentActivity" class="activity-item">
-                <div class="activity-icon-container" [class.critical]="item.critical">
-                    <span class="material-symbols-outlined">{{ item.icon }}</span>
-                </div>
-                <div class="activity-info">
-                    <p class="activity-text">
-                        <span class="activity-user">&#64;{{ item.user }}</span> {{ item.message }}
-                    </p>
-                    <p class="activity-time">{{ item.time }}</p>
-                </div>
+            <div class="stat-info">
+                <p class="stat-label">Total Users</p>
+                <h2 class="stat-value">{{ stats.totalUsers | number }}</h2>
             </div>
         </div>
-        <button class="chunky-button chunky-button-secondary w-full mt-4">View All Activity</button>
+
+        <div class="card stat-card">
+            <div class="stat-icon-container active">
+                <span class="material-symbols-outlined">bolt</span>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Active Today</p>
+                <h2 class="stat-value">{{ stats.activeNow }}</h2>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon-container xp">
+                <span class="material-symbols-outlined">workspace_premium</span>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Total XP Earned</p>
+                <h2 class="stat-value">{{ stats.totalXP }}</h2>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon-container modules">
+                <span class="material-symbols-outlined">category</span>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Modules</p>
+                <h2 class="stat-value">{{ stats.totalModules }}</h2>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon-container puzzles">
+                <span class="material-symbols-outlined">extension</span>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Puzzles</p>
+                <h2 class="stat-value">{{ stats.totalPuzzles }}</h2>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="stat-icon-container quizzes">
+                <span class="material-symbols-outlined">quiz</span>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Quizzes</p>
+                <h2 class="stat-value">{{ stats.totalQuizzes }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <!-- User Growth Chart -->
+        <div class="card chart-card">
+            <div class="chart-header">
+                <div>
+                    <h3 class="card-title">User Growth</h3>
+                    <p class="card-subtitle">New registrations per month</p>
+                </div>
+            </div>
+
+            <div class="chart-area" *ngIf="chartLabels.length > 0">
+                <div class="chart-bars">
+                    <div *ngFor="let val of chartValues; let i = index" class="chart-bar-wrapper">
+                        <div class="chart-bar-value">{{ val }}</div>
+                        <div class="chart-bar" [style.height]="getBarHeight(val)"></div>
+                        <div class="chart-bar-label">{{ chartLabels[i] }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-chart" *ngIf="chartLabels.length === 0">
+                <span class="material-symbols-outlined">bar_chart</span>
+                <p>No growth data available</p>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card activity-card">
+            <h3 class="card-title mb-4">Recent Activity</h3>
+            <div class="activity-list">
+                <div *ngFor="let item of recentActivity" class="activity-item">
+                    <div class="activity-icon-container" [class.critical]="item.critical">
+                        <span class="material-symbols-outlined">{{ item.icon }}</span>
+                    </div>
+                    <div class="activity-info">
+                        <p class="activity-text">
+                            <span class="activity-user">&#64;{{ item.user }}</span> {{ item.message }}
+                        </p>
+                        <p class="activity-time">{{ item.time }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-activity" *ngIf="recentActivity.length === 0">
+                <span class="material-symbols-outlined">history</span>
+                <p>No recent activity</p>
+            </div>
+        </div>
     </div>
 </div>

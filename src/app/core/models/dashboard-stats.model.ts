@@ -12,6 +12,8 @@ export interface DashboardStats {
     activeUsers: number;
     totalModules: number;
     totalPuzzles: number;
+    totalQuizzes: number;
     totalXp: number;
     recentActivities: DashboardActivity[];
+    userGrowth: { [month: string]: number };
 }
