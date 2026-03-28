@@ -68,8 +68,8 @@
             </div>
 
             <div class="feedback-msg" *ngIf="isAnswerChecked"
-               [ngClass]="results[currentQuestionIndex]?.isCorrect ? 'correct-text' : 'incorrect-text'">
-               {{ results[currentQuestionIndex]?.isCorrect ? 'Correct!' : 'Incorrect!' }}
+               [ngClass]="results[currentQuestionIndex] && results[currentQuestionIndex].isCorrect ? 'correct-text' : 'incorrect-text'">
+               {{ results[currentQuestionIndex] && results[currentQuestionIndex].isCorrect ? 'Correct!' : 'Incorrect!' }}
             </div>
 
             <button *ngIf="!isAnswerChecked" class="chunky-button check-btn" (click)="checkAnswer()"
@@ -78,7 +78,7 @@
             </button>
 
             <button *ngIf="isAnswerChecked" class="chunky-button"
-               [ngClass]="results[currentQuestionIndex]?.isCorrect ? 'success-btn' : 'primary-btn'"
+               [ngClass]="results[currentQuestionIndex] && results[currentQuestionIndex].isCorrect ? 'success-btn' : 'primary-btn'"
                (click)="nextQuestion()">
                {{ currentQuestionIndex === questions.length - 1 ? 'FINISH' : 'CONTINUE' }}
             </button>

@@ -195,8 +195,7 @@ export class ActiveSituationComponent implements OnInit, OnDestroy {
   }
 
   validatePosition(): boolean {
-      // Use the direct check in checkResult instead
-      return this.lastUserMove === this.currentSituation?.solutionMoves;
+      return this.lastUserMove === this.currentSituation?.correctMove;
   }
 
   generateCurrentFen(): string {

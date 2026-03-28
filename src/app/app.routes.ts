@@ -55,6 +55,10 @@ export const routes: Routes = [
                 component: ManagePuzzlesComponent
             },
             {
+                path: 'puzzles/:id/situations',
+                loadComponent: () => import('./components/admin/manage-puzzles/situation-management/situation-management.component').then(m => m.SituationManagementComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

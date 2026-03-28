@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { PuzzleService } from '../../../core/services/puzzle.service';
 import { ModuleService } from '../../../core/services/module.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -19,6 +20,7 @@ export class ManagePuzzlesComponent implements OnInit {
   private moduleService = inject(ModuleService);
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   puzzles: Puzzle[] = [];
   modules: Module[] = [];
@@ -32,13 +34,10 @@ export class ManagePuzzlesComponent implements OnInit {
 
   constructor() {
     this.puzzleForm = this.fb.group({
-      fenPosition: ['', [Validators.required]],
-      title: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      solutionMoves: ['', [Validators.required]],
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
       difficulty: [1000, [Validators.required, Validators.min(0)]],
       xpReward: [50, [Validators.required, Validators.min(0)]],
-      maxAttempts: [3, [Validators.required, Validators.min(1)]],
       moduleId: ['', [Validators.required]]
     });
   }
@@ -87,30 +86,28 @@ export class ManagePuzzlesComponent implements OnInit {
     this.isCreating = true;
     this.isEditingPuzzleId = null;
     this.puzzleForm.reset({
-      fenPosition: '',
       title: '',
       description: '',
-      solutionMoves: '',
       difficulty: 1000,
       xpReward: 50,
-      maxAttempts: 3,
       moduleId: ''
     });
   }
 
   openEditModal(puzzle: Puzzle) {
     this.isCreating = true;
-    this.isEditingPuzzleId = puzzle.id;
+    this.isEditingPuzzleId = puzzle.id ?? null;
     this.puzzleForm.patchValue({
-      fenPosition: puzzle.fenPosition,
       title: puzzle.title,
       description: puzzle.description,
-      solutionMoves: puzzle.solutionMoves,
       difficulty: puzzle.difficulty,
       xpReward: puzzle.xpReward,
-      maxAttempts: puzzle.maxAttempts,
       moduleId: puzzle.moduleId
     });
+  }
+
+  navigateToSituations(puzzleId: number) {
+    this.router.navigate(['/admin/puzzles', puzzleId, 'situations']);
   }
 
   closeCreateModal() {

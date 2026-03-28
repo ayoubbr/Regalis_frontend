@@ -79,12 +79,12 @@ export class ActiveQuizComponent implements OnInit {
       this.soundService.incorrect();
     }
 
-    this.results.push({
+    this.results[this.currentQuestionIndex] = {
       questionId: this.currentQuestion.id,
       selectedOptionId: this.selectedOptionId,
       isCorrect: isCorrect,
       timeSpent: 0
-    });
+    };
   }
 
   nextQuestion(): void {

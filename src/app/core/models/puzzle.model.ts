@@ -1,41 +1,34 @@
-export interface Situation {
-    id: number;
-    fenPosition: string;
-    solutionMoves: string;
-    description: string;
-}
-
 export interface Puzzle {
-    id: number;
-    fenPosition: string;
-    title: string;
-    description: string;
-    solutionMoves: string;
+    id?: number;
+    title?: string;
+    description?: string;
     difficulty: number;
     xpReward: number;
-    maxAttempts: number;
     moduleId: number;
+    moduleName?: string;
     situations?: Situation[];
 }
 
-export interface PuzzleCreateDTO {
+export interface Situation {
+    id?: number;
     fenPosition: string;
+    correctMove: string;
+    description?: string;
+    puzzleId?: number;
+}
+
+export interface PuzzleCreateDTO {
     title: string;
     description: string;
-    solutionMoves: string;
     difficulty: number;
     xpReward: number;
-    maxAttempts: number;
     moduleId: number;
 }
 
 export interface PuzzleUpdateDTO {
-    fenPosition: string;
     title: string;
     description: string;
-    solutionMoves: string;
     difficulty: number;
     xpReward: number;
-    maxAttempts: number;
     moduleId: number;
 }

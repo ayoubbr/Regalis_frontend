@@ -2,8 +2,8 @@
     <!-- Header Section -->
     <div class="puzzles-header">
         <div class="header-titles">
-            <h2 class="page-title">Puzzle Database</h2>
-            <p class="page-subtitle">Manage and curate the royal chess challenges.</p>
+            <h2 class="page-title">Puzzle Management</h2>
+            <p class="page-subtitle">Curate the royal challenges and their situations.</p>
         </div>
         <div class="header-actions">
             <button class="chunky-button btn-primary" (click)="openCreateModal()">
@@ -13,80 +13,81 @@
         </div>
     </div>
 
-    <!-- Puzzle List Card -->
-    <div class="content-card">
-        <div class="table-header">
-            <div class="col-preview">Preview</div>
-            <div class="col-details">Puzzle Details</div>
-            <div class="col-elo">Target Elo</div>
-            <div class="col-success">Reward / Attempts</div>
-            <div class="col-actions">Actions</div>
+    <!-- Puzzle Table Card -->
+    <div class="card content-card">
+        <div class="table-responsive">
+            <table class="regalis-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Module</th>
+                        <th>Difficulty</th>
+                        <th>XP Reward</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (isLoading) {
+                        <tr>
+                            <td colspan="5" class="text-center py-4">Loading puzzles...</td>
+                        </tr>
+                    } @else if (error) {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 error">{{ error }}</td>
+                        </tr>
+                    } @else if (filteredPuzzles.length === 0) {
+                        <tr>
+                            <td colspan="5" class="text-center py-4">No puzzles found.</td>
+                        </tr>
+                    } @else {
+                        @for (puzzle of filteredPuzzles; track puzzle.id) {
+                            <tr>
+                                <td class="font-bold">#{{ puzzle.id }}</td>
+                                <td>
+                                    <div class="puzzle-info">
+                                        <span class="puzzle-title">{{ puzzle.title || 'Untitled Puzzle' }}</span>
+                                        <span class="puzzle-desc-hint" [title]="puzzle.description || ''">{{ (puzzle.description || '') | slice:0:30 }}{{ (puzzle.description?.length || 0) > 30 ? '...' : '' }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="module-tag">{{ puzzle.moduleName || getModuleName(puzzle.moduleId) }}</span>
+                                </td>
+                                <td>
+                                    <div class="difficulty-badge">
+                                        <span class="material-symbols-outlined">trending_up</span>
+                                        {{ puzzle.difficulty }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="xp-badge">{{ puzzle.xpReward }} XP</span>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="action-btn situations-btn" (click)="puzzle.id && navigateToSituations(puzzle.id)" title="Manage Situations">
+                                            <span class="material-symbols-outlined">extension</span>
+                                            Situations
+                                        </button>
+                                        <button class="action-btn edit-btn" (click)="openEditModal(puzzle)" title="Edit Puzzle">
+                                            <span class="material-symbols-outlined">edit</span>
+                                        </button>
+                                        <button class="action-btn delete-btn" (click)="puzzle.id && deletePuzzle(puzzle.id)" title="Delete Puzzle">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
-
-        @if (isLoading) {
-        <div class="state-message">Loading puzzles...</div>
-        } @else if (error) {
-        <div class="state-message error">{{ error }}</div>
-        } @else if (filteredPuzzles.length === 0) {
-        <div class="state-message">No puzzles found.</div>
-        } @else {
-        <div class="table-body">
-            @for (puzzle of filteredPuzzles; track puzzle.id) {
-            <div class="table-row grid-4-cols">
-                <div class="col-preview">
-                    <div class="preview-img-container">
-                        <img [src]="getFenImageUrl(puzzle.fenPosition)" [alt]="puzzle.title"
-                            class="preview-img" onerror="this.src='https://placehold.co/100x100?text=FEN'" />
-                    </div>
-                </div>
-                <div class="col-details">
-                    <div class="puzzle-title">{{puzzle.title}}</div>
-                    <div class="puzzle-desc">Module: {{ getModuleName(puzzle.moduleId) }}</div>
-                </div>
-                <div class="col-elo">
-                    <div class="elo-badge">
-                        <span class="material-symbols-outlined elo-icon">trending_up</span>
-                        <span class="elo-value">{{puzzle.difficulty}} Elo</span>
-                    </div>
-                </div>
-                <div class="col-success">
-                    <div class="badge-wrapper">
-                        <span class="status-badge active">{{puzzle.xpReward}} XP</span>
-                        <span class="status-badge attempts">Max {{puzzle.maxAttempts}} Tries</span>
-                    </div>
-                </div>
-                <div class="col-actions">
-                    <button class="action-btn" (click)="openEditModal(puzzle)" title="Edit Puzzle">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    <button class="action-btn delete-btn" (click)="deletePuzzle(puzzle.id)" title="Delete Puzzle">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
-            </div>
-            }
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-            <p class="pagination-info">Showing {{filteredPuzzles.length}} puzzles</p>
-            <div class="pagination-controls">
-                <button class="page-btn disabled">
-                    <span class="material-symbols-outlined">chevron_left</span>
-                </button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn disabled">
-                    <span class="material-symbols-outlined">chevron_right</span>
-                </button>
-            </div>
-        </div>
-        }
     </div>
 
-    <!-- Create Puzzle Modal -->
+    <!-- Create/Edit Puzzle Modal -->
     @if (isCreating) {
     <div class="modal-overlay">
-        <div class="modal-container">
+        <div class="card modal-container">
             <div class="modal-header">
                 <h3>{{ isEditingPuzzleId ? 'Edit Puzzle' : 'Create New Puzzle' }}</h3>
                 <button class="btn-close" (click)="closeCreateModal()">
@@ -94,52 +95,35 @@
                 </button>
             </div>
             <form [formGroup]="puzzleForm" (ngSubmit)="savePuzzle()" class="puzzle-form">
-
-                <div class="form-group full-width">
-                    <label>Title</label>
-                    <input type="text" formControlName="title" placeholder="e.g. Back Rank Mate" class="form-input">
+                
+                <div class="form-group">
+                    <label>Module Target</label>
+                    <select formControlName="moduleId" class="form-input">
+                        <option value="">Select a Module</option>
+                        @for (mod of modules; track mod.id) {
+                            <option [value]="mod.id">{{ mod.name }}</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="form-group full-width">
-                    <label>Description</label>
-                    <textarea formControlName="description" placeholder="Describe the puzzle goals..." class="form-input" rows="3"></textarea>
+                <div class="form-group">
+                    <label>Puzzle Title</label>
+                    <input type="text" formControlName="title" class="form-input" placeholder="e.g. Basic Fork Pattern">
                 </div>
 
-                <div class="form-group full-width">
-                    <label>FEN Position</label>
-                    <input type="text" formControlName="fenPosition"
-                        placeholder="e.g. rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" class="form-input">
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Solution Moves (Comma separated or space separated)</label>
-                    <input type="text" formControlName="solutionMoves" placeholder="e.g. e2e4, e7e5" class="form-input">
+                <div class="form-group">
+                    <label>Instruction Description</label>
+                    <textarea formControlName="description" class="form-input" rows="3" placeholder="Describe the goal of this challenge..."></textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Difficulty (Elo)</label>
-                        <input type="number" formControlName="difficulty" class="form-input">
+                        <label>Difficulty Rating</label>
+                        <input type="number" formControlName="difficulty" class="form-input" placeholder="e.g. 1200">
                     </div>
                     <div class="form-group">
                         <label>XP Reward</label>
-                        <input type="number" formControlName="xpReward" class="form-input">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Max Attempts</label>
-                        <input type="number" formControlName="maxAttempts" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label>Module</label>
-                        <select formControlName="moduleId" class="form-input">
-                            <option value="">Select a Module</option>
-                            @for (mod of modules; track mod.id) {
-                            <option [value]="mod.id">{{ mod.name }}</option>
-                            }
-                        </select>
+                        <input type="number" formControlName="xpReward" class="form-input" placeholder="e.g. 50">
                     </div>
                 </div>
 

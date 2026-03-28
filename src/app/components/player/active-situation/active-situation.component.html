@@ -6,7 +6,7 @@
          <button class="close-btn" (click)="close()">
             <span class="material-symbols-outlined">close</span>
          </button>
-         
+
          <div class="progress-bar-container">
             <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
          </div>
@@ -21,7 +21,7 @@
 
       <!-- Main Content Area -->
       <div class="arena-content">
-         
+
          <!-- Instruction Area: Character + Speech Bubble -->
          <section class="instruction-section" *ngIf="gameState !== 'intro' && gameState !== 'finished'">
             <div class="character-avatar">
@@ -54,24 +54,30 @@
 
          <!-- Feedback State: Success/Failure -->
          <div class="state-feedback" *ngIf="gameState === 'success' || gameState === 'failure'">
-             <div class="feedback-card">
-                 <span class="material-symbols-outlined feedback-icon" [ngClass]="gameState === 'success' ? 'success-icon' : 'failure-icon'">
-                     {{ gameState === 'success' ? 'verified' : 'error' }}
-                 </span>
-                 <h2 class="feedback-title">{{ gameState === 'success' ? 'Nice!' : 'Not quite...' }}</h2>
-                 <p class="feedback-msg">{{ gameState === 'success' ? 'You repaired the realm position.' : 'Try another strategy.' }}</p>
-                 <button class="chunky-button" [ngClass]="gameState === 'success' ? 'success-btn' : 'primary-btn'" 
-                         (click)="gameState === 'success' ? nextSituation() : retry()">
-                     {{ gameState === 'success' ? 'CONTINUE' : 'TRY AGAIN' }}
-                 </button>
-             </div>
+            <div class="feedback-card">
+               <span class="material-symbols-outlined feedback-icon"
+                  [ngClass]="gameState === 'success' ? 'success-icon' : 'failure-icon'">
+                  {{ gameState === 'success' ? 'verified' : 'error' }}
+               </span>
+               <h2 class="feedback-title">{{ gameState === 'success' ? 'Nice!' : 'Not quite...' }}</h2>
+               <p class="feedback-msg">{{ gameState === 'success' ? 'You repaired the realm position.' : 'Try another
+                  strategy.' }}</p>
+               <button class="chunky-button" [ngClass]="gameState === 'success' ? 'success-btn' : 'primary-btn'"
+                  (click)="gameState === 'success' ? nextSituation() : retry()">
+                  {{ gameState === 'success' ? 'CONTINUE' : 'TRY AGAIN' }}
+               </button>
+            </div>
          </div>
 
-         <!-- Intro/End States... (Simplified for now) -->
+         <!-- Intro/End States -->
          <div class="state-feedback" *ngIf="gameState === 'intro' || gameState === 'finished'">
             <div class="feedback-card">
-               <h2 class="feedback-title">{{ gameState === 'intro' ? puzzle.title : 'Challenge Complete!' }}</h2>
-               <p class="feedback-msg">{{ gameState === 'intro' ? puzzle.description : 'Fantastic work today!' }}</p>
+               <h2 class="feedback-title">
+                  {{ gameState === 'intro' ? puzzle.title : 'Challenge Complete!' }}
+               </h2>
+               <p class="feedback-msg">
+                  {{ gameState === 'intro' ? (puzzle.description || 'Test your skills in this arena.') : 'Fantastic work today!' }}
+               </p>
                <button class="chunky-button primary-btn" (click)="gameState === 'intro' ? startArenaMode() : close()">
                   {{ gameState === 'intro' ? 'START CHALLENGE' : 'CONTINUE' }}
                </button>
@@ -82,13 +88,12 @@
 
       <!-- Footer Action Area (Only when playing) -->
       <footer class="action-area" *ngIf="gameState === 'playing'">
-          <div class="action-container">
-              <button class="chunky-button primary-btn" [disabled]="!canContinue" (click)="checkResult()">
-                  CHECK
-              </button>
-          </div>
+         <div class="action-container">
+            <button class="chunky-button primary-btn" [disabled]="!canContinue" (click)="checkResult()">
+               CHECK
+            </button>
+         </div>
       </footer>
 
    </div>
 </div>
-v>
