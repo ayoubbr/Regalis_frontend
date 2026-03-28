@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PuzzleService } from '../../../core/services/puzzle.service';
 import { ModuleService } from '../../../core/services/module.service';
@@ -11,7 +11,7 @@ import { Module } from '../../../core/models/module.model';
 @Component({
   selector: 'app-manage-puzzles',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './manage-puzzles.component.html',
   styleUrl: './manage-puzzles.component.css'
 })
@@ -29,6 +29,20 @@ export class ManagePuzzlesComponent implements OnInit {
   error: string | null = null;
   isCreating = false;
   isEditingPuzzleId: number | null = null;
+
+  protected Math = Math;
+
+  searchQuery = '';
+  moduleFilter = '';
+  sortField = 'difficulty';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+  // Pagination state
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
 
   puzzleForm: FormGroup;
 
@@ -49,9 +63,18 @@ export class ManagePuzzlesComponent implements OnInit {
 
   fetchPuzzles() {
     this.isLoading = true;
-    this.puzzleService.getAll().subscribe({
-      next: (data) => {
-        this.puzzles = data;
+    this.puzzleService.getPagedPuzzles({
+      page: this.currentPage,
+      size: this.pageSize,
+      search: this.searchQuery,
+      moduleId: this.moduleFilter,
+      sort: `${this.sortField},${this.sortDirection}`
+    }).subscribe({
+      next: (response) => {
+        this.puzzles = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
         this.isLoading = false;
       },
       error: (err) => {
@@ -73,8 +96,36 @@ export class ManagePuzzlesComponent implements OnInit {
     });
   }
 
-  get filteredPuzzles(): Puzzle[] {
-    return this.puzzles;
+  // Handlers for pagination and filtering
+  onSearch(): void {
+    this.currentPage = 0;
+    this.fetchPuzzles();
+  }
+
+  onModuleFilterChange(): void {
+    this.currentPage = 0;
+    this.fetchPuzzles();
+  }
+
+  onSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+    this.currentPage = 0;
+    this.fetchPuzzles();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.fetchPuzzles();
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) return 'unfold_more';
+    return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
   getModuleName(id: number): string {
@@ -140,8 +191,8 @@ export class ManagePuzzlesComponent implements OnInit {
     } else {
       this.puzzleService.create(this.puzzleForm.value).subscribe({
         next: (newPuzzle) => {
-          this.puzzles.unshift(newPuzzle);
           this.toastService.showSuccess('Puzzle created successfully!');
+          this.fetchPuzzles(); // Refresh the paginated list
           this.closeCreateModal();
         },
         error: (err) => {
@@ -156,7 +207,7 @@ export class ManagePuzzlesComponent implements OnInit {
     if (confirm('Are you sure you want to delete this puzzle?')) {
       this.puzzleService.delete(id).subscribe({
         next: () => {
-          this.puzzles = this.puzzles.filter(p => p.id !== id);
+          this.fetchPuzzles(); // Refresh the paginated list
           this.toastService.showSuccess('Puzzle deleted successfully!');
         },
         error: (err) => {

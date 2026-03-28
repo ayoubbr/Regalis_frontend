@@ -13,17 +13,38 @@
         </div>
     </div>
 
+    <!-- Filters -->
+    <div class="card filter-bar">
+        <div class="search-box">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" class="search-input" placeholder="Search by title or description..."
+                [(ngModel)]="searchQuery" (input)="onSearch()">
+        </div>
+        <select class="filter-select" [(ngModel)]="moduleFilter" (change)="onModuleFilterChange()">
+            <option value="">All Modules</option>
+            <option *ngFor="let mod of modules" [value]="mod.id">{{ mod.name }}</option>
+        </select>
+    </div>
+
     <!-- Puzzle Table Card -->
     <div class="card content-card">
         <div class="table-responsive">
             <table class="regalis-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Title</th>
+                        <th class="sortable" (click)="onSort('id')">
+                            ID <span class="material-symbols-outlined sort-icon">{{ getSortIcon('id') }}</span>
+                        </th>
+                        <th class="sortable" (click)="onSort('title')">
+                            Title <span class="material-symbols-outlined sort-icon">{{ getSortIcon('title') }}</span>
+                        </th>
                         <th>Module</th>
-                        <th>Difficulty</th>
-                        <th>XP Reward</th>
+                        <th class="sortable" (click)="onSort('difficulty')">
+                            Difficulty <span class="material-symbols-outlined sort-icon">{{ getSortIcon('difficulty') }}</span>
+                        </th>
+                        <th class="sortable" (click)="onSort('xpReward')">
+                            XP Reward <span class="material-symbols-outlined sort-icon">{{ getSortIcon('xpReward') }}</span>
+                        </th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -36,12 +57,12 @@
                         <tr>
                             <td colspan="5" class="text-center py-4 error">{{ error }}</td>
                         </tr>
-                    } @else if (filteredPuzzles.length === 0) {
+                    } @else if (puzzles.length === 0) {
                         <tr>
-                            <td colspan="5" class="text-center py-4">No puzzles found.</td>
+                            <td colspan="6" class="text-center py-4">No puzzles found matching your criteria.</td>
                         </tr>
                     } @else {
-                        @for (puzzle of filteredPuzzles; track puzzle.id) {
+                        @for (puzzle of puzzles; track puzzle.id) {
                             <tr>
                                 <td class="font-bold">#{{ puzzle.id }}</td>
                                 <td>
@@ -81,6 +102,33 @@
                     }
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="pagination-footer" *ngIf="totalPages > 0">
+            <div class="pagination-info">
+                Showing <strong>{{ (currentPage * pageSize) + 1 }}</strong> to
+                <strong>{{ Math.min((currentPage + 1) * pageSize, totalElements) }}</strong> of
+                <strong>{{ totalElements }}</strong> puzzles
+            </div>
+            <div class="pagination-controls">
+                <button class="page-btn" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                    Previous
+                </button>
+
+                <div class="page-numbers">
+                    <button *ngFor="let p of [].constructor(totalPages); let i = index" class="page-num"
+                        [class.active]="i === currentPage" (click)="onPageChange(i)">
+                        {{ i + 1 }}
+                    </button>
+                </div>
+
+                <button class="page-btn" [disabled]="isLastPage" (click)="onPageChange(currentPage + 1)">
+                    Next
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
         </div>
     </div>
 
