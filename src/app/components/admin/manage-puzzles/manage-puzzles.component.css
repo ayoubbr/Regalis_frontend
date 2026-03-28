@@ -4,7 +4,7 @@
     margin: 0 auto;
 }
 
-.puzzles-header {
+.page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;

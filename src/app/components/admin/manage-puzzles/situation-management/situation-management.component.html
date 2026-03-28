@@ -10,7 +10,7 @@
                 <p class="page-subtitle" *ngIf="puzzle">Puzzle #{{puzzle.id}} in {{puzzle.moduleName}}</p>
             </div>
         </div>
-        <button class="chunky-button btn-primary" (click)="openCreateModal()">
+        <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
             <span class="material-symbols-outlined">add_circle</span>
             ADD POSITION
         </button>
@@ -94,8 +94,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="chunky-button btn-secondary" (click)="closeModal()">Cancel</button>
-                    <button type="submit" class="chunky-button btn-primary" [disabled]="situationForm.invalid">
+                    <button type="button" class="chunky-button chunky-button-secondary" (click)="closeModal()">Cancel</button>
+                    <button type="submit" class="chunky-button chunky-button-primary" [disabled]="situationForm.invalid">
                         {{ isEditingId ? 'Save Position' : 'Add Position' }}
                     </button>
                 </div>

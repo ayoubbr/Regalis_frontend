@@ -1,16 +1,14 @@
 <div class="puzzles-container">
     <!-- Header Section -->
-    <div class="puzzles-header">
+    <div class="page-header">
         <div class="header-titles">
             <h2 class="page-title">Puzzle Management</h2>
             <p class="page-subtitle">Curate the royal challenges and their situations.</p>
         </div>
-        <div class="header-actions">
-            <button class="chunky-button btn-primary" (click)="openCreateModal()">
-                <span class="material-symbols-outlined">add_circle</span>
-                CREATE PUZZLE
-            </button>
-        </div>
+        <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
+            <span class="material-symbols-outlined">add_circle</span>
+            CREATE PUZZLE
+        </button>
     </div>
 
     <!-- Filters -->
@@ -176,9 +174,9 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="chunky-button btn-secondary"
+                    <button type="button" class="chunky-button chunky-button-secondary"
                         (click)="closeCreateModal()">Cancel</button>
-                    <button type="submit" class="chunky-button btn-primary" [disabled]="puzzleForm.invalid">
+                    <button type="submit" class="chunky-button chunky-button-primary" [disabled]="puzzleForm.invalid">
                         {{ isEditingPuzzleId ? 'Update Puzzle' : 'Save Puzzle' }}
                     </button>
                 </div>
