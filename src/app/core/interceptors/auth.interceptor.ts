@@ -1,10 +1,17 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const token = authService.getToken();
+  // To avoid NG0200 Circular Dependency with AuthService, read directly from localStorage
+  let token = null;
+  try {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      token = user.token || user.accessToken;
+    }
+  } catch (e) {
+    console.error('Error parsing user from localStorage in interceptor', e);
+  }
 
   if (token) {
     const authReq = req.clone({
