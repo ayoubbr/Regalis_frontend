@@ -20,13 +20,21 @@ export class QuizzesComponent implements OnInit {
   private toastService = inject(ToastService);
 
   quizzes: Quiz[] = [];
-  filteredQuizzes: Quiz[] = [];
-
   modules: Module[] = [];
 
-  searchQuery: string = '';
-  selectedModule: string = '';
-  selectedDifficulty: string = '';
+  protected Math = Math;
+
+  searchQuery = '';
+  moduleFilter = '';
+  sortField = 'difficulty';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+  // Pagination state
+  currentPage = 0;
+  pageSize = 10;
+  totalElements = 0;
+  totalPages = 0;
+  isLastPage = false;
 
   ngOnInit(): void {
     this.loadModules();
@@ -46,10 +54,18 @@ export class QuizzesComponent implements OnInit {
   }
 
   loadQuizzes(): void {
-    this.quizService.getAll().subscribe({
-      next: (data) => {
-        this.quizzes = data;
-        this.applyFilters();
+    this.quizService.getPagedQuizzes({
+      page: this.currentPage,
+      size: this.pageSize,
+      search: this.searchQuery,
+      moduleId: this.moduleFilter,
+      sort: `${this.sortField},${this.sortDirection}`
+    }).subscribe({
+      next: (response) => {
+        this.quizzes = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.isLastPage = response.last;
       },
       error: (err) => {
         console.error('Error fetching quizzes', err);
@@ -59,24 +75,34 @@ export class QuizzesComponent implements OnInit {
   }
 
   onSearch(): void {
-    this.applyFilters();
+    this.currentPage = 0;
+    this.loadQuizzes();
   }
 
-  onFilterChange(): void {
-    this.applyFilters();
+  onModuleFilterChange(): void {
+    this.currentPage = 0;
+    this.loadQuizzes();
   }
 
-  applyFilters(): void {
-    this.filteredQuizzes = this.quizzes.filter(quiz => {
-      const matchesSearch = quiz.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        quiz.content.toLowerCase().includes(this.searchQuery.toLowerCase());
+  onSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+    this.currentPage = 0;
+    this.loadQuizzes();
+  }
 
-      const matchesModule = !this.selectedModule || quiz.moduleId === +this.selectedModule;
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadQuizzes();
+  }
 
-      const matchesDifficulty = !this.selectedDifficulty || quiz.difficulty === +this.selectedDifficulty;
-
-      return matchesSearch && matchesModule && matchesDifficulty;
-    });
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) return 'unfold_more';
+    return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
   getQuizIcon(quiz: Quiz): string {

@@ -10,31 +10,37 @@
 </div>
 
 <!-- Filters and Search -->
-<div class="card filter-card">
+<div class="card filter-bar">
     <div class="search-box">
         <span class="material-symbols-outlined search-icon">search</span>
-        <input type="text" class="search-input" placeholder="Search quizzes by title, module, or tags..."
+        <input type="text" class="search-input" placeholder="Search quizzes by title or content..."
             [(ngModel)]="searchQuery" (input)="onSearch()">
     </div>
     <div class="filter-group">
-        <select class="filter-select" [(ngModel)]="selectedModule" (change)="onFilterChange()">
+        <select class="filter-select" [(ngModel)]="moduleFilter" (change)="onModuleFilterChange()">
             <option value="">All Modules</option>
             <option *ngFor="let mod of modules" [value]="mod.id">{{ mod.name }}</option>
         </select>
-        <select class="filter-select" [(ngModel)]="selectedDifficulty" (change)="onFilterChange()">
-            <option value="">All Difficulties</option>
-            <option value="1">Beginner</option>
-            <option value="2">Intermediate</option>
-            <option value="3">Advanced</option>
+        <select class="filter-select" [(ngModel)]="sortField" (change)="onSort(sortField)">
+            <option value="difficulty">Sort by Difficulty</option>
+            <option value="id">Sort by ID</option>
+            <option value="title">Sort by Title</option>
         </select>
     </div>
 </div>
 
 <!-- Quizzes List -->
 <div class="quizzes-list">
-    <div *ngFor="let quiz of filteredQuizzes" class="card quiz-card">
-        <div class="quiz-icon-container">
-            <span class="material-symbols-outlined quiz-icon">{{ getQuizIcon(quiz) }}</span>
+    <!-- Empty state -->
+    <div *ngIf="quizzes.length === 0" class="empty-state card">
+        <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
+        <p>No quizzes found matching your criteria.</p>
+    </div>
+
+    <div *ngFor="let quiz of quizzes" class="card quiz-card">
+        <div class="quiz-image-container">
+            <img [src]="quiz.imageUrl || 'assets/images/quiz-placeholder.jpg'" 
+                 alt="Quiz thumbnail" class="quiz-thumbnail">
         </div>
 
         <div class="quiz-info">
@@ -49,10 +55,9 @@
 
         <div class="quiz-stats">
             <div class="stat-item">
-                <p class="stat-label">Status</p>
+                <p class="stat-label">Questions</p>
                 <div class="status-indicator">
-                    <span class="status-dot published"></span>
-                    <span class="status-text">Published</span>
+                    <span class="status-text fw-bold">{{ quiz.questions?.length || 0 }} Questions</span>
                 </div>
             </div>
             <div class="stat-item">
@@ -71,20 +76,32 @@
             </button>
         </div>
     </div>
-
-    <!-- Empty state -->
-    <div *ngIf="filteredQuizzes.length === 0" class="empty-state">
-        <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
-        <p>No quizzes found matching your criteria.</p>
-    </div>
 </div>
 
-<!-- Pagination -->
-<div class="pagination">
-    <p class="pagination-info">Showing {{ filteredQuizzes.length }} quizzes</p>
+<!-- Pagination Footer -->
+<div class="pagination-footer" *ngIf="totalPages > 0">
+    <div class="pagination-info">
+        Showing <strong>{{ (currentPage * pageSize) + 1 }}</strong> to
+        <strong>{{ Math.min((currentPage + 1) * pageSize, totalElements) }}</strong> of
+        <strong>{{ totalElements }}</strong> quizzes
+    </div>
     <div class="pagination-controls">
-        <button class="chunky-button chunky-button-secondary">Previous</button>
-        <button class="chunky-button chunky-button-primary">Next</button>
+        <button class="page-btn" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
+            <span class="material-symbols-outlined">chevron_left</span>
+            Previous
+        </button>
+
+        <div class="page-numbers">
+            <button *ngFor="let p of [].constructor(totalPages); let i = index" class="page-num"
+                [class.active]="i === currentPage" (click)="onPageChange(i)">
+                {{ i + 1 }}
+            </button>
+        </div>
+
+        <button class="page-btn" [disabled]="isLastPage" (click)="onPageChange(currentPage + 1)">
+            Next
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
     </div>
 </div>
 
