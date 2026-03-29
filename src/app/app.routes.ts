@@ -63,6 +63,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./components/admin/manage-puzzles/situation-management/situation-management.component').then(m => m.SituationManagementComponent)
             },
             {
+                path: 'leaderboard',
+                loadComponent: () => import('./components/admin/leaderboard/admin-leaderboard.component').then(m => m.AdminLeaderboardComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

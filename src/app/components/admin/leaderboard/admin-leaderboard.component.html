@@ -1,0 +1,97 @@
+<div class="leaderboard-container">
+    <div class="page-header">
+        <div class="header-titles">
+            <h2 class="page-title">Leaderboard Management</h2>
+            <p class="page-subtitle">Track player performance and rankings across different periods.</p>
+        </div>
+        
+        <div class="period-selector chunky-card">
+            <button class="period-btn" 
+                    [class.active]="selectedPeriod === periods.WEEKLY" 
+                    (click)="switchPeriod(periods.WEEKLY)">
+                Weekly
+            </button>
+            <button class="period-btn" 
+                    [class.active]="selectedPeriod === periods.MONTHLY" 
+                    (click)="switchPeriod(periods.MONTHLY)">
+                Monthly
+            </button>
+            <button class="period-btn" 
+                    [class.active]="selectedPeriod === periods.ALL_TIME" 
+                    (click)="switchPeriod(periods.ALL_TIME)">
+                All Time
+            </button>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError" class="card error-card">
+        <span class="material-symbols-outlined error-icon">error</span>
+        <h3>Oops! Something went wrong.</h3>
+        <p>We couldn't load the leaderboard data. Please try again later.</p>
+        <button class="chunky-button chunky-button-primary" (click)="loadLeaderboard(selectedPeriod)">RETRY</button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading && !hasError" class="loading-container">
+        <app-chess-loader></app-chess-loader>
+        <p>Fetching rankings...</p>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div *ngIf="!loading && !hasError" class="card leaderboard-card">
+        <div class="table-container">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th class="rank-col">Rank</th>
+                        <th class="player-col">Player</th>
+                        <th class="level-col">Level</th>
+                        <th class="xp-col">Total XP</th>
+                        <th class="status-col">Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let player of players" class="player-row">
+                        <td class="rank-cell">
+                            <span class="rank-badge" [ngClass]="getRankClass(player.rank)">
+                                {{ getRankIcon(player.rank) }}
+                            </span>
+                        </td>
+                        <td class="player-cell">
+                            <div class="player-info">
+                                <div class="avatar-container">
+                                    <img *ngIf="player.imageUrl" [src]="player.imageUrl" alt="Avatar" class="avatar">
+                                    <div *ngIf="!player.imageUrl" class="avatar-initial">
+                                        {{ player.username[0].toUpperCase() }}
+                                    </div>
+                                    <div class="online-dot"></div>
+                                </div>
+                                <span class="username">{{ player.username }}</span>
+                            </div>
+                        </td>
+                        <td class="level-cell">
+                            <span class="level-badge">Lvl {{ player.level }}</span>
+                        </td>
+                        <td class="xp-cell">
+                          <div class="xp-value">
+                            <span class="xp-amount">{{ player.xp }}</span>
+                            <span class="xp-tag">XP</span>
+                          </div>
+                        </td>
+                        <td class="progress-cell">
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" [style.width.%]="(player.xp % 100)"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div *ngIf="players.length === 0" class="empty-state">
+            <span class="material-symbols-outlined empty-icon">group_off</span>
+            <p>No rankings found for this period.</p>
+        </div>
+    </div>
+</div>

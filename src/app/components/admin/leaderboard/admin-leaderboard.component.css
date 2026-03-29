@@ -1,0 +1,304 @@
+.leaderboard-container {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 950;
+    margin: 0;
+    color: var(--slate-900);
+}
+
+.page-subtitle {
+    margin: 0.5rem 0 0;
+    color: var(--slate-500);
+    font-weight: 600;
+}
+
+/* Period Selector - Chunky Look */
+.chunky-card {
+    background: white;
+    border: 3px solid var(--slate-900);
+    border-radius: 16px;
+    box-shadow: 0 4px 0 var(--slate-900);
+    padding: 0.4rem;
+    display: flex;
+    gap: 0.4rem;
+}
+
+.period-btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: transparent;
+    font-weight: 800;
+    color: var(--slate-600);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.period-btn:hover:not(.active) {
+    background: var(--slate-50);
+    color: var(--slate-900);
+}
+
+.period-btn.active {
+    background: var(--primary);
+    color: white;
+    border: 2px solid var(--slate-900);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Leaderboard Card */
+.leaderboard-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.leaderboard-table th {
+    background: var(--slate-50);
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--slate-400);
+    border-bottom: 2px solid var(--slate-100);
+}
+
+.leaderboard-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid var(--slate-50);
+    vertical-align: middle;
+}
+
+.player-row:hover td {
+    background: var(--slate-50);
+}
+
+.player-row:last-child td {
+    border-bottom: none;
+}
+
+/* Rank Cells */
+.rank-badge {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--slate-100);
+    color: var(--slate-600);
+    border-radius: 10px;
+    font-weight: 900;
+    font-size: 1rem;
+    border: 2px solid var(--slate-200);
+}
+
+.rank-first {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #f59e0b;
+    box-shadow: 0 3px 0 #f59e0b;
+}
+
+.rank-second {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #cbd5e1;
+    box-shadow: 0 3px 0 #cbd5e1;
+}
+
+.rank-third {
+    background: #fff7ed;
+    color: #9a3412;
+    border-color: #f97316;
+    box-shadow: 0 3px 0 #f97316;
+}
+
+/* User Info Cells */
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar-container {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    border: 2px solid var(--slate-900);
+    object-fit: cover;
+    background: var(--slate-100);
+}
+
+.avatar-initial {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    border: 2px solid var(--slate-900);
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 950;
+    font-size: 1.25rem;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.online-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    background: #22c55e;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.username {
+    font-weight: 850;
+    color: var(--slate-900);
+    font-size: 1.05rem;
+}
+
+/* Level Badges */
+.level-badge {
+    padding: 0.35rem 0.75rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 0.8rem;
+    border: 2px solid #3b82f6;
+    box-shadow: 0 2px 0 #3b82f6;
+}
+
+/* XP Value */
+.xp-amount {
+    font-weight: 950;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.xp-tag {
+    font-weight: 900;
+    font-size: 0.75rem;
+    color: var(--slate-400);
+    margin-left: 0.25rem;
+    text-transform: uppercase;
+}
+
+/* Progress Section */
+.progress-bar-container {
+    width: 120px;
+    height: 10px;
+    background: var(--slate-100);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--slate-200);
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 5px;
+}
+
+/* Loading & Empty States */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5rem 0;
+    gap: 1.5rem;
+}
+
+.loading-container p {
+    font-weight: 800;
+    color: var(--slate-500);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.empty-state {
+    padding: 5rem 0;
+    text-align: center;
+    color: var(--slate-400);
+}
+
+.empty-icon {
+    font-size: 4rem;
+}
+
+.empty-state p {
+    font-weight: 800;
+    margin-top: 1rem;
+}
+
+/* Error Card */
+.error-card {
+    text-align: center;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.error-icon {
+    font-size: 4rem;
+    color: var(--danger);
+}
+
+/* Dark Mode Support */
+.dark .page-title { color: white; }
+.dark .chunky-card { background: var(--slate-800); border-color: var(--slate-700); box-shadow: 0 4px 0 var(--slate-700); }
+.dark .period-btn { color: var(--slate-400); }
+.dark .period-btn.active { color: white; border-color: var(--slate-700); }
+.dark .leaderboard-table th { background: var(--slate-900); border-color: var(--slate-800); color: var(--slate-500); }
+.dark .leaderboard-table td { border-color: var(--slate-800); }
+.dark .player-row:hover td { background: var(--slate-800); }
+.dark .username { color: white; }
+.dark .rank-badge { background: var(--slate-800); border-color: var(--slate-700); }
+.dark .rank-first { background: rgba(245, 158, 11, 0.2); }
+.dark .rank-second { background: rgba(148, 163, 184, 0.2); }
+.dark .rank-third { background: rgba(249, 115, 22, 0.2); }
+.dark .avatar { border-color: var(--slate-700); }
+.dark .online-dot { border-color: var(--slate-900); }
