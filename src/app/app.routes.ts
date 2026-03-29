@@ -39,6 +39,10 @@ export const routes: Routes = [
                 component: QuizzesComponent
             },
             {
+                path: 'quizzes/:id/questions',
+                loadComponent: () => import('./components/admin/quizzes/manage-questions/manage-questions.component').then(m => m.ManageQuestionsComponent)
+            },
+            {
                 path: 'modules',
                 component: ModulesComponent
             },

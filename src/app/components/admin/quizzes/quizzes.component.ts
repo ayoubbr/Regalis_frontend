@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { QuizService } from '../../../core/services/quiz.service';
 import { ModuleService } from '../../../core/services/module.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { Router } from '@angular/router';
 import { Quiz } from '../../../core/models/quiz.model';
 import { Module } from '../../../core/models/module.model';
 
@@ -18,6 +19,7 @@ export class QuizzesComponent implements OnInit {
   private quizService = inject(QuizService);
   private moduleService = inject(ModuleService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   quizzes: Quiz[] = [];
   modules: Module[] = [];
@@ -98,6 +100,10 @@ export class QuizzesComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadQuizzes();
+  }
+
+  manageQuestions(quizId: number): void {
+    this.router.navigate(['/admin/quizzes', quizId, 'questions']);
   }
 
   getSortIcon(field: string): string {

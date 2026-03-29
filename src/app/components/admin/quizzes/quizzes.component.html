@@ -57,7 +57,7 @@
             <div class="stat-item">
                 <p class="stat-label">Questions</p>
                 <div class="status-indicator">
-                    <span class="status-text fw-bold">{{ quiz.questions?.length || 0 }} Questions</span>
+                    <span class="status-text fw-bold">{{ quiz.questions.length || 0 }} Questions</span>
                 </div>
             </div>
             <div class="stat-item">
@@ -67,6 +67,10 @@
         </div>
 
         <div class="quiz-actions">
+            <button class="chunky-button chunky-button-primary" (click)="manageQuestions(quiz.id)">
+                <span class="material-symbols-outlined">format_list_bulleted</span>
+                Questions
+            </button>
             <button class="chunky-button chunky-button-secondary" (click)="onEdit(quiz)">
                 <span class="material-symbols-outlined">edit</span>
                 Edit

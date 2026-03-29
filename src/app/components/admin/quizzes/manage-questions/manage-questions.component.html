@@ -1,0 +1,178 @@
+<div class="questions-container">
+    <div class="page-header">
+        <div class="header-breadcrumb">
+            <button class="back-link" (click)="goBack()">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back to Quizzes
+            </button>
+            <div class="header-titles">
+                <h2 class="page-title">Manage Questions</h2>
+                <p class="page-subtitle" *ngIf="quiz">
+                    <span class="quiz-badge">{{ quiz.title }}</span>
+                    &mdash; {{ questions.length }} question{{ questions.length !== 1 ? 's' : '' }}
+                </p>
+            </div>
+        </div>
+        <button class="chunky-button chunky-button-primary" (click)="openCreateModal()">
+            <span class="material-symbols-outlined">add_circle</span>
+            ADD QUESTION
+        </button>
+    </div>
+
+    <!-- Questions Table -->
+    <div class="card content-card">
+        <div class="table-responsive">
+            <table class="regalis-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Question</th>
+                        <th>Options</th>
+                        <th>Correct Answer</th>
+                        <th>Hint</th>
+                        <th>XP</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="isLoading">
+                        <td colspan="7" class="empty-row">
+                            <span class="material-symbols-outlined loading-icon">hourglass_empty</span>
+                            Loading questions...
+                        </td>
+                    </tr>
+                    <tr *ngIf="!isLoading && questions.length === 0">
+                        <td colspan="7" class="empty-row">
+                            <span class="material-symbols-outlined">quiz</span>
+                            <p>No questions yet. Add your first question!</p>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let question of questions; let i = index">
+                        <td>
+                            <span class="question-index">{{ i + 1 }}</span>
+                        </td>
+                        <td class="question-text-cell">
+                            <p class="question-text">{{ question.text }}</p>
+                        </td>
+                        <td>
+                            <div class="options-list">
+                                <span
+                                    *ngFor="let opt of getParsedOptions(question.options)"
+                                    class="option-chip"
+                                    [class.correct-chip]="opt === question.correctOptionId">
+                                    {{ opt }}
+                                    <span class="material-symbols-outlined check-icon" *ngIf="opt === question.correctOptionId">check_circle</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="correct-badge">{{ question.correctOptionId }}</span>
+                        </td>
+                        <td>
+                            <p class="hint-text">{{ question.hint || '—' }}</p>
+                        </td>
+                        <td>
+                            <span class="xp-badge">+{{ question.xpReward }} XP</span>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="action-btn" (click)="openEditModal(question)" title="Edit">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="action-btn delete-btn" (click)="deleteQuestion(question.id)" title="Delete">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Question Modal -->
+<div class="modal-overlay" *ngIf="isCreating" (click)="closeModal()">
+    <div class="card modal-container" (click)="$event.stopPropagation()" [formGroup]="questionForm">
+        <div class="modal-header">
+            <h3>{{ isEditingId ? 'Edit Question' : 'New Question' }}</h3>
+            <button class="btn-close" (click)="closeModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form [formGroup]="questionForm" (ngSubmit)="saveQuestion()" class="regalis-form">
+
+            <!-- Question Text -->
+            <div class="form-group">
+                <label>Question Text <span class="required">*</span></label>
+                <textarea formControlName="text" class="form-input" rows="3"
+                    placeholder="Enter the question..."></textarea>
+                <p class="field-error" *ngIf="questionForm.get('text')?.invalid && questionForm.get('text')?.touched">
+                    Question text is required.
+                </p>
+            </div>
+
+            <!-- Options -->
+            <div class="form-group">
+                <div class="options-header">
+                    <label>Answer Options <span class="required">*</span></label>
+                    <button type="button" class="add-option-btn" (click)="addOption()">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        Add Option
+                    </button>
+                </div>
+                <div class="options-inputs" formArrayName="options">
+                    <div class="option-input-row" *ngFor="let ctrl of optionsArray.controls; let i = index">
+                        <span class="option-letter">{{ 'ABCDEFGH'[i] }}</span>
+                        <input [formControlName]="i" type="text" class="form-input"
+                            [placeholder]="'Option ' + (i + 1)">
+                        <button type="button" class="remove-option-btn" (click)="removeOption(i)"
+                            [disabled]="optionsArray.length <= 1">
+                            <span class="material-symbols-outlined">remove_circle</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correct Answer -->
+            <div class="form-group">
+                <label>Correct Answer <span class="required">*</span></label>
+                <select formControlName="correctOptionId" class="form-input form-select">
+                    <option value="">— Select the correct option —</option>
+                    <option *ngFor="let ctrl of optionsArray.controls; let i = index"
+                        [value]="ctrl.value">
+                        {{ 'ABCDEFGH'[i] }}. {{ ctrl.value }}
+                    </option>
+                </select>
+                <p class="field-error" *ngIf="questionForm.get('correctOptionId')?.invalid && questionForm.get('correctOptionId')?.touched">
+                    Please select the correct answer.
+                </p>
+            </div>
+
+            <!-- Hint -->
+            <div class="form-group">
+                <label>Hint (Optional)</label>
+                <input type="text" formControlName="hint" class="form-input"
+                    placeholder="A helpful tip for the player...">
+            </div>
+
+            <!-- XP Reward -->
+            <div class="form-group">
+                <label>XP Reward <span class="required">*</span></label>
+                <input type="number" formControlName="xpReward" class="form-input"
+                    placeholder="e.g. 50" min="1">
+                <p class="field-error" *ngIf="questionForm.get('xpReward')?.invalid && questionForm.get('xpReward')?.touched">
+                    XP reward must be at least 1.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="chunky-button chunky-button-secondary" (click)="closeModal()">Cancel</button>
+                <button type="submit" class="chunky-button chunky-button-primary" [disabled]="questionForm.invalid">
+                    {{ isEditingId ? 'Save Changes' : 'Add Question' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
