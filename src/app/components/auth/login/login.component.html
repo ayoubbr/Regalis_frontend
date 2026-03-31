@@ -27,6 +27,11 @@
                 </div>
             </div>
 
+            <div *ngIf="infoMessage" class="info-message">
+                <span class="material-symbols-outlined">info</span>
+                {{ infoMessage }}
+            </div>
+
             <div *ngIf="errorMessage" class="error-message">
                 <span class="material-symbols-outlined">error</span>
                 {{ errorMessage }}
