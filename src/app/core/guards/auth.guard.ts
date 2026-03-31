@@ -14,7 +14,6 @@ export const authGuard: CanActivateFn = (route, state) => {
       const hasRole = roles.some(role => userRoles.includes(role));
       
       if (!hasRole) {
-        // role not authorized, redirect to home page
         router.navigate(['/']);
         return false;
       }
@@ -22,7 +21,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // not logged in so redirect to login page with the return url
   router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
 };
